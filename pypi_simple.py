@@ -1,7 +1,14 @@
-PYPI_ENDPOINT = 'https://pypi.org/simple/'
+import attr
+
+PYPI_SIMPLE_ENDPOINT = 'https://pypi.org/simple/'
 
 class PyPISimple:
-    def __init__(self, endpoint=PYPI_ENDPOINT, cache=None):
+    def __init__(self, endpoint=PYPI_SIMPLE_ENDPOINT, cache=None):
+        raise NotImplementedError
+
+    def fetch_index(self, force=False):
+        # Called automatically by any methods that need data from the index
+        # force=True: forcibly refetch
         raise NotImplementedError
 
     def list_projects(self):
@@ -18,20 +25,15 @@ class PyPISimple:
     def __contains__(self, project):
         raise NotImplementedError
 
-    ### Something for forcibly refetching the index page?
 
-
+@attr.s
 class ProjectFile:
-    @property
-    def filename(self):
-        raise NotImplementedError
+    filename = attr.ib()
+    url = attr.ib()
+    requires_python = attr.ib(default=None)
 
     @property
-    def url(self):
-        raise NotImplementedError
-
-    @property
-    def requires_python(self):
+    def project(self):
         raise NotImplementedError
 
     @property
@@ -52,17 +54,19 @@ class ProjectFile:
         # wheel, sdist, egg, etc.
         raise NotImplementedError
 
-    ### file hashes
+    def get_digests(self):
+        # Returns a dict mapping hash name to hex string
+        raise NotImplementedError
 
 
 def get_pip_cache():
     # Return the HTTP cache used by pip
     raise NotImplementedError
 
-def parse_simple_index(html, base_url):
+def parse_simple_index(html, base_url, from_encoding=None):
     # Returns a list of (project name, url) pairs
     raise NotImplementedError
 
-def parse_project_files(html, base_url):
+def parse_project_files(html, base_url, from_encoding=None):
     # Returns a list of ProjectFile objects
     raise NotImplementedError
