@@ -27,18 +27,14 @@ class PyPISimple:
 
 
 @attr.s
-class ProjectFile:
+class ProjectFile:  ### Rename to "DistributionPackage" or similar?
     filename = attr.ib()
     url = attr.ib()
     requires_python = attr.ib(default=None)
 
-    @property
-    def project(self):
-        raise NotImplementedError
-
-    @property
-    def version(self):
-        raise NotImplementedError
+    def __attrs_post_init__(self):
+        self.project, self.version, self.package_type \
+            = parse_filename(self.filename)
 
     @property
     def has_sig(self):
@@ -47,11 +43,6 @@ class ProjectFile:
     @property
     def sig_url(self):
         # Returns None if no signature
-        raise NotImplementedError
-
-    @property
-    def package_type(self):  ### Rethink name
-        # wheel, sdist, egg, etc.
         raise NotImplementedError
 
     def get_digests(self):
@@ -69,4 +60,23 @@ def parse_simple_index(html, base_url, from_encoding=None):
 
 def parse_project_files(html, base_url, from_encoding=None):
     # Returns a list of ProjectFile objects
+    raise NotImplementedError
+
+def parse_filename(filename):
+    """
+    Given the filename of a distribution package, return a triple of the
+    project name, project version, and package type.  The name and version are
+    spelled the same as they appear in the filename; no normalization is
+    performed.
+
+    The package type may be any of the following strings:
+
+    - ``'dumb'``
+    - ``'egg'``
+    - ``'sdist'``
+    - ``'wheel'``
+    - ``'wininst'``
+
+    If the filename cannot be parsed, ``(None, None, None)`` is returned.
+    """
     raise NotImplementedError
