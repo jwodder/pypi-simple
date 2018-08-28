@@ -13,7 +13,7 @@ __url__          = 'https://github.com/jwodder/pypi-simple'
 import re
 import attr
 from   bs4                    import BeautifulSoup
-from   six.moves.urllib.parse import urljoin
+from   six.moves.urllib.parse import urljoin, urlunparse, urlparse
 
 PYPI_SIMPLE_ENDPOINT = 'https://pypi.org/simple/'
 
@@ -63,11 +63,16 @@ class DistributionPackage(object):
     @property
     def sig_url(self):
         # Returns None if no signature
-        raise NotImplementedError
+        if self.has_sig:
+            u = urlparse(self.url)
+            return urlunparse((u[0], u[1], u[2] + '.asc', '', '', ''))
+        else:
+            return None
 
     def get_digests(self):
         # Returns a dict mapping hash name to hex string
-        raise NotImplementedError
+        name, sep, value = urlparse(self.url).fragment.partition('=')
+        return {name: value} if sep else {}
 
 
 def get_pip_cache():
