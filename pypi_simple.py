@@ -10,6 +10,7 @@ __author_email__ = 'pypi-simple@varonathe.org'
 __license__      = 'MIT'
 __url__          = 'https://github.com/jwodder/pypi-simple'
 
+import re
 import attr
 from   bs4                    import BeautifulSoup
 from   six.moves.urllib.parse import urljoin
@@ -97,6 +98,35 @@ def parse_project_files(html, base_url, from_encoding=None):
         files.append(pkg)
     return files
 
+
+ARCHIVE_EXT = r'\.(?:tar\.(?:bz2|gz|xz|Z)|zip)'
+
+PACKAGE_TYPES = [
+    ('dumb', re.compile(r'^(?P<project>[-A-Za-z0-9._]+)'
+                        r'-(?P<version>.+?)'
+                        r'\.(?:aix|cygwin|darwin|linux|macosx|solaris|sunos'
+                            r'|win)[-.\w]*'
+                        + ARCHIVE_EXT + '$')),
+
+    ('egg', re.compile(r'^(?P<project>[A-Za-z0-9._]+)'
+                       r'-(?P<version>[^-]+)'
+                       r'(?:-[^-]+)*\.egg$')),
+
+    ('sdist', re.compile(r'^(?P<project>[-A-Za-z0-9._]+)'
+                         r'-(?P<version>.+)'
+                        + ARCHIVE_EXT + '$')),
+
+    ('wheel', re.compile(r'^(?P<project>[A-Za-z0-9._]+)'
+                         r'-(?P<version>[^-]+)'
+                         r'(?:-[^-]+)+\.whl$')),
+
+    ('wininst', re.compile(r'^(?P<project>[-A-Za-z0-9._]+)'
+                           r'-(?P<version>.+?)'
+                           r'[._](?:aix|cygwin|darwin|linux|macosx|solaris'
+                                 r'|sunos|win)[-.\w]*'
+                           r'\.exe$')),
+]
+
 def parse_filename(filename):
     """
     Given the filename of a distribution package, return a triple of the
@@ -114,4 +144,8 @@ def parse_filename(filename):
 
     If the filename cannot be parsed, ``(None, None, None)`` is returned.
     """
-    raise NotImplementedError
+    for pkg_type, rgx in PACKAGE_TYPES:
+        m = rgx.match(filename)
+        if m:
+            return (m.group('project'), m.group('version'), pkg_type)
+    return (None, None, None)

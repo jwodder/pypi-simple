@@ -5,6 +5,10 @@ from   pypi_simple import parse_filename
     # dumb:
     ("4ch-1.0.0.linux-x86_64.tar.gz", ('4ch', '1.0.0', 'dumb')),
     (
+        "AccelBrainBeat-1.0.0.win-amd64.zip",
+        ("AccelBrainBeat", "1.0.0", 'dumb'),
+    ),
+    (
         "Appengine-Fixture-Loader-0.1.8.linux-x86_64.tar.gz",
         ("Appengine-Fixture-Loader", "0.1.8", 'dumb'),
     ),
@@ -12,24 +16,30 @@ from   pypi_simple import parse_filename
         "Appium-Python-Client-0.3.macosx-10.9-intel.tar.gz",
         ("Appium-Python-Client", "0.3", 'dumb'),
     ),
+    (
+        'linesep-1.0.0.post1.linux-x86_64.tar.gz',
+        ('linesep', '1.0.0.post1', 'dumb'),
+    ),
+    (
+        'pypi-simple-0.1.0.dev1.linux-x86_64.tar.gz',
+        ('pypi-simple', '0.1.0.dev1', 'dumb'),
+    ),
 
     # egg:
     ("4Suite_XML-1.0rc2-py2.5-win32-2.5.egg", ('4Suite_XML', '1.0rc2', 'egg')),
     ("4Suite_XML-1.0.1-py2.5-win32.egg", ('4Suite_XML', '1.0.1', 'egg')),
+    ('btk-0.3.0-py2.7_macosx-10.7-intel.egg', ('btk', '0.3.0', 'egg')),
+    ('pypi_simple-0.1.0.dev1-py3.5.egg', ('pypi_simple', '0.1.0.dev1', 'egg')),
     ('setuptools_scm-3.1.0-py2.7.egg', ('setuptools_scm', '3.1.0', 'egg')),
 
     # sdist:
     ("1-1.0.0.zip", ('1', '1.0.0', 'sdist')),
+    ("3-1-1.0.0.zip", ('3-1', '1.0.0', 'sdist')),
     ("3color-Press-0.2.0.tar.bz2", ('3color-Press', '0.2.0', 'sdist')),
     ("3to2_py3k-0.1b1.tar.gz", ('3to2_py3k', '0.1b1', 'sdist')),
     (
         "application_repository-0.1.post2.dev31171108.tar.gz",
         ("application_repository", "0.1.post2.dev31171108", 'sdist'),
-    ),
-    ("carbon-1.1.0_.tar.gz", ("carbon", "1.1.0", 'sdist')),
-    (
-        "carbonara-archinfo-7.7.9.14-1.tar.gz",
-        ("carbonara-archinfo", "7.7.9.14-1", 'sdist'),
     ),
     ('pip-18.0.tar.gz', ('pip', '18.0', 'sdist')),
     ('pypi-simple-0.1.0.dev1.tar.gz', ('pypi-simple', '0.1.0.dev1', 'sdist')),
@@ -62,13 +72,28 @@ from   pypi_simple import parse_filename
         "applicake-0.0.7.macosx-10.6-x86_64.exe",
         ('applicake', '0.0.7', 'wininst'),
     ),
+    ("btk-0.3.0_win-amd64.exe", ('btk', '0.3.0', 'wininst')),
+    ("btk-0.3.0_win32.exe", ('btk', '0.3.0', 'wininst')),
+    (
+        'pypi-simple-0.1.0.dev1.linux-x86_64.exe',
+        ('pypi-simple', '0.1.0.dev1', 'wininst'),
+    ),
 
     # Invalid:
     ('pip-18.0.tar.gz.txt', (None, None, None)),
     ('pip-18.0.txt', (None, None, None)),
 
-    # Nonstandard?:
-    #("3-1-1.0.0.zip", ('3-1', '1.0.0', 'sdist')),
+    # Nonstandard oddities:
+    pytest.param(
+        "carbon-1.1.0_.tar.gz",
+        ("carbon", "1.1.0", 'sdist'),
+        marks=pytest.mark.xfail,
+    ),
+    pytest.param(
+        "carbonara-archinfo-7.7.9.14-1.tar.gz",
+        ("carbonara-archinfo", "7.7.9.14-1", 'sdist'),
+        marks=pytest.mark.xfail,
+    ),
 ])
 def test_parse_filename(filename, expected):
     assert parse_filename(filename) == expected
