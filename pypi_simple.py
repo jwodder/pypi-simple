@@ -10,35 +10,64 @@ __author_email__ = 'pypi-simple@varonathe.org'
 __license__      = 'MIT'
 __url__          = 'https://github.com/jwodder/pypi-simple'
 
+from   collections            import OrderedDict
 import re
 import attr
 from   bs4                    import BeautifulSoup
+from   cachecontrol           import CacheControl
+from   packaging.utils        import canonicalize_name as normalize
+import requests
 from   six.moves.urllib.parse import urljoin, urlunparse, urlparse
 
 PYPI_SIMPLE_ENDPOINT = 'https://pypi.org/simple/'
 
 class PyPISimple(object):
     def __init__(self, endpoint=PYPI_SIMPLE_ENDPOINT, cache=None):
-        raise NotImplementedError
+        self.endpoint = endpoint
+        self.s = requests.Session()
+        if cache is not None:
+            self.s = CacheControl(self.s, cache=cache)
+        self._projects = None
 
     def fetch_index(self, force=False):
         # Called automatically by any methods that need data from the index
-        # force=True: forcibly refetch
-        raise NotImplementedError
+        # force=True: forcibly refetch (still goes through cache, though)
+        if self._projects is None or force:
+            r = self.s.get(self.endpoint)
+            r.raise_for_status()
+            if 'charset' in r.headers.get('content-type', '').lower():
+                charset = r.encoding
+            else:
+                charset = None
+            self._projects = OrderedDict([
+                (normalize(name), url)
+                for name, url in parse_simple_index(r.content, r.url, charset)
+            ])
 
     def list_projects(self):
-        raise NotImplementedError
+        self.fetch_index()
+        return list(self._projects)
 
     def get_project_files(self, project):
-        ### Project lookup needs to be name normalization-aware
-        raise NotImplementedError
+        url = self.get_project_url(project)
+        if url is None:
+            return []
+        r = self.s.get(url)
+        r.raise_for_status()
+        if 'charset' in r.headers.get('content-type', '').lower():
+            charset = r.encoding
+        else:
+            charset = None
+        return parse_project_files(r.content, r.url, charset)
 
     def get_project_url(self, project):
         # Return the URL in the simple API used for the given project
-        raise NotImplementedError
+        self.fetch_index()
+        return self._projects.get(normalize(project))
 
     def __contains__(self, project):
-        raise NotImplementedError
+        self.fetch_index()
+        return normalize(project) in self._projects
 
 
 @attr.s
