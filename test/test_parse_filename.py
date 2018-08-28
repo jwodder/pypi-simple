@@ -5,7 +5,7 @@ from   pypi_simple import parse_filename
     # dumb:
     ("4ch-1.0.0.linux-x86_64.tar.gz", ('4ch', '1.0.0', 'dumb')),
     (
-        "Appengine-Fixture-Loader-0.1.8.linux-x86_64.tar.gz"
+        "Appengine-Fixture-Loader-0.1.8.linux-x86_64.tar.gz",
         ("Appengine-Fixture-Loader", "0.1.8", 'dumb'),
     ),
     (
@@ -32,6 +32,7 @@ from   pypi_simple import parse_filename
         ("carbonara-archinfo", "7.7.9.14-1", 'sdist'),
     ),
     ('pip-18.0.tar.gz', ('pip', '18.0', 'sdist')),
+    ('pypi-simple-0.1.0.dev1.tar.gz', ('pypi-simple', '0.1.0.dev1', 'sdist')),
     ('pytz-2008a.tar.bz2', ('pytz', '2008a', 'sdist')),
     ('setuptools-40.2.0.zip', ('setuptools', '40.2.0', 'sdist')),
 
@@ -44,6 +45,10 @@ from   pypi_simple import parse_filename
     ('psycopg2-2.7.5-cp37-cp37m-macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl', ('psycopg2', '2.7.5', 'wheel')),
     ('psycopg2-2.7.5-cp37-cp37m-manylinux1_x86_64.whl', ('psycopg2', '2.7.5', 'wheel')),
     ('psycopg2-2.7.5-cp37-cp37m-win32.whl', ('psycopg2', '2.7.5', 'wheel')),
+    (
+        'pypi_simple-0.1.0.dev1-py2.py3-none-any.whl',
+        ('pypi_simple', '0.1.0.dev1', 'wheel'),
+    ),
     ('qypi-0.4.1-py3-none-any.whl', ('qypi', '0.4.1', 'wheel')),
 
     # wininst:

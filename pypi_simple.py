@@ -11,10 +11,12 @@ __license__      = 'MIT'
 __url__          = 'https://github.com/jwodder/pypi-simple'
 
 import attr
+from   bs4                    import BeautifulSoup
+from   six.moves.urllib.parse import urljoin
 
 PYPI_SIMPLE_ENDPOINT = 'https://pypi.org/simple/'
 
-class PyPISimple:
+class PyPISimple(object):
     def __init__(self, endpoint=PYPI_SIMPLE_ENDPOINT, cache=None):
         raise NotImplementedError
 
@@ -39,15 +41,23 @@ class PyPISimple:
 
 
 @attr.s
-class DistributionPackage:
+class DistributionPackage(object):
     filename = attr.ib()
     url = attr.ib()
     requires_python = attr.ib(default=None)
     has_sig = attr.ib(default=False)
 
-    def __attrs_post_init__(self):
-        self.project, self.version, self.package_type \
-            = parse_filename(self.filename)
+    @property
+    def project(self):
+        return parse_filename(self.filename)[0]
+
+    @property
+    def version(self):
+        return parse_filename(self.filename)[1]
+
+    @property
+    def package_type(self):
+        return parse_filename(self.filename)[2]
 
     @property
     def sig_url(self):
@@ -65,11 +75,27 @@ def get_pip_cache():
 
 def parse_simple_index(html, base_url, from_encoding=None):
     # Returns a list of (project name, url) pairs
-    raise NotImplementedError
+    projects = []
+    soup = BeautifulSoup(html, 'html.parser', from_encoding=from_encoding)
+    for link in soup.find_all('a'):
+        projects.append((link.string, urljoin(base_url, link['href'])))
+    return projects
 
 def parse_project_files(html, base_url, from_encoding=None):
     # Returns a list of DistributionPackage objects
-    raise NotImplementedError
+    files = []
+    soup = BeautifulSoup(html, 'html.parser', from_encoding=from_encoding)
+    for link in soup.find_all('a'):
+        pkg = DistributionPackage(
+            filename=link.string,
+            url=urljoin(base_url, link['href']),
+        )
+        if 'data-gpg-sig' in link.attrs:
+            pkg.has_sig = (link['data-gpg-sig'].lower() == 'true')
+        if 'data-requires-python' in link.attrs:
+            pkg.requires_python = link['data-requires-python']
+        files.append(pkg)
+    return files
 
 def parse_filename(filename):
     """
