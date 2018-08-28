@@ -27,18 +27,15 @@ class PyPISimple:
 
 
 @attr.s
-class ProjectFile:  ### Rename to "DistributionPackage" or similar?
+class DistributionPackage:
     filename = attr.ib()
     url = attr.ib()
     requires_python = attr.ib(default=None)
+    has_sig = attr.ib(default=False)
 
     def __attrs_post_init__(self):
         self.project, self.version, self.package_type \
             = parse_filename(self.filename)
-
-    @property
-    def has_sig(self):
-        raise NotImplementedError
 
     @property
     def sig_url(self):
@@ -59,7 +56,7 @@ def parse_simple_index(html, base_url, from_encoding=None):
     raise NotImplementedError
 
 def parse_project_files(html, base_url, from_encoding=None):
-    # Returns a list of ProjectFile objects
+    # Returns a list of DistributionPackage objects
     raise NotImplementedError
 
 def parse_filename(filename):
