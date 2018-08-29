@@ -1,4 +1,5 @@
-from pypi_simple import DistributionPackage
+import pytest
+from   pypi_simple import DistributionPackage
 
 def test_filename_parsed():
     pkg = DistributionPackage(
@@ -8,6 +9,14 @@ def test_filename_parsed():
     assert pkg.project == 'qypi'
     assert pkg.version == '0.1.0'
     assert pkg.package_type == 'wheel'
+
+@pytest.mark.parametrize('fragment', ['', '#', '#sha256', '#sha256='])
+def test_get_no_digests(fragment):
+    pkg = DistributionPackage(
+        filename='qypi-0.1.0-py3-none-any.whl',
+        url="https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl" + fragment,
+    )
+    assert pkg.get_digests() == {}
 
 def test_get_digests():
     pkg = DistributionPackage(

@@ -101,7 +101,7 @@ class DistributionPackage(object):
     def get_digests(self):
         # Returns a dict mapping hash name to hex string
         name, sep, value = urlparse(self.url).fragment.partition('=')
-        return {name: value} if sep else {}
+        return {name: value} if value else {}
 
 
 def get_pip_cache():
