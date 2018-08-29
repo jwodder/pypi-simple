@@ -4,6 +4,9 @@ from pypi_simple import PYPI_SIMPLE_ENDPOINT, DistributionPackage, \
 
 DATA_DIR = join(dirname(__file__), 'data')
 
+def test_empty():
+    assert parse_project_files('', PYPI_SIMPLE_ENDPOINT + 'qypi/') == []
+
 def test_parse_qypi():
     with open(join(DATA_DIR, 'qypi.html'), 'rb') as fp:
         assert parse_project_files(

@@ -3,6 +3,9 @@ from pypi_simple import PYPI_SIMPLE_ENDPOINT, parse_simple_index
 
 DATA_DIR = join(dirname(__file__), 'data')
 
+def test_empty():
+    assert parse_simple_index('', PYPI_SIMPLE_ENDPOINT) == []
+
 def test_simple01():
     with open(join(DATA_DIR, 'simple01.html'), 'rb') as fp:
         assert parse_simple_index(
