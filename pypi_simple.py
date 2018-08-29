@@ -112,6 +112,8 @@ def parse_simple_index(html, base_url, from_encoding=None):
     # Returns a list of (project name, url) pairs
     projects = []
     soup = BeautifulSoup(html, 'html.parser', from_encoding=from_encoding)
+    if soup.base is not None and 'href' in soup.base.attrs:
+        base_url = urljoin(base_url, soup.base['href'])
     for link in soup.find_all('a'):
         projects.append((link.string, urljoin(base_url, link['href'])))
     return projects

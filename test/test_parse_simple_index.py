@@ -31,3 +31,17 @@ def test_simple01():
             ('a3rt-sdk-py', PYPI_SIMPLE_ENDPOINT + 'a3rt-sdk-py/'),
             ('a4t-party_contact', PYPI_SIMPLE_ENDPOINT + 'a4t-party-contact/'),
         ]
+
+def test_simple_base():
+    with open(join(DATA_DIR, 'simple_base.html'), 'rb') as fp:
+        assert parse_simple_index(
+            fp.read(),
+            PYPI_SIMPLE_ENDPOINT,
+            from_encoding='utf-8',
+        ) == [
+            ('a', PYPI_SIMPLE_ENDPOINT + 'projects/a/'),
+            ('a00k5pgrtn', PYPI_SIMPLE_ENDPOINT + 'projects/a00k5pgrtn/'),
+            ('a10ctl', PYPI_SIMPLE_ENDPOINT + 'projects/a10ctl/'),
+            ('a10-horizon', PYPI_SIMPLE_ENDPOINT + 'projects/a10-horizon/'),
+            ('a10-neutronclient', PYPI_SIMPLE_ENDPOINT + 'projects/a10-neutronclient/'),
+        ]
