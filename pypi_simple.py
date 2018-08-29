@@ -133,18 +133,24 @@ def parse_project_files(html, base_url, from_encoding=None):
     return files
 
 
-ARCHIVE_EXT = r'\.(?:tar\.(?:bz2|gz|xz|Z)|zip)'
+ARCHIVE_EXT = r'\.(?:tar\.(?:bz2|gz|xz|Z)|tgz|zip)'
 
 PACKAGE_TYPES = [
     ('dumb', re.compile(r'^(?P<project>[-A-Za-z0-9._]+)'
                         r'-(?P<version>.+?)'
                         r'\.(?:aix|cygwin|darwin|linux|macosx|solaris|sunos'
-                            r'|win)[-.\w]*'
+                            r'|[wW]in)[-.\w]*'
                         + ARCHIVE_EXT + '$')),
 
     ('egg', re.compile(r'^(?P<project>[A-Za-z0-9._]+)'
                        r'-(?P<version>[^-]+)'
                        r'(?:-[^-]+)*\.egg$')),
+
+    ('msi', re.compile(r'^(?P<project>[-A-Za-z0-9._]+)'
+                       r'-(?P<version>.+?)'
+                       r'[-.](?:[wW]in32|win-amd64|pentium4|winxp32)'
+                       r'(?:-py\d\.\d+(?:-\d+)?)?'
+                       r'\.msi$')),
 
     ('sdist', re.compile(r'^(?P<project>[-A-Za-z0-9._]+)'
                          r'-(?P<version>.+)'
@@ -156,8 +162,8 @@ PACKAGE_TYPES = [
 
     ('wininst', re.compile(r'^(?P<project>[-A-Za-z0-9._]+)'
                            r'-(?P<version>.+?)'
-                           r'[._](?:aix|cygwin|darwin|linux|macosx|solaris'
-                                 r'|sunos|win)[-.\w]*'
+                           r'[-._](?:aix|cygwin|darwin|linux|macosx|solaris'
+                                  r'|sunos|[wW]in)[-.\w]*'
                            r'\.exe$')),
 ]
 
@@ -172,6 +178,7 @@ def parse_filename(filename):
 
     - ``'dumb'``
     - ``'egg'``
+    - ``'msi'``
     - ``'sdist'``
     - ``'wheel'``
     - ``'wininst'``

@@ -32,11 +32,23 @@ from   pypi_simple import parse_filename
     ('pypi_simple-0.1.0.dev1-py3.5.egg', ('pypi_simple', '0.1.0.dev1', 'egg')),
     ('setuptools_scm-3.1.0-py2.7.egg', ('setuptools_scm', '3.1.0', 'egg')),
 
+    # msi:
+    ('ntracer-0.6.2.pentium4-py2.7.msi', ('ntracer', '0.6.2', 'msi')),
+    ('pyFAI-0.13.1.win-amd64-py2.7-1.msi', ('pyFAI', '0.13.1', 'msi')),
+    ('pyftpsync-1.1.0-win32.msi', ('pyftpsync', '1.1.0', 'msi')),
+    ('pyOpenSSL-0.13.winxp32-py3.2.msi', ('pyOpenSSL', '0.13', 'msi')),
+    ('pytango-9.2.0.Win32-py2.7.msi', ('pytango', '9.2.0', 'msi')),
+    ("winappdbg-1.3.win32-py2.4.msi", ('winappdbg', '1.3', 'msi')),
+    ("winappdbg-1.3.win-amd64-py2.4.msi", ('winappdbg', '1.3', 'msi')),
+    ("winappdbg-1.4.win32.msi", ('winappdbg', '1.4', 'msi')),
+    ("winappdbg-1.4.win-amd64.msi", ('winappdbg', '1.4', 'msi')),
+
     # sdist:
     ("1-1.0.0.zip", ('1', '1.0.0', 'sdist')),
     ("3-1-1.0.0.zip", ('3-1', '1.0.0', 'sdist')),
     ("3color-Press-0.2.0.tar.bz2", ('3color-Press', '0.2.0', 'sdist')),
     ("3to2_py3k-0.1b1.tar.gz", ('3to2_py3k', '0.1b1', 'sdist')),
+    ('amqplib-1.0.0.tgz', ('amqplib', '1.0.0', 'sdist')),
     (
         "application_repository-0.1.post2.dev31171108.tar.gz",
         ("application_repository", "0.1.post2.dev31171108", 'sdist'),
@@ -74,16 +86,23 @@ from   pypi_simple import parse_filename
     ),
     ("btk-0.3.0_win-amd64.exe", ('btk', '0.3.0', 'wininst')),
     ("btk-0.3.0_win32.exe", ('btk', '0.3.0', 'wininst')),
+    ('l5x-1.2-win32.exe', ('l5x', '1.2', 'wininst')),
     (
         'pypi-simple-0.1.0.dev1.linux-x86_64.exe',
         ('pypi-simple', '0.1.0.dev1', 'wininst'),
     ),
+    ('pytango-9.2.1.Win32-py2.7.exe', ('pytango', '9.2.1', 'wininst')),
+    ("winappdbg-1.4.win-amd64.exe", ('winappdbg', '1.4', 'wininst')),
 
     # Invalid:
+    ('500.tar.bz2', (None, None, None)),
+    ('aa utility package-0.1.tar.gz', (None, None, None)),
+    ('alexander.tar.gz', (None, None, None)),
     ('pip-18.0.tar.gz.txt', (None, None, None)),
     ('pip-18.0.txt', (None, None, None)),
+    ('Pomodoro+-1.0.tar.gz', (None, None, None)),
 
-    # Nonstandard oddities:
+    # Nonstandard oddities that may or may not be valid:
     pytest.param(
         "carbon-1.1.0_.tar.gz",
         ("carbon", "1.1.0", 'sdist'),
@@ -92,6 +111,11 @@ from   pypi_simple import parse_filename
     pytest.param(
         "carbonara-archinfo-7.7.9.14-1.tar.gz",
         ("carbonara-archinfo", "7.7.9.14-1", 'sdist'),
+        marks=pytest.mark.xfail,
+    ),
+    pytest.param(
+        'psifas-0.3.msi',
+        ('psifas', '0.3', 'msi'),
         marks=pytest.mark.xfail,
     ),
 ])
