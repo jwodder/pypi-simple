@@ -72,3 +72,32 @@ def test_parse_qypi():
                 requires_python="~=3.4",
             ),
         ]
+
+def test_parse_qypi_base():
+    with open(join(DATA_DIR, 'qypi_base.html'), 'rb') as fp:
+        assert parse_project_files(
+            fp.read(),
+            PYPI_SIMPLE_ENDPOINT + 'qypi/',
+            from_encoding='utf-8',
+        ) == [
+            DistributionPackage(
+                filename='qypi-0.1.0-py3-none-any.whl',
+                url="https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl#sha256=da69d28dcd527c0e372b3fa7b92fc333b327f8470175f035abc4e351b539189f",
+                requires_python="~=3.4",
+            ),
+            DistributionPackage(
+                filename='qypi-0.1.0.tar.gz',
+                url="https://files.pythonhosted.org/packages/e4/fe/3fdb222a2916b94e9ca12d80c92dbbad1f7068c82fca42872d6c1739fead/qypi-0.1.0.tar.gz#sha256=212093de95b4f5f22e19fa18fe57fa33eccd63adb9b325fe1b673bf71912c551",
+                requires_python="~=3.4",
+            ),
+            DistributionPackage(
+                filename='qypi-0.1.0.post1-py3-none-any.whl',
+                url="https://files.pythonhosted.org/packages/f9/3f/6b184713e79da15cd451f0dab91864633175242f4d321df0cacdd2dc8300/qypi-0.1.0.post1-py3-none-any.whl#sha256=5946a4557550479af90278e5418cd2c32a2626936075078a4c7096be52d43078",
+                requires_python="~=3.4",
+            ),
+            DistributionPackage(
+                filename='qypi-0.1.0.post1.tar.gz',
+                url="https://files.pythonhosted.org/packages/0e/49/3056ee68b44c8eab4d4698b52ae4d18c0db92c80abc312894c02c4722621/qypi-0.1.0.post1.tar.gz#sha256=c99eea315455cf9fde722599ab67eeefdff5c184bb3861a7fd82f8a9387c252d",
+                requires_python="~=3.4",
+            ),
+        ]
