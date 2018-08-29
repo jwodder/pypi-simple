@@ -10,14 +10,17 @@ __author_email__ = 'pypi-simple@varonathe.org'
 __license__      = 'MIT'
 __url__          = 'https://github.com/jwodder/pypi-simple'
 
-from   collections            import OrderedDict
+from   collections                    import OrderedDict
+from   os.path                        import join
 import re
+import appdirs
 import attr
-from   bs4                    import BeautifulSoup
-from   cachecontrol           import CacheControl
-from   packaging.utils        import canonicalize_name as normalize
+from   bs4                            import BeautifulSoup
+from   cachecontrol                   import CacheControl
+from   cachecontrol.caches.file_cache import FileCache
+from   packaging.utils                import canonicalize_name as normalize
 import requests
-from   six.moves.urllib.parse import urljoin, urlunparse, urlparse
+from   six.moves.urllib.parse         import urljoin, urlunparse, urlparse
 
 PYPI_SIMPLE_ENDPOINT = 'https://pypi.org/simple/'
 
@@ -106,7 +109,7 @@ class DistributionPackage(object):
 
 def get_pip_cache():
     # Return the HTTP cache used by pip
-    raise NotImplementedError
+    return FileCache(join(appdirs.user_cache_dir('pip'), 'http'))
 
 def parse_simple_index(html, base_url, from_encoding=None):
     # Returns a list of (project name, url) pairs
