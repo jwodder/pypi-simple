@@ -17,6 +17,12 @@ from   packaging.utils        import canonicalize_name as normalize
 import requests
 from   six.moves.urllib.parse import urljoin, urlunparse, urlparse
 
+__all__ = [
+    'DistributionPackage',
+    'PYPI_SIMPLE_ENDPOINT',
+    'PyPISimple',
+]
+
 PYPI_SIMPLE_ENDPOINT = 'https://pypi.org/simple/'
 
 class PyPISimple(object):
