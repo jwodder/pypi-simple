@@ -89,31 +89,28 @@ class DistributionPackage(object):
 def parse_simple_index(html, base_url, from_encoding=None):
     # Returns a list of (project name, url) pairs
     projects = []
-    soup = BeautifulSoup(html, 'html.parser', from_encoding=from_encoding)
-    if soup.base is not None and 'href' in soup.base.attrs:
-        base_url = urljoin(base_url, soup.base['href'])
-    for link in soup.find_all('a'):
-        projects.append((link.string, urljoin(base_url, link['href'])))
+    for filename, url, _ in parse_links(html, base_url, from_encoding):
+        projects.append((filename, url))
     return projects
 
 def parse_project_files(html, base_url, from_encoding=None):
     # Returns a list of DistributionPackage objects
     files = []
+    for filename, url, attrs in parse_links(html, base_url, from_encoding):
+        files.append(DistributionPackage(
+            filename = filename,
+            url = url,
+            has_sig = attrs.get('data-gpg-sig', 'false').lower() == 'true',
+            requires_python = attrs.get('data-requires-python'),
+        ))
+    return files
+
+def parse_links(html, base_url, from_encoding=None):
     soup = BeautifulSoup(html, 'html.parser', from_encoding=from_encoding)
     if soup.base is not None and 'href' in soup.base.attrs:
         base_url = urljoin(base_url, soup.base['href'])
     for link in soup.find_all('a'):
-        pkg = DistributionPackage(
-            filename=link.string,
-            url=urljoin(base_url, link['href']),
-        )
-        if 'data-gpg-sig' in link.attrs:
-            pkg.has_sig = (link['data-gpg-sig'].lower() == 'true')
-        if 'data-requires-python' in link.attrs:
-            pkg.requires_python = link['data-requires-python']
-        files.append(pkg)
-    return files
-
+        yield (link.string, urljoin(base_url, link['href']), link.attrs)
 
 ARCHIVE_EXT = r'\.(?:tar\.(?:bz2|gz|xz|Z)|tgz|zip)'
 
