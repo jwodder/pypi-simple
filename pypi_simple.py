@@ -10,7 +10,6 @@ __author_email__ = 'pypi-simple@varonathe.org'
 __license__      = 'MIT'
 __url__          = 'https://github.com/jwodder/pypi-simple'
 
-from   collections                    import OrderedDict
 from   os.path                        import join
 import re
 import appdirs
@@ -26,36 +25,27 @@ PYPI_SIMPLE_ENDPOINT = 'https://pypi.org/simple/'
 
 class PyPISimple(object):
     def __init__(self, endpoint=PYPI_SIMPLE_ENDPOINT, cache=None):
-        self.endpoint = endpoint
+        self.endpoint = endpoint.rstrip('/') + '/'
         self.s = requests.Session()
         if cache is not None:
             self.s = CacheControl(self.s, cache=cache)
-        self._projects = None
-
-    def fetch_index(self, force=False):
-        # Called automatically by any methods that need data from the index
-        # force=True: forcibly refetch (still goes through cache, though)
-        if self._projects is None or force:
-            r = self.s.get(self.endpoint)
-            r.raise_for_status()
-            if 'charset' in r.headers.get('content-type', '').lower():
-                charset = r.encoding
-            else:
-                charset = None
-            self._projects = OrderedDict([
-                (normalize(name), url)
-                for name, url in parse_simple_index(r.content, r.url, charset)
-            ])
 
     def list_projects(self):
-        self.fetch_index()
-        return list(self._projects)
+        r = self.s.get(self.endpoint)
+        r.raise_for_status()
+        if 'charset' in r.headers.get('content-type', '').lower():
+            charset = r.encoding
+        else:
+            charset = None
+        return [
+            name for name, url in parse_simple_index(r.content, r.url, charset)
+        ]
 
     def get_project_files(self, project):
         url = self.get_project_url(project)
-        if url is None:
-            return []
         r = self.s.get(url)
+        if r.status_code == 404:
+            return []
         r.raise_for_status()
         if 'charset' in r.headers.get('content-type', '').lower():
             charset = r.encoding
@@ -65,12 +55,7 @@ class PyPISimple(object):
 
     def get_project_url(self, project):
         # Return the URL in the simple API used for the given project
-        self.fetch_index()
-        return self._projects.get(normalize(project))
-
-    def __contains__(self, project):
-        self.fetch_index()
-        return normalize(project) in self._projects
+        return self.endpoint + normalize(project) + '/'
 
 
 @attr.s

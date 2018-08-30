@@ -25,12 +25,16 @@ def test_session():
             body=fp.read(),
             content_type='text/html',
         )
+    responses.add(
+        method=responses.GET,
+        url='https://test.nil/simple/nonexistent/',
+        body='Does not exist',
+        status=404,
+    )
 
     simple = PyPISimple('https://test.nil/simple/')
-    assert simple.list_projects() == ['in-place', 'foo', 'bar']
+    assert simple.list_projects() == ['in_place', 'foo', 'BAR']
     assert simple.get_project_url('IN.PLACE') == 'https://test.nil/simple/in-place/'
-    assert 'IN.PLACE' in simple
-    assert 'quux' not in simple
 
     assert simple.get_project_files('IN.PLACE') == [
         DistributionPackage(
