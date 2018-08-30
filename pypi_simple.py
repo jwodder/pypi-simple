@@ -30,16 +30,15 @@ class PyPISimple(object):
         self.endpoint = endpoint.rstrip('/') + '/'
         self.s = requests.Session()
 
-    def list_projects(self):
+    def get_projects(self):
         r = self.s.get(self.endpoint)
         r.raise_for_status()
         if 'charset' in r.headers.get('content-type', '').lower():
             charset = r.encoding
         else:
             charset = None
-        return [
-            name for name, url in parse_simple_index(r.content, r.url, charset)
-        ]
+        for name, url in parse_simple_index(r.content, r.url, charset):
+            yield name
 
     def get_project_files(self, project):
         url = self.get_project_url(project)
@@ -93,11 +92,9 @@ class DistributionPackage(object):
 
 
 def parse_simple_index(html, base_url, from_encoding=None):
-    # Returns a list of (project name, url) pairs
-    projects = []
+    # Returns a generator of (project name, url) pairs
     for filename, url, _ in parse_links(html, base_url, from_encoding):
-        projects.append((filename, url))
-    return projects
+        yield (filename, url)
 
 def parse_project_files(html, base_url, from_encoding=None):
     # Returns a list of DistributionPackage objects

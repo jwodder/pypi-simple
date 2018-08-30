@@ -33,7 +33,7 @@ def test_session():
     )
 
     simple = PyPISimple('https://test.nil/simple/')
-    assert simple.list_projects() == ['in_place', 'foo', 'BAR']
+    assert list(simple.get_projects()) == ['in_place', 'foo', 'BAR']
     assert simple.get_project_url('IN.PLACE') == 'https://test.nil/simple/in-place/'
 
     assert simple.get_project_files('IN.PLACE') == [

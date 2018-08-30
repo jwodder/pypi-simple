@@ -4,15 +4,15 @@ from pypi_simple import PYPI_SIMPLE_ENDPOINT, parse_simple_index
 DATA_DIR = join(dirname(__file__), 'data')
 
 def test_empty():
-    assert parse_simple_index('', PYPI_SIMPLE_ENDPOINT) == []
+    assert list(parse_simple_index('', PYPI_SIMPLE_ENDPOINT)) == []
 
 def test_simple01():
     with open(join(DATA_DIR, 'simple01.html'), 'rb') as fp:
-        assert parse_simple_index(
+        assert list(parse_simple_index(
             fp.read(),
             PYPI_SIMPLE_ENDPOINT,
             from_encoding='utf-8',
-        ) == [
+        )) == [
             ('a', PYPI_SIMPLE_ENDPOINT + 'a/'),
             ('a00k5pgrtn', PYPI_SIMPLE_ENDPOINT + 'a00k5pgrtn/'),
             ('a10ctl', PYPI_SIMPLE_ENDPOINT + 'a10ctl/'),
@@ -37,11 +37,11 @@ def test_simple01():
 
 def test_simple_base():
     with open(join(DATA_DIR, 'simple_base.html'), 'rb') as fp:
-        assert parse_simple_index(
+        assert list(parse_simple_index(
             fp.read(),
             PYPI_SIMPLE_ENDPOINT,
             from_encoding='utf-8',
-        ) == [
+        )) == [
             ('a', PYPI_SIMPLE_ENDPOINT + 'projects/a/'),
             ('a00k5pgrtn', PYPI_SIMPLE_ENDPOINT + 'projects/a00k5pgrtn/'),
             ('a10ctl', PYPI_SIMPLE_ENDPOINT + 'projects/a10ctl/'),
