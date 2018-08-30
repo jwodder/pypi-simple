@@ -118,37 +118,46 @@ def parse_links(html, base_url, from_encoding=None):
     for link in soup.find_all('a'):
         yield (link.string, urljoin(base_url, link['href']), link.attrs)
 
-ARCHIVE_EXT = r'\.(?:tar\.(?:bz2|gz|xz|Z)|tgz|zip)'
+ARCHIVE_EXT = r'\.(?:tar|tar\.(?:bz2|gz|lz|lzma|xz|Z)|tbz|tgz|tlz|txz|zip)'
+PLAT_NAME = r'(?:aix|cygwin|darwin|linux|macosx|solaris|sunos|[wW]in)[-.\w]*'
+PYVER = r'py\d+\.\d+'
 
 PACKAGE_TYPES = [
+    # See <https://git.io/fAclc>:
     ('dumb', re.compile(r'^(?P<project>[-A-Za-z0-9._]+)'
                         r'-(?P<version>.+?)'
-                        r'\.(?:aix|cygwin|darwin|linux|macosx|solaris|sunos'
-                            r'|[wW]in)[-.\w]*'
+                        r'\.' + PLAT_NAME
                         + ARCHIVE_EXT + '$')),
 
+    # See <https://setuptools.readthedocs.io/en/latest/formats.html#filename-embedded-metadata>:
+    # Note that, unlike the other formats, the project name & version for an
+    # egg cannot contain hyphens.
     ('egg', re.compile(r'^(?P<project>[A-Za-z0-9._]+)'
                        r'-(?P<version>[^-]+)'
-                       r'(?:-[^-]+)*\.egg$')),
+                       r'(?:-' + PYVER + '(?:-' + PLAT_NAME + ')?)?\.egg$')),
 
+    # See <https://git.io/fAclv>:
     ('msi', re.compile(r'^(?P<project>[-A-Za-z0-9._]+)'
                        r'-(?P<version>.+?)'
-                       r'[-.](?:[wW]in32|win-amd64|pentium4|winxp32)'
-                       r'(?:-py\d\.\d+(?:-\d+)?)?'
+                       r'\.' + PLAT_NAME +
+                       r'(?:-' + PYVER + r')?'
                        r'\.msi$')),
 
     ('sdist', re.compile(r'^(?P<project>[-A-Za-z0-9._]+)'
                          r'-(?P<version>.+)'
-                        + ARCHIVE_EXT + '$')),
+                         + ARCHIVE_EXT + '$')),
 
-    ('wheel', re.compile(r'^(?P<project>[A-Za-z0-9._]+)'
-                         r'-(?P<version>[^-]+)'
-                         r'(?:-[^-]+)+\.whl$')),
+    # Regex adapted from <https://git.io/fAclu>:
+    ('wheel', re.compile(r'^(?P<project>.+?)'
+                         r'-(?P<version>.*?)'
+                         r'(-\d[^-]*?)?-.+?-.+?-.+?'
+                         r'\.whl$')),
 
+    # See <https://git.io/fAclL>:
     ('wininst', re.compile(r'^(?P<project>[-A-Za-z0-9._]+)'
                            r'-(?P<version>.+?)'
-                           r'[-._](?:aix|cygwin|darwin|linux|macosx|solaris'
-                                  r'|sunos|[wW]in)[-.\w]*'
+                           r'\.' + PLAT_NAME +
+                           r'(?:-' + PYVER + r')?'
                            r'\.exe$')),
 ]
 
