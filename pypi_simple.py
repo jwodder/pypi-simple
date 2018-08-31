@@ -235,6 +235,8 @@ def parse_links(html, base_url=None, from_encoding=None):
 
 PROJECT_NAME = r'[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?'
 PROJECT_NAME_NODASH = r'[A-Za-z0-9](?:[A-Za-z0-9._]*[A-Za-z0-9])?'
+VERSION = r'[A-Za-z0-9_.!+-]+?'
+VERSION_NODASH = r'[A-Za-z0-9_.!+]+?'
 ARCHIVE_EXT = r'\.(?:tar|tar\.(?:bz2|gz|lz|lzma|xz|Z)|tbz|tgz|tlz|txz|zip)'
 PLAT_NAME = r'(?:aix|cygwin|darwin|linux|macosx|solaris|sunos|[wW]in)[-.\w]*'
 PYVER = r'py\d+\.\d+'
@@ -242,37 +244,35 @@ PYVER = r'py\d+\.\d+'
 PACKAGE_TYPES = [
     # See <https://git.io/fAclc>:
     ('dumb', re.compile(r'^(?P<project>' + PROJECT_NAME + ')'
-                        r'-(?P<version>.+?)'
+                        r'-(?P<version>' + VERSION + ')'
                         r'\.' + PLAT_NAME
                         + ARCHIVE_EXT + '$')),
 
     # See <https://setuptools.readthedocs.io/en/latest/formats.html#filename-embedded-metadata>:
-    # Note that, unlike the other formats, the project name & version for an
-    # egg cannot contain hyphens.
     ('egg', re.compile(r'^(?P<project>' + PROJECT_NAME_NODASH + r')'
-                       r'-(?P<version>[^-]+)'
+                       r'-(?P<version>' + VERSION_NODASH + ')'
                        r'(?:-' + PYVER + '(?:-' + PLAT_NAME + ')?)?\.egg$')),
 
     # See <https://git.io/fAclv>:
     ('msi', re.compile(r'^(?P<project>' + PROJECT_NAME + ')'
-                       r'-(?P<version>.+?)'
+                       r'-(?P<version>' + VERSION + ')'
                        r'\.' + PLAT_NAME +
                        r'(?:-' + PYVER + r')?'
                        r'\.msi$')),
 
     ('sdist', re.compile(r'^(?P<project>' + PROJECT_NAME + ')'
-                         r'-(?P<version>.+)'
+                         r'-(?P<version>' + VERSION + ')'
                          + ARCHIVE_EXT + '$')),
 
     # Regex adapted from <https://git.io/fAclu>:
     ('wheel', re.compile(r'^(?P<project>' + PROJECT_NAME_NODASH + r')'
-                         r'-(?P<version>.*?)'
+                         r'-(?P<version>' + VERSION_NODASH + ')'
                          r'(-\d[^-]*?)?-.+?-.+?-.+?'
                          r'\.whl$')),
 
     # See <https://git.io/fAclL>:
     ('wininst', re.compile(r'^(?P<project>' + PROJECT_NAME + ')'
-                           r'-(?P<version>.+?)'
+                           r'-(?P<version>' + VERSION + ')'
                            r'\.' + PLAT_NAME +
                            r'(?:-' + PYVER + r')?'
                            r'\.exe$')),

@@ -141,12 +141,22 @@ from   pypi_simple import parse_filename
     # Invalid:
     # Invalid package name:
     ('aa utility package-0.1.tar.gz', (None, None, None)),
+    ('jvc-projector tools-0.1.tar.gz', (None, None, None)),
     ('Pomodoro+-1.0.tar.gz', (None, None, None)),
     ('pypol_-0.2.linux-i686.exe', (None, None, None)),
     ('pypol_-0.3.win32.exe', (None, None, None)),
     ('pypol_-0.4.tar.gz', (None, None, None)),
     ('pypol_-0.5-py2.6.egg', (None, None, None)),
     ('qcodes_-0.1.0-py3-none-any.whl', (None, None, None)),
+    # Invalid version:
+    ('AppValidationAutomation-0[1][1].1.tar.gz', (None, None, None)),
+    ('caosz-1,0,0.tar.gz', (None, None, None)),
+    ('CROC-1.0.60:61.tar.gz', (None, None, None)),
+    ('Geraldo-0.2-alpha(5).tar.gz', (None, None, None)),
+    ('limnoria-2013-01-21T20:33:09+0100.tar.gz', (None, None, None)),
+    ('Pegl-0.1a3~1.4.tar.gz', (None, None, None)),
+    ('pyjamas-0.8.1~+alpha1.tar.bz2', (None, None, None)),
+    ('thrivext-0.0.3    .tar.gz', (None, None, None)),
     # No version:
     ('500.tar.bz2', (None, None, None)),
     ('alexander.tar.gz', (None, None, None)),
