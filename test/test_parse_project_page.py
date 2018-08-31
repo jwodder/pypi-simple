@@ -1,15 +1,15 @@
 from os.path     import dirname, join
 from pypi_simple import PYPI_SIMPLE_ENDPOINT, DistributionPackage, \
-                            parse_project_files
+                            parse_project_page
 
 DATA_DIR = join(dirname(__file__), 'data')
 
 def test_empty():
-    assert parse_project_files('', PYPI_SIMPLE_ENDPOINT + 'qypi/') == []
+    assert parse_project_page('', PYPI_SIMPLE_ENDPOINT + 'qypi/') == []
 
 def test_parse_qypi():
     with open(join(DATA_DIR, 'qypi.html'), 'rb') as fp:
-        assert parse_project_files(
+        assert parse_project_page(
             fp.read(),
             PYPI_SIMPLE_ENDPOINT + 'qypi/',
             from_encoding='utf-8',
@@ -78,7 +78,7 @@ def test_parse_qypi():
 
 def test_parse_qypi_base():
     with open(join(DATA_DIR, 'qypi_base.html'), 'rb') as fp:
-        assert parse_project_files(
+        assert parse_project_page(
             fp.read(),
             PYPI_SIMPLE_ENDPOINT + 'qypi/',
             from_encoding='utf-8',
@@ -107,7 +107,7 @@ def test_parse_qypi_base():
 
 def test_parse_qypi_mixed():
     with open(join(DATA_DIR, 'qypi_mixed.html'), 'rb') as fp:
-        assert parse_project_files(
+        assert parse_project_page(
             fp.read(),
             PYPI_SIMPLE_ENDPOINT + 'qypi/',
             from_encoding='utf-8',

@@ -50,7 +50,7 @@ class PyPISimple(object):
             charset = r.encoding
         else:
             charset = None
-        return parse_project_files(r.content, r.url, charset)
+        return parse_project_page(r.content, r.url, charset)
 
     def get_project_url(self, project):
         # Return the URL in the simple API used for the given project
@@ -96,7 +96,7 @@ def parse_simple_index(html, base_url=None, from_encoding=None):
     for filename, url, _ in parse_links(html, base_url, from_encoding):
         yield (filename, url)
 
-def parse_project_files(html, base_url=None, from_encoding=None):
+def parse_project_page(html, base_url=None, from_encoding=None):
     # Returns a list of DistributionPackage objects
     files = []
     for filename, url, attrs in parse_links(html, base_url, from_encoding):
