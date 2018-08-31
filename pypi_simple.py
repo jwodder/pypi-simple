@@ -243,39 +243,28 @@ PYVER = r'py\d+\.\d+'
 
 PACKAGE_TYPES = [
     # See <https://git.io/fAclc>:
-    ('dumb', re.compile(r'^(?P<project>' + PROJECT_NAME + ')'
-                        r'-(?P<version>' + VERSION + ')'
-                        r'\.' + PLAT_NAME
-                        + ARCHIVE_EXT + '$')),
+    ('dumb', re.compile(r'^(?P<project>{})-(?P<version>{})\.{}{}$'
+                       .format(PROJECT_NAME, VERSION, PLAT_NAME, ARCHIVE_EXT))),
 
     # See <https://setuptools.readthedocs.io/en/latest/formats.html#filename-embedded-metadata>:
-    ('egg', re.compile(r'^(?P<project>' + PROJECT_NAME_NODASH + r')'
-                       r'-(?P<version>' + VERSION_NODASH + ')'
-                       r'(?:-' + PYVER + '(?:-' + PLAT_NAME + ')?)?\.egg$')),
+    ('egg', re.compile(r'^(?P<project>{})-(?P<version>{})(?:-{}(?:-{})?)?\.egg$'
+               .format(PROJECT_NAME_NODASH, VERSION_NODASH, PYVER, PLAT_NAME))),
 
     # See <https://git.io/fAclv>:
-    ('msi', re.compile(r'^(?P<project>' + PROJECT_NAME + ')'
-                       r'-(?P<version>' + VERSION + ')'
-                       r'\.' + PLAT_NAME +
-                       r'(?:-' + PYVER + r')?'
-                       r'\.msi$')),
+    ('msi', re.compile(r'^(?P<project>{})-(?P<version>{})\.{}(?:-{})?\.msi$'
+                       .format(PROJECT_NAME, VERSION, PLAT_NAME, PYVER))),
 
-    ('sdist', re.compile(r'^(?P<project>' + PROJECT_NAME + ')'
-                         r'-(?P<version>' + VERSION + ')'
-                         + ARCHIVE_EXT + '$')),
+    ('sdist', re.compile(r'^(?P<project>{})-(?P<version>{}){}$'
+                         .format(PROJECT_NAME, VERSION, ARCHIVE_EXT))),
 
     # Regex adapted from <https://git.io/fAclu>:
-    ('wheel', re.compile(r'^(?P<project>' + PROJECT_NAME_NODASH + r')'
-                         r'-(?P<version>' + VERSION_NODASH + ')'
-                         r'(-\d[^-]*?)?-.+?-.+?-.+?'
-                         r'\.whl$')),
+    ('wheel', re.compile(r'^(?P<project>{})-(?P<version>{})(-\d[^-]*?)?'
+                         r'-.+?-.+?-.+?\.whl$'
+                         .format(PROJECT_NAME_NODASH, VERSION_NODASH))),
 
     # See <https://git.io/fAclL>:
-    ('wininst', re.compile(r'^(?P<project>' + PROJECT_NAME + ')'
-                           r'-(?P<version>' + VERSION + ')'
-                           r'\.' + PLAT_NAME +
-                           r'(?:-' + PYVER + r')?'
-                           r'\.exe$')),
+    ('wininst', re.compile(r'^(?P<project>{})-(?P<version>{})\.{}(?:-{})?\.exe$'
+                           .format(PROJECT_NAME, VERSION, PLAT_NAME, PYVER))),
 ]
 
 def parse_filename(filename):
