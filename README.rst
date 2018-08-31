@@ -16,8 +16,12 @@
 `GitHub <https://github.com/jwodder/pypi-simple>`_
 | `Issues <https://github.com/jwodder/pypi-simple/issues>`_
 
-A client library for PyPI's Simple Repository API as specified in `PEP 503
-<https://www.python.org/dev/peps/pep-0503/>`_.
+``pypi-simple`` is a client library for the Python Simple Repository API as
+specified in `PEP 503 <https://www.python.org/dev/peps/pep-0503/>`_.  With it,
+you can query PyPI and other pip-compatible repositories for a list of their
+available projects and lists of each project's available package files.  The
+library also allows you to query package files for their project version,
+package type, file digests, ``requires_python`` string, and PGP signature URL.
 
 
 Example
