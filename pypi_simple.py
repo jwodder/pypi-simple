@@ -110,11 +110,11 @@ def parse_project_page(html, base_url=None, from_encoding=None):
 
 def parse_links(html, base_url=None, from_encoding=None):
     soup = BeautifulSoup(html, 'html.parser', from_encoding=from_encoding)
-    base_tag = soup.base
-    if base_tag is not None and 'href' in base_tag.attrs:
+    base_tag = soup.find('base', href=True)
+    if base_tag is not None:
         base_url = urljoin(base_url, base_tag['href'])
     # Note that ``urljoin(None, x) == x``
-    for link in soup.find_all('a'):
+    for link in soup.find_all('a', href=True):
         yield (
             ''.join(link.strings).strip(),
             urljoin(base_url, link['href']),

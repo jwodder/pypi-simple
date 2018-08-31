@@ -124,3 +124,14 @@ def test_whitespace():
         ('multiple words', 'two.html', {'href': 'two.html'}),
         ('preceded by a comment', 'three.html', {'href': 'three.html'}),
     ]
+
+def test_a_name():
+    assert list(parse_links('''
+<html>
+<head><title>Test that &lt;a&gt; tags without href are ignored</title></head>
+<body>
+<a href="one.html">link1</a>
+<a name="two">target</a>
+</body>
+</html>
+''')) == [('link1', 'one.html', {'href': 'one.html'})]
