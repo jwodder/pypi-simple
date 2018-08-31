@@ -107,3 +107,20 @@ def test_uppercase():
         ('link1', 'https://nil.test/path/one.html', {'href': 'one.html'}),
         ('link-two', 'https://nil.test/path/two.html', {'href': 'two.html'}),
     ]
+
+def test_whitespace():
+    assert list(parse_links('''
+<html>
+<head><title>Test links with leading &amp; trailing whitespace</title></head>
+<body>
+<a href="one.html"> whitespaced  </a>
+<a href="two.html">multiple words</a>
+<a href="three.html"> <!-- comment -->  preceded by a comment </a>
+</body>
+</html>
+'''
+    )) == [
+        ('whitespaced', 'one.html', {'href': 'one.html'}),
+        ('multiple words', 'two.html', {'href': 'two.html'}),
+        ('preceded by a comment', 'three.html', {'href': 'three.html'}),
+    ]

@@ -115,7 +115,11 @@ def parse_links(html, base_url=None, from_encoding=None):
         base_url = urljoin(base_url, base_tag['href'])
     # Note that ``urljoin(None, x) == x``
     for link in soup.find_all('a'):
-        yield (link.string, urljoin(base_url, link['href']), link.attrs)
+        yield (
+            ''.join(link.strings).strip(),
+            urljoin(base_url, link['href']),
+            link.attrs,
+        )
 
 ARCHIVE_EXT = r'\.(?:tar|tar\.(?:bz2|gz|lz|lzma|xz|Z)|tbz|tgz|tlz|txz|zip)'
 PLAT_NAME = r'(?:aix|cygwin|darwin|linux|macosx|solaris|sunos|[wW]in)[-.\w]*'
