@@ -37,7 +37,7 @@ class PyPISimple(object):
             charset = r.encoding
         else:
             charset = None
-        for name, url in parse_simple_index(r.content, r.url, charset):
+        for name, _ in parse_simple_index(r.content, r.url, charset):
             yield name
 
     def get_project_files(self, project):
@@ -91,12 +91,12 @@ class DistributionPackage(object):
         return {name: value} if value else {}
 
 
-def parse_simple_index(html, base_url, from_encoding=None):
+def parse_simple_index(html, base_url=None, from_encoding=None):
     # Returns a generator of (project name, url) pairs
     for filename, url, _ in parse_links(html, base_url, from_encoding):
         yield (filename, url)
 
-def parse_project_files(html, base_url, from_encoding=None):
+def parse_project_files(html, base_url=None, from_encoding=None):
     # Returns a list of DistributionPackage objects
     files = []
     for filename, url, attrs in parse_links(html, base_url, from_encoding):
@@ -108,10 +108,12 @@ def parse_project_files(html, base_url, from_encoding=None):
         ))
     return files
 
-def parse_links(html, base_url, from_encoding=None):
+def parse_links(html, base_url=None, from_encoding=None):
     soup = BeautifulSoup(html, 'html.parser', from_encoding=from_encoding)
-    if soup.base is not None and 'href' in soup.base.attrs:
-        base_url = urljoin(base_url, soup.base['href'])
+    base_tag = soup.base
+    if base_tag is not None and 'href' in base_tag.attrs:
+        base_url = urljoin(base_url, base_tag['href'])
+    # Note that ``urljoin(None, x) == x``
     for link in soup.find_all('a'):
         yield (link.string, urljoin(base_url, link['href']), link.attrs)
 
