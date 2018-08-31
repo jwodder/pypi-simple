@@ -1,16 +1,21 @@
 from   os.path     import dirname, join
+import pytest
 import responses
 from   pypi_simple import DistributionPackage, PyPISimple
 
+@pytest.mark.parametrize('content_type', [
+    'text/html',
+    'text/html; charset=utf-8',
+])
 @responses.activate
-def test_session():
+def test_session(content_type):
     session_dir = join(dirname(__file__), 'data', 'session01')
     with open(join(session_dir, 'simple.html')) as fp:
         responses.add(
             method=responses.GET,
             url='https://test.nil/simple/',
             body=fp.read(),
-            content_type='text/html',
+            content_type=content_type,
         )
     responses.add(
         method=responses.GET,
@@ -23,7 +28,7 @@ def test_session():
             method=responses.GET,
             url='https://test.nil/simple/in-place/',
             body=fp.read(),
-            content_type='text/html',
+            content_type=content_type,
         )
     responses.add(
         method=responses.GET,
