@@ -1,7 +1,7 @@
-.. image:: http://www.repostatus.org/badges/latest/wip.svg
-    :target: http://www.repostatus.org/#wip
-    :alt: Project Status: WIP — Initial development is in progress, but there
-          has not yet been a stable, usable release suitable for the public.
+.. image:: http://www.repostatus.org/badges/latest/active.svg
+    :target: http://www.repostatus.org/#active
+    :alt: Project Status: Active — The project has reached a stable, usable
+          state and is being actively developed.
 
 .. image:: https://travis-ci.org/jwodder/pypi-simple.svg?branch=master
     :target: https://travis-ci.org/jwodder/pypi-simple
@@ -9,11 +9,15 @@
 .. image:: https://codecov.io/gh/jwodder/pypi-simple/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/jwodder/pypi-simple
 
+.. image:: https://img.shields.io/pypi/pyversions/pypi-simple.svg
+    :target: https://pypi.org/project/pypi-simple/
+
 .. image:: https://img.shields.io/github/license/jwodder/pypi-simple.svg
     :target: https://opensource.org/licenses/MIT
     :alt: MIT License
 
 `GitHub <https://github.com/jwodder/pypi-simple>`_
+| `PyPI <https://pypi.org/project/pypi-simple/>`_
 | `Issues <https://github.com/jwodder/pypi-simple/issues>`_
 
 ``pypi-simple`` is a client library for the Python Simple Repository API as
@@ -22,6 +26,14 @@ you can query PyPI and other pip-compatible repositories for a list of their
 available projects and lists of each project's available package files.  The
 library also allows you to query package files for their project version,
 package type, file digests, ``requires_python`` string, and PGP signature URL.
+
+
+Installation
+============
+Just use `pip <https://pip.pypa.io>`_ (You have pip, right?) to install
+``pypi-simple`` and its dependencies::
+
+    pip install pypi-simple
 
 
 Example
