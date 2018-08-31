@@ -139,11 +139,16 @@ from   pypi_simple import parse_filename
     ("winappdbg-1.4.win-amd64.exe", ('winappdbg', '1.4', 'wininst')),
 
     # Invalid:
+    # Invalid package name:
+    ('aa utility package-0.1.tar.gz', (None, None, None)),
+    ('Pomodoro+-1.0.tar.gz', (None, None, None)),
+    ('pypol_-0.2.linux-i686.exe', (None, None, None)),
+    ('pypol_-0.3.win32.exe', (None, None, None)),
+    ('pypol_-0.4.tar.gz', (None, None, None)),
+    ('pypol_-0.5-py2.6.egg', (None, None, None)),
+    ('qcodes_-0.1.0-py3-none-any.whl', (None, None, None)),
     # No version:
     ('500.tar.bz2', (None, None, None)),
-    # Invalid pakage name:
-    ('aa utility package-0.1.tar.gz', (None, None, None)),
-    # No version:
     ('alexander.tar.gz', (None, None, None)),
     # Wheel without ABI tag:
     ("azure_iothub_service_client-1.1.0.0-py2-win32.whl", (None, None, None)),
@@ -151,14 +156,10 @@ from   pypi_simple import parse_filename
     ('btk-0.3.0-py2.7_macosx-10.7-intel.egg', (None, None, None)),
     # Wininst with invalid version-platform separator:
     ("btk-0.3.0_win32.exe", (None, None, None)),
-    # Wininst with invalid version-platform separator:
     ('l5x-1.2-win32.exe', (None, None, None)),
     # Invalid extension:
     ('pip-18.0.tar.gz.txt', (None, None, None)),
-    # Invalid extension:
     ('pip-18.0.txt', (None, None, None)),
-    # Invalid pakage name:
-    ('Pomodoro+-1.0.tar.gz', (None, None, None)),
     # MSI without a platform:
     ('psifas-0.3.msi', (None, None, None)),
     # MSI with invalid version-platform separator:
@@ -167,7 +168,6 @@ from   pypi_simple import parse_filename
     ('pypi-simple-0.1.0.dev1-py3.5.egg', (None, None, None)),
     # Sdist with invalid name-version separator:
     ('testmanager.1.1.1.tar.gz', (None, None, None)),
-    # Sdist with invalid name-version separator:
     ('TestManager_1.2.0.tar.gz', (None, None, None)),
     # Egg with too many components in pyver string:
     ('xrayutilities-1.4.0-py2.7.10-win-amd64.egg', (None, None, None)),

@@ -11,7 +11,7 @@ package type, file digests, ``requires_python`` string, and PGP signature URL.
 Visit <https://github.com/jwodder/pypi-simple> for more information.
 """
 
-__version__      = '0.1.0'
+__version__      = '0.2.0.dev1'
 __author__       = 'John Thorvald Wodder II'
 __author_email__ = 'pypi-simple@varonathe.org'
 __license__      = 'MIT'
@@ -233,13 +233,15 @@ def parse_links(html, base_url=None, from_encoding=None):
             link.attrs,
         )
 
+PROJECT_NAME = r'[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?'
+PROJECT_NAME_NODASH = r'[A-Za-z0-9](?:[A-Za-z0-9._]*[A-Za-z0-9])?'
 ARCHIVE_EXT = r'\.(?:tar|tar\.(?:bz2|gz|lz|lzma|xz|Z)|tbz|tgz|tlz|txz|zip)'
 PLAT_NAME = r'(?:aix|cygwin|darwin|linux|macosx|solaris|sunos|[wW]in)[-.\w]*'
 PYVER = r'py\d+\.\d+'
 
 PACKAGE_TYPES = [
     # See <https://git.io/fAclc>:
-    ('dumb', re.compile(r'^(?P<project>[-A-Za-z0-9._]+)'
+    ('dumb', re.compile(r'^(?P<project>' + PROJECT_NAME + ')'
                         r'-(?P<version>.+?)'
                         r'\.' + PLAT_NAME
                         + ARCHIVE_EXT + '$')),
@@ -247,29 +249,29 @@ PACKAGE_TYPES = [
     # See <https://setuptools.readthedocs.io/en/latest/formats.html#filename-embedded-metadata>:
     # Note that, unlike the other formats, the project name & version for an
     # egg cannot contain hyphens.
-    ('egg', re.compile(r'^(?P<project>[A-Za-z0-9._]+)'
+    ('egg', re.compile(r'^(?P<project>' + PROJECT_NAME_NODASH + r')'
                        r'-(?P<version>[^-]+)'
                        r'(?:-' + PYVER + '(?:-' + PLAT_NAME + ')?)?\.egg$')),
 
     # See <https://git.io/fAclv>:
-    ('msi', re.compile(r'^(?P<project>[-A-Za-z0-9._]+)'
+    ('msi', re.compile(r'^(?P<project>' + PROJECT_NAME + ')'
                        r'-(?P<version>.+?)'
                        r'\.' + PLAT_NAME +
                        r'(?:-' + PYVER + r')?'
                        r'\.msi$')),
 
-    ('sdist', re.compile(r'^(?P<project>[-A-Za-z0-9._]+)'
+    ('sdist', re.compile(r'^(?P<project>' + PROJECT_NAME + ')'
                          r'-(?P<version>.+)'
                          + ARCHIVE_EXT + '$')),
 
     # Regex adapted from <https://git.io/fAclu>:
-    ('wheel', re.compile(r'^(?P<project>.+?)'
+    ('wheel', re.compile(r'^(?P<project>' + PROJECT_NAME_NODASH + r')'
                          r'-(?P<version>.*?)'
                          r'(-\d[^-]*?)?-.+?-.+?-.+?'
                          r'\.whl$')),
 
     # See <https://git.io/fAclL>:
-    ('wininst', re.compile(r'^(?P<project>[-A-Za-z0-9._]+)'
+    ('wininst', re.compile(r'^(?P<project>' + PROJECT_NAME + ')'
                            r'-(?P<version>.+?)'
                            r'\.' + PLAT_NAME +
                            r'(?:-' + PYVER + r')?'
