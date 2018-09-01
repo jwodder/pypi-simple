@@ -48,3 +48,30 @@ def test_simple_base():
             ('a10-horizon', PYPI_SIMPLE_ENDPOINT + 'projects/a10-horizon/'),
             ('a10-neutronclient', PYPI_SIMPLE_ENDPOINT + 'projects/a10-neutronclient/'),
         ]
+
+def test_simple_devpi():
+    with open(join(DATA_DIR, 'simple_devpi.html'), 'rb') as fp:
+        assert list(parse_simple_index(
+            fp.read(),
+            'https://m.devpi.net/fschulze/dev/+simple/',
+            from_encoding='utf-8',
+        )) == [
+            ('devpi', 'https://m.devpi.net/fschulze/dev/+simple/devpi'),
+            ('devpi-client', "https://m.devpi.net/fschulze/dev/+simple/devpi-client"),
+            ('devpi-common', "https://m.devpi.net/fschulze/dev/+simple/devpi-common"),
+            ('devpi-jenkins', "https://m.devpi.net/fschulze/dev/+simple/devpi-jenkins"),
+            ('devpi-ldap', "https://m.devpi.net/fschulze/dev/+simple/devpi-ldap"),
+            ('devpi-lockdown', "https://m.devpi.net/fschulze/dev/+simple/devpi-lockdown"),
+            ('devpi-postgresql', "https://m.devpi.net/fschulze/dev/+simple/devpi-postgresql"),
+            ('devpi-server', "https://m.devpi.net/fschulze/dev/+simple/devpi-server"),
+            ('devpi-web', "https://m.devpi.net/fschulze/dev/+simple/devpi-web"),
+            ('ploy-ezjail', "https://m.devpi.net/fschulze/dev/+simple/ploy-ezjail"),
+            ('pytest', "https://m.devpi.net/fschulze/dev/+simple/pytest"),
+            ('waitress', "https://m.devpi.net/fschulze/dev/+simple/waitress"),
+            ('0', "https://m.devpi.net/fschulze/dev/+simple/0"),
+            ('0-0', "https://m.devpi.net/fschulze/dev/+simple/0-0"),
+            ('0-0-1', "https://m.devpi.net/fschulze/dev/+simple/0-0-1"),
+            ('0-core-client', "https://m.devpi.net/fschulze/dev/+simple/0-core-client"),
+            ('0-orchestrator', "https://m.devpi.net/fschulze/dev/+simple/0-orchestrator"),
+            ('00smalinux', "https://m.devpi.net/fschulze/dev/+simple/00smalinux"),
+        ]
