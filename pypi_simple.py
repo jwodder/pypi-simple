@@ -11,7 +11,7 @@ package type, file digests, ``requires_python`` string, and PGP signature URL.
 Visit <https://github.com/jwodder/pypi-simple> for more information.
 """
 
-__version__      = '0.2.0.dev1'
+__version__      = '0.2.0'
 __author__       = 'John Thorvald Wodder II'
 __author_email__ = 'pypi-simple@varonathe.org'
 __license__      = 'MIT'
