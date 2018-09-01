@@ -143,6 +143,7 @@ class DistributionPackage(object):
         - ``'dumb'``
         - ``'egg'``
         - ``'msi'``
+        - ``'rpm'``
         - ``'sdist'``
         - ``'wheel'``
         - ``'wininst'``
@@ -254,6 +255,12 @@ PACKAGE_TYPES = [
     ('msi', re.compile(r'^(?P<project>{})-(?P<version>{})\.{}(?:-{})?\.msi$'
                        .format(PROJECT_NAME, VERSION, PLAT_NAME, PYVER))),
 
+    # See <http://ftp.rpm.org/max-rpm/ch-rpm-file-format.html>:
+    # (The architecture pattern is mainly just a guess based on what's
+    # currently on PyPI.)
+    ('rpm', re.compile(r'^(?P<project>{})-(?P<version>{})-[^-]+\.[A-Za-z0-9._]+\.rpm$'
+                       .format(PROJECT_NAME, VERSION_NODASH))),
+
     ('sdist', re.compile(r'^(?P<project>{})-(?P<version>{}){}$'
                          .format(PROJECT_NAME, VERSION, ARCHIVE_EXT))),
 
@@ -279,6 +286,7 @@ def parse_filename(filename):
     - ``'dumb'``
     - ``'egg'``
     - ``'msi'``
+    - ``'rpm'``
     - ``'sdist'``
     - ``'wheel'``
     - ``'wininst'``

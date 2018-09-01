@@ -123,6 +123,7 @@ attributes and method:
    - ``'dumb'``
    - ``'egg'``
    - ``'msi'``
+   - ``'rpm'``
    - ``'sdist'``
    - ``'wheel'``
    - ``'wininst'``

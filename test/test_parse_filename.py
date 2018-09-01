@@ -49,6 +49,50 @@ from   pypi_simple import parse_filename
     ("winappdbg-1.4.win32.msi", ('winappdbg', '1.4', 'msi')),
     ("winappdbg-1.4.win-amd64.msi", ('winappdbg', '1.4', 'msi')),
 
+    # rpm:
+    ("Aglyph-3.0.0-1.noarch.rpm", ('Aglyph', '3.0.0', 'rpm')),
+    ("Aglyph-3.0.0-1.src.rpm", ('Aglyph', '3.0.0', 'rpm')),
+    ("anuga-1.3.1-1.x86_64.rpm", ('anuga', '1.3.1', 'rpm')),
+    ("bootstrap_env-0.5.0-1.noarch.rpm", ('bootstrap_env', '0.5.0', 'rpm')),
+    ('Cheetah-2.2.2-1.x86_64.rpm', ('Cheetah', '2.2.2', 'rpm')),
+    ('Cheetah-2.4.0-1.i586.rpm', ('Cheetah', '2.4.0', 'rpm')),
+    ("clustershell-1.2-1.el5.noarch.rpm", ('clustershell', '1.2', 'rpm')),
+    ('clustershell-1.2-1.fc11.noarch.rpm', ('clustershell', '1.2', 'rpm')),
+    ('django-mako-0.1.4pre-1.noarch.rpm', ('django-mako', '0.1.4pre', 'rpm')),
+    (
+        'django-ssl-auth-0.8.2.1-126.sles11.noarch.rpm',
+        ('django-ssl-auth', '0.8.2.1', 'rpm'),
+    ),
+    (
+        'Flask-Celery-py3-0.2.1-1.noarch.rpm',
+        ('Flask-Celery-py3', '0.2.1', 'rpm'),
+    ),
+    ('ipython-0.10-py25.noarch.rpm', ('ipython', '0.10', 'rpm')),
+    ('libqutrub-python-1.0-3.1.noarch.rpm', ('libqutrub-python', '1.0', 'rpm')),
+    ("ll-core-1.2-1.i386.rpm", ('ll-core', '1.2', 'rpm')),
+    ('LSystem2-1.3-1.pentium3.rpm', ('LSystem2', '1.3', 'rpm')),
+    ('music_manager-0.1-0.1.noarch.rpm', ('music_manager', '0.1', 'rpm')),
+    ('nml-0.1.1-suse1130.noarch.rpm', ('nml', '0.1.1', 'rpm')),
+    ('pyrasite-2.0-0.1.beta9.fc16.noarch.rpm', ('pyrasite', '2.0', 'rpm')),
+    ('pyspf-2.0.2-2.py24.noarch.rpm', ('pyspf', '2.0.2', 'rpm')),
+    (
+        "python-turboflot-0.0.5-2.fc8.noarch.rpm",
+        ('python-turboflot', '0.0.5', 'rpm'),
+    ),
+    (
+        "python-turboflot-0.0.5-2.fc8.src.rpm",
+        ('python-turboflot', '0.0.5', 'rpm'),
+    ),
+    (
+        "python-turboflot-0.1.0-1.fc8.noarch.rpm",
+        ('python-turboflot', '0.1.0', 'rpm'),
+    ),
+    (
+        "python-turboflot-0.1.1-1.fc9.noarch.rpm",
+        ('python-turboflot', '0.1.1', 'rpm'),
+    ),
+    ('txt2boil-b_v0.4.12-1.noarch.rpm', ('txt2boil', 'b_v0.4.12', 'rpm')),
+
     # sdist:
     ("1-1.0.0.zip", ('1', '1.0.0', 'sdist')),
     ("3-1-1.0.0.zip", ('3-1', '1.0.0', 'sdist')),
@@ -146,6 +190,7 @@ from   pypi_simple import parse_filename
     ('pypol_-0.2.linux-i686.exe', (None, None, None)),
     ('pypol_-0.3.win32.exe', (None, None, None)),
     ('pypol_-0.4.tar.gz', (None, None, None)),
+    ('pypol_-0.5-1.noarch.rpm', (None, None, None)),
     ('pypol_-0.5-py2.6.egg', (None, None, None)),
     ('qcodes_-0.1.0-py3-none-any.whl', (None, None, None)),
     # Invalid version:
@@ -162,6 +207,9 @@ from   pypi_simple import parse_filename
     ('alexander.tar.gz', (None, None, None)),
     # Wheel without ABI tag:
     ("azure_iothub_service_client-1.1.0.0-py2-win32.whl", (None, None, None)),
+    # rpm with invalid release-architecture separator:
+    ('btk-0.3.0-1_i686.rpm', (None, None, None)),
+    ('btk-0.3.0-1_x86_64.rpm', (None, None, None)),
     # Egg with invalid pyver-platform separator:
     ('btk-0.3.0-py2.7_macosx-10.7-intel.egg', (None, None, None)),
     # Wininst with invalid version-platform separator:
@@ -176,6 +224,9 @@ from   pypi_simple import parse_filename
     ('pyftpsync-1.1.0-win32.msi', (None, None, None)),
     # Egg with hyphen in project name:
     ('pypi-simple-0.1.0.dev1-py3.5.egg', (None, None, None)),
+    # rpm without a release or architecture:
+    ('streamtuner2-2.1.9_beta1.rpm', (None, None, None)),
+    ('streamtuner2-2.2.0.rpm', (None, None, None)),
     # Sdist with invalid name-version separator:
     ('testmanager.1.1.1.tar.gz', (None, None, None)),
     ('TestManager_1.2.0.tar.gz', (None, None, None)),
