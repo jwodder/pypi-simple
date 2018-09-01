@@ -239,7 +239,7 @@ VERSION = r'[A-Za-z0-9_.!+-]+?'
 VERSION_NODASH = r'[A-Za-z0-9_.!+]+?'
 ARCHIVE_EXT = r'\.(?:tar|tar\.(?:bz2|gz|lz|lzma|xz|Z)|tbz|tgz|tlz|txz|zip)'
 PLAT_NAME = r'(?:aix|cygwin|darwin|linux|macosx|solaris|sunos|[wW]in)[-.\w]*'
-PYVER = r'py\d+\.\d+'
+PYVER = r'py[0-9]+\.[0-9]+'
 
 PACKAGE_TYPES = [
     # See <https://git.io/fAclc>:
@@ -258,7 +258,7 @@ PACKAGE_TYPES = [
                          .format(PROJECT_NAME, VERSION, ARCHIVE_EXT))),
 
     # Regex adapted from <https://git.io/fAclu>:
-    ('wheel', re.compile(r'^(?P<project>{})-(?P<version>{})(-\d[^-]*?)?'
+    ('wheel', re.compile(r'^(?P<project>{})-(?P<version>{})(-[0-9][^-]*?)?'
                          r'-.+?-.+?-.+?\.whl$'
                          .format(PROJECT_NAME_NODASH, VERSION_NODASH))),
 
