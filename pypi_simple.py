@@ -86,7 +86,7 @@ class PyPISimple(object):
             charset = r.encoding
         else:
             charset = None
-        return parse_project_page(r.content, r.url, charset)
+        return parse_project_page(r.content, r.url, charset, project)
 
     def get_project_url(self, project):
         """
@@ -111,44 +111,32 @@ class DistributionPackage(object):
     #: The URL from which the package file can be downloaded
     url = attr.ib()
 
+    #: The name of the project (as extracted from the filename), or `None` if
+    #: the filename cannot be parsed
+    project = attr.ib()
+
+    #: The project version (as extracted from the filename), or `None` if the
+    #: filename cannot be parsed
+    version = attr.ib()
+
+    #: The type of the package, or `None` if the filename cannot be parsed.
+    #: The recognized package types are:
+    #:
+    #: - ``'dumb'``
+    #: - ``'egg'``
+    #: - ``'msi'``
+    #: - ``'rpm'``
+    #: - ``'sdist'``
+    #: - ``'wheel'``
+    #: - ``'wininst'``
+    package_type = attr.ib()
+
     #: An optional version specifier string declaring the Python version(s) in
     #: which the package can be installed
     requires_python = attr.ib(default=None)
 
     #: Whether the package file is accompanied by a PGP signature file
     has_sig = attr.ib(default=False)
-
-    @property
-    def project(self):
-        """
-        The name of the project (as extracted from the filename), or `None` if
-        the filename cannot be parsed
-        """
-        return parse_filename(self.filename)[0]
-
-    @property
-    def version(self):
-        """
-        The project version (as extracted from the filename), or `None` if the
-        filename cannot be parsed
-        """
-        return parse_filename(self.filename)[1]
-
-    @property
-    def package_type(self):
-        """
-        The type of the package, or `None` if the filename cannot be parsed.
-        The recognized package types are:
-
-        - ``'dumb'``
-        - ``'egg'``
-        - ``'msi'``
-        - ``'rpm'``
-        - ``'sdist'``
-        - ``'wheel'``
-        - ``'wininst'``
-        """
-        return parse_filename(self.filename)[2]
 
     @property
     def sig_url(self):
@@ -185,7 +173,8 @@ def parse_simple_index(html, base_url=None, from_encoding=None):
     for filename, url, _ in parse_links(html, base_url, from_encoding):
         yield (filename, url)
 
-def parse_project_page(html, base_url=None, from_encoding=None):
+def parse_project_page(html, base_url=None, from_encoding=None,
+                                            project_hint=None):
     """
     Parse a project page from a simple repository and return a list of
     `DistributionPackage` objects
@@ -198,11 +187,15 @@ def parse_project_page(html, base_url=None, from_encoding=None):
     """
     files = []
     for filename, url, attrs in parse_links(html, base_url, from_encoding):
+        project, version, pkg_type = parse_filename(filename, project_hint)
         files.append(DistributionPackage(
             filename = filename,
             url = url,
             has_sig = attrs.get('data-gpg-sig', 'false').lower() == 'true',
             requires_python = attrs.get('data-requires-python'),
+            project = project,
+            version = version,
+            package_type = pkg_type,
         ))
     return files
 
