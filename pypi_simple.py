@@ -17,8 +17,8 @@ __author_email__ = 'pypi-simple@varonathe.org'
 __license__      = 'MIT'
 __url__          = 'https://github.com/jwodder/pypi-simple'
 
+from   collections            import namedtuple
 import re
-import attr
 from   bs4                    import BeautifulSoup
 from   packaging.utils        import canonicalize_name as normalize
 import requests
@@ -98,45 +98,49 @@ class PyPISimple(object):
         return self.endpoint + normalize(project) + '/'
 
 
-@attr.s
-class DistributionPackage(object):
+class DistributionPackage(
+    namedtuple(
+        'DistributionPackage',
+        'filename url project version package_type requires_python has_sig',
+    )
+):
     """
     Information about a versioned archived file from which a Python project
     release can be installed
+
+    .. attribute:: filename
+        The basename of the package file
+
+    .. attribute:: url
+        The URL from which the package file can be downloaded
+
+    .. attribute:: project
+        The name of the project (as extracted from the filename), or `None` if
+        the filename cannot be parsed
+
+    .. attribute:: version
+        The project version (as extracted from the filename), or `None` if the
+        filename cannot be parsed
+
+    .. attribute:: package_type
+        The type of the package, or `None` if the filename cannot be parsed.
+        The recognized package types are:
+
+        - ``'dumb'``
+        - ``'egg'``
+        - ``'msi'``
+        - ``'rpm'``
+        - ``'sdist'``
+        - ``'wheel'``
+        - ``'wininst'``
+
+    .. attribute:: requires_python
+        An optional version specifier string declaring the Python version(s) in
+        which the package can be installed
+
+    .. attribute:: has_sig
+        Whether the package file is accompanied by a PGP signature file
     """
-
-    #: The basename of the package file
-    filename = attr.ib()
-
-    #: The URL from which the package file can be downloaded
-    url = attr.ib()
-
-    #: The name of the project (as extracted from the filename), or `None` if
-    #: the filename cannot be parsed
-    project = attr.ib()
-
-    #: The project version (as extracted from the filename), or `None` if the
-    #: filename cannot be parsed
-    version = attr.ib()
-
-    #: The type of the package, or `None` if the filename cannot be parsed.
-    #: The recognized package types are:
-    #:
-    #: - ``'dumb'``
-    #: - ``'egg'``
-    #: - ``'msi'``
-    #: - ``'rpm'``
-    #: - ``'sdist'``
-    #: - ``'wheel'``
-    #: - ``'wininst'``
-    package_type = attr.ib()
-
-    #: An optional version specifier string declaring the Python version(s) in
-    #: which the package can be installed
-    requires_python = attr.ib(default=None)
-
-    #: Whether the package file is accompanied by a PGP signature file
-    has_sig = attr.ib(default=False)
 
     @property
     def sig_url(self):
