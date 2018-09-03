@@ -236,7 +236,7 @@ PROJECT_NAME_NODASH = r'[A-Za-z0-9](?:[A-Za-z0-9._]*[A-Za-z0-9])?'
 VERSION = r'[A-Za-z0-9_.!+-]+?'
 VERSION_NODASH = r'[A-Za-z0-9_.!+]+?'
 ARCHIVE_EXT = r'\.(?:tar|tar\.(?:bz2|gz|lz|lzma|xz|Z)|tbz|tgz|tlz|txz|zip)'
-PLAT_NAME = r'(?:aix|cygwin|darwin|linux|macosx|solaris|sunos|[wW]in)[-.\w]*'
+PLAT_NAME = r'(?:aix|cygwin|darwin|linux|macosx|solaris|sunos|[wW]in)[-.A-Za-z0-9_]*'
 PYVER = r'py[0-9]+\.[0-9]+'
 
 #: Regexes for package filenames that can be parsed unambiguously
