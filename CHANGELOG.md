@@ -1,5 +1,5 @@
-v0.3.0 (in development)
------------------------
+v0.3.0 (2018-09-03)
+-------------------
 - When fetching the list of files for a project, the project name is now used
   to resolve ambiguous filenames.
 - The filename parser now requires all filenames to be all-ASCII (except for
