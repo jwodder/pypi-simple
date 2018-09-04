@@ -148,3 +148,30 @@ def test_project_hint_received():
 def test_get_project_url(endpoint, project):
     assert PyPISimple(endpoint).get_project_url(project) \
         == 'https://test.nil/simple/some-project/'
+
+@responses.activate
+def test_redirected_project_page():
+    responses.add(
+        method=responses.GET,
+        url='https://nil.test/simple/project/',
+        status=301,
+        headers={'Location': 'https://test.nil/simple/project/'},
+    )
+    responses.add(
+        method=responses.GET,
+        url='https://test.nil/simple/project/',
+        body='<a href="../files/project-0.1.0.tar.gz">project-0.1.0.tar.gz</a>',
+        content_type='text/html',
+    )
+    simple = PyPISimple('https://nil.test/simple/')
+    assert simple.get_project_files('project') == [
+        DistributionPackage(
+            filename='project-0.1.0.tar.gz',
+            project='project',
+            version='0.1.0',
+            package_type='sdist',
+            url="https://test.nil/simple/files/project-0.1.0.tar.gz",
+            requires_python=None,
+            has_sig=False,
+        ),
+    ]
