@@ -135,3 +135,16 @@ def test_project_hint_received():
             has_sig=False,
         ),
     ]
+
+@pytest.mark.parametrize('endpoint', [
+    'https://test.nil/simple',
+    'https://test.nil/simple/',
+])
+@pytest.mark.parametrize('project', [
+    'some-project',
+    'some.project',
+    'SOME_PROJECT',
+])
+def test_get_project_url(endpoint, project):
+    assert PyPISimple(endpoint).get_project_url(project) \
+        == 'https://test.nil/simple/some-project/'
