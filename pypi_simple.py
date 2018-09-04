@@ -28,6 +28,10 @@ __all__ = [
     'DistributionPackage',
     'PYPI_SIMPLE_ENDPOINT',
     'PyPISimple',
+    'parse_filename',
+    'parse_links',
+    'parse_project_page',
+    'parse_simple_index',
 ]
 
 #: The base URL for PyPI's simple API

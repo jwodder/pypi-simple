@@ -1,3 +1,7 @@
+v0.4.0 (in development)
+-----------------------
+- Publicly (i.e., in the README) document the utility functions
+
 v0.3.0 (2018-09-03)
 -------------------
 - When fetching the list of files for a project, the project name is now used
