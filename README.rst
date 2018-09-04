@@ -142,3 +142,62 @@ attributes and method:
 ``get_digests()``
    Extracts the hash digests from the package file's URL and returns a `dict`
    mapping hash algorithm names to hex-encoded digest strings
+
+
+Utility Functions
+-----------------
+
+``parse_simple_index(html, base_url=None, from_encoding=None)``
+   Parse a simple repository's index page and return a generator of ``(project
+   name, project URL)`` pairs.  ``html`` is a `str` or `bytes` value to parse.
+   ``base_url`` is an optional URL (usually the URL of the page being parsed)
+   to join to the front of the URLs returned.  ``from_encoding`` is an optional
+   hint to Beautiful Soup as to the encoding of ``html``.
+
+``parse_project_page(html, base_url=None, from_encoding=None, project_hint=None)``
+   Parse a project page from a simple repository and return a list of
+   ``DistributionPackage`` objects.  ``html`` is a `str` or `bytes` value to
+   parse.  ``base_url`` is an optional URL (usually the URL of the page being
+   parsed) to join to the front of the URLs returned.  ``from_encoding`` is an
+   optional hint to Beautiful Soup as to the encoding of ``html``.
+   ``project_hint`` is the name of the project whose page is being parsed; it
+   is used to disambiguate the parsing of certain filenames.
+
+``parse_links(html, base_url=None, from_encoding=None)``
+   Parse an HTML page and return a generator of links, where each link is
+   represented as a triple of link text, link URL, and a `dict` of link tag
+   attributes (including the unmodified ``href`` attribute).  Link text has all
+   leading & trailing whitespace removed.  Keys in the attributes `dict` are
+   converted to lowercase.
+
+   ``html`` is a `str` or `bytes` value to parse.  ``base_url`` is an optional
+   URL (usually the URL of the page being parsed) to join to the front of the
+   URLs returned.  ``from_encoding`` is an optional hint to Beautiful Soup as
+   to the encoding of ``html``.
+
+``parse_filename(filename, project_hint=None)``
+   Given the filename of a distribution package, returns a triple of the
+   project name, project version, and package type.  The name and version are
+   spelled the same as they appear in the filename; no normalization is
+   performed.
+
+   The package type may be any of the following strings:
+
+   - ``'dumb'``
+   - ``'egg'``
+   - ``'msi'``
+   - ``'rpm'``
+   - ``'sdist'``
+   - ``'wheel'``
+   - ``'wininst'``
+
+   If the filename cannot be parsed, ``(None, None, None)`` is returned.
+
+   Note that some filenames (e.g., ``1-2-3.tar.gz``) may be ambiguous as
+   to which part is the project name and which is the version.  In order to
+   resolve the ambiguity, the expected value for the project name (*modulo*
+   normalization) can be supplied as the ``project_name`` argument to the
+   function.  If the filename can be parsed with the given string in the role
+   of the project name, the results of that parse will be returned; otherwise,
+   the function will fall back to breaking the project & version apart at an
+   unspecified point.

@@ -11,7 +11,7 @@ package type, file digests, ``requires_python`` string, and PGP signature URL.
 Visit <https://github.com/jwodder/pypi-simple> for more information.
 """
 
-__version__      = '0.3.0'
+__version__      = '0.4.0.dev1'
 __author__       = 'John Thorvald Wodder II'
 __author_email__ = 'pypi-simple@varonathe.org'
 __license__      = 'MIT'
@@ -170,7 +170,8 @@ def parse_simple_index(html, base_url=None, from_encoding=None):
 
     :param html: the HTML to parse
     :type html: str or bytes
-    :param str base_url: an optional URL to prepend to the URLs returned
+    :param str base_url: an optional URL to join to the front of the URLs
+        returned
     :param str from_encoding: an optional hint to Beautiful Soup as to the
         encoding of ``html``
     """
@@ -185,9 +186,12 @@ def parse_project_page(html, base_url=None, from_encoding=None,
 
     :param html: the HTML to parse
     :type html: str or bytes
-    :param str base_url: an optional URL to prepend to the packages' URLs
+    :param str base_url: an optional URL to join to the front of the packages'
+        URLs
     :param str from_encoding: an optional hint to Beautiful Soup as to the
         encoding of ``html``
+    :param str project_hint: The name of the project whose page is being
+        parsed; used to disambiguate the parsing of certain filenames
     """
     files = []
     for filename, url, attrs in parse_links(html, base_url, from_encoding):
@@ -215,7 +219,8 @@ def parse_links(html, base_url=None, from_encoding=None):
 
     :param html: the HTML to parse
     :type html: str or bytes
-    :param str base_url: an optional URL to prepend to the URLs returned
+    :param str base_url: an optional URL to join to the front of the URLs
+        returned
     :param str from_encoding: an optional hint to Beautiful Soup as to the
         encoding of ``html``
     """
