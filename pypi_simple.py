@@ -44,11 +44,17 @@ class PyPISimple(object):
 
     :param str endpoint: The base URL of the simple API instance to query;
         defaults to the base URL for PyPI's simple API
+
+    :param auth: Optional login/authentication details for the repository;
+        either a ``(username, password)`` pair or `another authentication
+        object accepted by requests
+        <http://docs.python-requests.org/en/master/user/authentication/>`_
     """
 
-    def __init__(self, endpoint=PYPI_SIMPLE_ENDPOINT):
+    def __init__(self, endpoint=PYPI_SIMPLE_ENDPOINT, auth=None):
         self.endpoint = endpoint.rstrip('/') + '/'
         self.s = requests.Session()
+        self.s.auth = auth
 
     def get_projects(self):
         """

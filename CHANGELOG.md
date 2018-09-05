@@ -1,6 +1,8 @@
 v0.4.0 (in development)
 -----------------------
 - Publicly (i.e., in the README) document the utility functions
+- Gave `PyPISimple` an `auth` parameter for specifying login/authentication
+  details
 
 v0.3.0 (2018-09-03)
 -------------------
