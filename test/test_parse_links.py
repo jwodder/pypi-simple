@@ -48,6 +48,64 @@ def test_base_tag():
         ('link-two', 'https://nil.test/path/two.html', {'href': 'two.html'}),
     ]
 
+def test_target_base_tag():
+    assert list(parse_links('''
+        <html>
+        <head>
+            <title>Test with &lt;base&gt; tag</title>
+            <base target="_new"/>
+        </head>
+        <body>
+        <a href="one.html">link1</a>
+        <a href="two.html">link-two</a>
+        <span href="zero.html">not-a-link</span>
+        </body>
+        </html>
+    ''')) == [
+        ('link1', 'one.html', {'href': 'one.html'}),
+        ('link-two', 'two.html', {'href': 'two.html'}),
+    ]
+
+def test_bare_base_and_href_base_tag():
+    assert list(parse_links('''
+        <html>
+        <head>
+            <title>Test with &lt;base&gt; tag</title>
+            <base/>
+            <base href="https://nil.test/path/"/>
+        </head>
+        <body>
+        <a href="one.html">link1</a>
+        <a href="two.html">link-two</a>
+        <span href="zero.html">not-a-link</span>
+        </body>
+        </html>
+    ''')) == [
+        ('link1', 'https://nil.test/path/one.html', {'href': 'one.html'}),
+        ('link-two', 'https://nil.test/path/two.html', {'href': 'two.html'}),
+    ]
+
+def test_many_base_tags():
+    # I'm not sure if this is how HTML is supposed to work, but it is how pip
+    # works: <https://git.io/fAVZF>
+    assert list(parse_links('''
+        <html>
+        <head>
+            <title>Test with &lt;base&gt; tag</title>
+            <base href="https://nil.test/path/"/>
+            <base href="https://example.invalid/subdir/"/>
+        </head>
+        <body>
+        <a href="one.html">link1</a>
+        <a href="two.html">link-two</a>
+        <span href="zero.html">not-a-link</span>
+        </body>
+        </html>
+    ''')) == [
+        ('link1', 'https://nil.test/path/one.html', {'href': 'one.html'}),
+        ('link-two', 'https://nil.test/path/two.html', {'href': 'two.html'}),
+    ]
+
 def test_base_url_and_absolute_base_tag():
     assert list(parse_links('''
         <html>
