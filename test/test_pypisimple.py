@@ -175,3 +175,58 @@ def test_redirected_project_page():
             has_sig=False,
         ),
     ]
+
+@pytest.mark.parametrize('content_type,body_decl', [
+    ('text/html; charset=utf-8', b''),
+    ('text/html', b'<?xml encoding="utf-8"?>'),
+    ('text/html', b'<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>'),
+])
+@responses.activate
+def test_utf8_declarations(content_type, body_decl):
+    responses.add(
+        method=responses.GET,
+        url='https://test.nil/simple/project/',
+        body=body_decl + b'<a href="../files/project-0.1.0-p\xC3\xBF42-none-any.whl">project-0.1.0-p\xC3\xBF42-none-any.whl</a>',
+        content_type=content_type,
+    )
+    simple = PyPISimple('https://test.nil/simple/')
+    assert simple.get_project_files('project') == [
+        DistributionPackage(
+            filename=u'project-0.1.0-p\xFF42-none-any.whl',
+            project='project',
+            version='0.1.0',
+            package_type='wheel',
+            url=u"https://test.nil/simple/files/project-0.1.0-p\xFF42-none-any.whl",
+            requires_python=None,
+            has_sig=False,
+        ),
+    ]
+
+@pytest.mark.parametrize('content_type,body_decl', [
+    ('text/html; charset=iso-8859-2', b''),
+    ('text/html', b'<?xml encoding="iso-8859-2"?>'),
+    ('text/html', b'<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2"/>'),
+])
+@responses.activate
+def test_latin2_declarations(content_type, body_decl):
+    # This test is deliberately weird in order to make sure the code is
+    # actually paying attention to the encoding declarations and not just
+    # assuming UTF-8 because the input happens to be valid UTF-8.
+    responses.add(
+        method=responses.GET,
+        url='https://test.nil/simple/project/',
+        body=body_decl + b'<a href="../files/project-0.1.0-p\xC3\xBF42-none-any.whl">project-0.1.0-p\xC3\xBF42-none-any.whl</a>',
+        content_type=content_type,
+    )
+    simple = PyPISimple('https://test.nil/simple/')
+    assert simple.get_project_files('project') == [
+        DistributionPackage(
+            filename=u'project-0.1.0-p\u0102\u017C42-none-any.whl',
+            project='project',
+            version='0.1.0',
+            package_type='wheel',
+            url=u"https://test.nil/simple/files/project-0.1.0-p\u0102\u017C42-none-any.whl",
+            requires_python=None,
+            has_sig=False,
+        ),
+    ]
