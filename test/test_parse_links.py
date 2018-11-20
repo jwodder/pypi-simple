@@ -212,3 +212,25 @@ def test_escaped_attrib():
             "data-requires-python": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, <4",
         },
     )]
+
+def test_escaped_text():
+    assert list(parse_links('''
+        <a href="https://test.nil/simple/files/project-0.1.0-p&#xFF;42-none-any.whl">project-0.1.0-p&#xFF;42-none-any.whl</a>
+    ''')) == [(
+        u'project-0.1.0-p\xFF42-none-any.whl',
+        u"https://test.nil/simple/files/project-0.1.0-p\xFF42-none-any.whl",
+        {
+            "href": u"https://test.nil/simple/files/project-0.1.0-p\xFF42-none-any.whl",
+        },
+    )]
+
+def test_named_escaped_text():
+    assert list(parse_links('''
+        <a href="https://test.nil/simple/files/project-0.1.0-p&yuml;42-none-any.whl">project-0.1.0-p&yuml;42-none-any.whl</a>
+    ''')) == [(
+        u'project-0.1.0-p\xFF42-none-any.whl',
+        u"https://test.nil/simple/files/project-0.1.0-p\xFF42-none-any.whl",
+        {
+            "href": u"https://test.nil/simple/files/project-0.1.0-p\xFF42-none-any.whl",
+        },
+    )]
