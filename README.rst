@@ -22,6 +22,7 @@
 `GitHub <https://github.com/jwodder/pypi-simple>`_
 | `PyPI <https://pypi.org/project/pypi-simple/>`_
 | `Issues <https://github.com/jwodder/pypi-simple/issues>`_
+| `Changelog <https://github.com/jwodder/pypi-simple/blob/master/CHANGELOG.md>`_
 
 ``pypi-simple`` is a client library for the Python Simple Repository API as
 specified in `PEP 503 <https://www.python.org/dev/peps/pep-0503/>`_.  With it,
