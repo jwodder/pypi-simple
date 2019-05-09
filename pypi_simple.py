@@ -49,12 +49,16 @@ class PyPISimple(object):
         either a ``(username, password)`` pair or `another authentication
         object accepted by requests
         <http://docs.python-requests.org/en/master/user/authentication/>`_
+
+    :param session: Optional `requests.Session` object to use instead of
+        creating a fresh one
     """
 
-    def __init__(self, endpoint=PYPI_SIMPLE_ENDPOINT, auth=None):
+    def __init__(self, endpoint=PYPI_SIMPLE_ENDPOINT, auth=None, session=None):
         self.endpoint = endpoint.rstrip('/') + '/'
-        self.s = requests.Session()
-        self.s.auth = auth
+        self.s = session or requests.Session()
+        if auth is not None:
+            self.s.auth = auth
 
     def get_projects(self):
         """

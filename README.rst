@@ -74,7 +74,7 @@ API
 A client for fetching package information from a Python simple package
 repository
 
-``PyPISimple(endpoint=pypi_simple.PYPI_SIMPLE_ENDPOINT, auth=None)``
+``PyPISimple(endpoint=pypi_simple.PYPI_SIMPLE_ENDPOINT, auth=None, session=None)``
    Create a new ``PyPISimple`` object for querying the simple API instance at
    ``endpoint``.  The endpoint defaults to PyPI's simple API at
    <https://pypi.org/simple/>.
@@ -83,6 +83,10 @@ repository
    specified by setting the ``auth`` parameter to either a ``(username,
    password)`` pair or `another authentication object accepted by requests
    <http://docs.python-requests.org/en/master/user/authentication/>`_.
+
+   If more complicated session configuration is desired (e.g., setting up
+   caching), the user must create & configure a ``requests.Session`` object
+   appropriately and pass it to the constructor as the ``session`` parameter.
 
 ``client.get_projects()``
    Returns a generator of names of projects available in the repository.

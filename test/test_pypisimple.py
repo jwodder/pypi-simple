@@ -1,5 +1,6 @@
 from   os.path     import dirname, join
 import pytest
+import requests
 import responses
 from   pypi_simple import DistributionPackage, PyPISimple
 
@@ -230,3 +231,31 @@ def test_latin2_declarations(content_type, body_decl):
             has_sig=False,
         ),
     ]
+
+def test_auth_new_session():
+    simple = PyPISimple('https://test.nil/simple/', auth=('user', 'password'))
+    assert simple.s.auth == ('user', 'password')
+
+def test_custom_session():
+    s = requests.Session()
+    simple = PyPISimple('https://test.nil/simple/', session=s)
+    assert simple.s is s
+    assert simple.s.auth is None
+
+def test_auth_custom_session():
+    simple = PyPISimple(
+        'https://test.nil/simple/',
+        auth=('user', 'password'),
+        session=requests.Session(),
+    )
+    assert simple.s.auth == ('user', 'password')
+
+def test_auth_override_custom_session():
+    s = requests.Session()
+    s.auth = ('login', 'secret')
+    simple = PyPISimple(
+        'https://test.nil/simple/',
+        auth=('user', 'password'),
+        session=s,
+    )
+    assert simple.s.auth == ('user', 'password')
