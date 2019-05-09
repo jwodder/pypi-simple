@@ -3,6 +3,7 @@ v0.5.0 (in development)
 - The `PyPISimple` constructor now takes an optional `session` argument which
   can be used to specify a `requests.Session` object with more complicated
   configuration than just authentication
+- Support for PEP 592; `DistributionPackage` now has a `yanked` attribute
 
 v0.4.0 (2018-09-06)
 -------------------

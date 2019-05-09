@@ -25,12 +25,13 @@
 | `Changelog <https://github.com/jwodder/pypi-simple/blob/master/CHANGELOG.md>`_
 
 ``pypi-simple`` is a client library for the Python Simple Repository API as
-specified in `PEP 503 <https://www.python.org/dev/peps/pep-0503/>`_.  With it,
-you can query `the Python Package Index (PyPI) <https://pypi.org>`_ and other
-`pip <https://pip.pypa.io>`_-compatible repositories for a list of their
-available projects and lists of each project's available package files.  The
-library also allows you to query package files for their project version,
-package type, file digests, ``requires_python`` string, and PGP signature URL.
+specified in `PEP 503 <https://www.python.org/dev/peps/pep-0503/>`_ and updated
+by `PEP 592 <https://www.python.org/dev/peps/pep-0592/>`_.  With it, you can
+query `the Python Package Index (PyPI) <https://pypi.org>`_ and other `pip
+<https://pip.pypa.io>`_-compatible repositories for a list of their available
+projects and lists of each project's available package files.  The library also
+allows you to query package files for their project version, package type, file
+digests, ``requires_python`` string, and PGP signature URL.
 
 
 Installation
@@ -50,7 +51,7 @@ Example
     >>> client = PyPISimple()
     >>> packages = client.get_project_files('requests')
     >>> packages[0]
-    DistributionPackage(filename='requests-0.2.0.tar.gz', url='https://files.pythonhosted.org/packages/ba/bb/dfa0141a32d773c47e4dede1a617c59a23b74dd302e449cf85413fc96bc4/requests-0.2.0.tar.gz#sha256=813202ace4d9301a3c00740c700e012fb9f3f8c73ddcfe02ab558a8df6f175fd', project='requests', version='0.2.0', package_type='sdist', requires_python=None, has_sig=False)
+    DistributionPackage(filename='requests-0.2.0.tar.gz', url='https://files.pythonhosted.org/packages/ba/bb/dfa0141a32d773c47e4dede1a617c59a23b74dd302e449cf85413fc96bc4/requests-0.2.0.tar.gz#sha256=813202ace4d9301a3c00740c700e012fb9f3f8c73ddcfe02ab558a8df6f175fd', project='requests', version='0.2.0', package_type='sdist', requires_python=None, has_sig=False, yanked=None)
     >>> packages[0].filename
     'requests-0.2.0.tar.gz'
     >>> packages[0].url
@@ -152,6 +153,12 @@ attributes and method:
 ``sig_url``
    If ``has_sig`` is true, this equals the URL of the package file's PGP
    signature file; otherwise, it equals `None`.
+
+``yanked``
+   If the package file has been "yanked" from the package repository (meaning
+   that it should only be installed when that specific version is requested),
+   this attribute will be a string giving the reason why it was yanked;
+   otherwise, it is `None`.
 
 ``get_digests()``
    Extracts the hash digests from the package file's URL and returns a `dict`

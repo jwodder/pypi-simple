@@ -2,11 +2,12 @@
 PyPI Simple Repository API client library
 
 ``pypi-simple`` is a client library for the Python Simple Repository API as
-specified in `PEP 503 <https://www.python.org/dev/peps/pep-0503/>`_.  With it,
-you can query PyPI and other pip-compatible repositories for a list of their
-available projects and lists of each project's available package files.  The
-library also allows you to query package files for their project version,
-package type, file digests, ``requires_python`` string, and PGP signature URL.
+specified in `PEP 503 <https://www.python.org/dev/peps/pep-0503/>`_ and updated
+by `PEP 592 <https://www.python.org/dev/peps/pep-0592/>`_.  With it, you can
+query PyPI and other pip-compatible repositories for a list of their available
+projects and lists of each project's available package files.  The library also
+allows you to query package files for their project version, package type, file
+digests, ``requires_python`` string, and PGP signature URL.
 
 Visit <https://github.com/jwodder/pypi-simple> for more information.
 """
@@ -130,7 +131,8 @@ class PyPISimple(object):
 class DistributionPackage(
     namedtuple(
         'DistributionPackage',
-        'filename url project version package_type requires_python has_sig',
+        'filename url project version package_type requires_python has_sig'
+        ' yanked',
     )
 ):
     """
@@ -169,6 +171,12 @@ class DistributionPackage(
 
     .. attribute:: has_sig
         Whether the package file is accompanied by a PGP signature file
+
+    .. attribute:: yanked
+        If the package file has been "yanked" from the package repository
+        (meaning that it should only be installed when that specific version is
+        requested), this attribute will be a string giving the reason why it
+        was yanked; otherwise, it is `None`.
     """
 
     @property
@@ -233,6 +241,7 @@ def parse_project_page(html, base_url=None, from_encoding=None,
             project = project,
             version = version,
             package_type = pkg_type,
+            yanked = attrs.get('data-yanked'),
         ))
     return files
 
