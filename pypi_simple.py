@@ -18,6 +18,7 @@ __license__      = 'MIT'
 __url__          = 'https://github.com/jwodder/pypi-simple'
 
 from   collections            import namedtuple
+import platform
 import re
 from   bs4                    import BeautifulSoup
 from   packaging.utils        import canonicalize_name as normalize
@@ -36,6 +37,16 @@ __all__ = [
 
 #: The base URL for PyPI's simple API
 PYPI_SIMPLE_ENDPOINT = 'https://pypi.org/simple/'
+
+#: The User-Agent header used for requests; not used when the user provides eir
+#: own session object
+USER_AGENT = 'pypi-simple/{} ({}) requests/{} {}/{}'.format(
+    __version__,
+    __url__,
+    requests.__version__,
+    platform.python_implementation(),
+    platform.python_version(),
+)
 
 class PyPISimple(object):
     """
@@ -56,7 +67,11 @@ class PyPISimple(object):
 
     def __init__(self, endpoint=PYPI_SIMPLE_ENDPOINT, auth=None, session=None):
         self.endpoint = endpoint.rstrip('/') + '/'
-        self.s = session or requests.Session()
+        if session is not None:
+            self.s = session
+        else:
+            self.s = requests.Session()
+            self.s.headers["User-Agent"] = USER_AGENT
         if auth is not None:
             self.s.auth = auth
 
