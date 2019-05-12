@@ -1,5 +1,5 @@
-v0.5.0 (in development)
------------------------
+v0.5.0 (2019-05-12)
+-------------------
 - The `PyPISimple` constructor now takes an optional `session` argument which
   can be used to specify a `requests.Session` object with more complicated
   configuration than just authentication
