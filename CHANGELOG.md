@@ -1,3 +1,7 @@
+v0.6.0 (in development)
+-----------------------
+- Support Python 3.8
+
 v0.5.0 (2019-05-12)
 -------------------
 - The `PyPISimple` constructor now takes an optional `session` argument which
