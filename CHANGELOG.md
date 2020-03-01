@@ -1,5 +1,5 @@
-v0.6.0 (in development)
------------------------
+v0.6.0 (2020-03-01)
+-------------------
 - Support Python 3.8
 - `DistributionPackage.sig_url` is now always non-`None`, as Warehouse does not
   report proper values for `has_sig`
