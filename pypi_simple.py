@@ -170,7 +170,8 @@ class DistributionPackage(
         which the package can be installed
 
     .. attribute:: has_sig
-        Whether the package file is accompanied by a PGP signature file
+        Whether the package file is accompanied by a PGP signature file.  Note
+        that Warehouse (as of 2020-03-01) does not report this information.
 
     .. attribute:: yanked
         If the package file has been "yanked" from the package repository
@@ -182,14 +183,11 @@ class DistributionPackage(
     @property
     def sig_url(self):
         """
-        If ``has_sig`` is true, this equals the URL of the package file's PGP
-        signature file; otherwise, it equals `None`.
+        The URL of the package file's PGP signature file, if it exists; cf.
+        ``has_sig``
         """
-        if self.has_sig:
-            u = urlparse(self.url)
-            return urlunparse((u[0], u[1], u[2] + '.asc', '', '', ''))
-        else:
-            return None
+        u = urlparse(self.url)
+        return urlunparse((u[0], u[1], u[2] + '.asc', '', '', ''))
 
     def get_digests(self):
         """

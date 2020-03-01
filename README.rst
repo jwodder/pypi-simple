@@ -148,11 +148,12 @@ attributes and method:
    which the package can be installed
 
 ``has_sig``
-   Whether the package file is accompanied by a PGP signature file
+   Whether the package file is accompanied by a PGP signature file.  Note that
+   Warehouse (as of 2020-03-01) does not report this information.
 
 ``sig_url``
-   If ``has_sig`` is true, this equals the URL of the package file's PGP
-   signature file; otherwise, it equals `None`.
+   The URL of the package file's PGP signature file, if it exists; cf.
+   ``has_sig``
 
 ``yanked``
    If the package file has been "yanked" from the package repository (meaning
