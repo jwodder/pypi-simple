@@ -290,7 +290,8 @@ PYVER = r'py[0-9]+\.[0-9]+'
 
 #: Regexes for package filenames that can be parsed unambiguously
 GOOD_PACKAGE_RGXN = [
-    # See <https://setuptools.readthedocs.io/en/latest/formats.html#filename-embedded-metadata>:
+    # See <https://setuptools.readthedocs.io/en/latest
+    #      /formats.html#filename-embedded-metadata>:
     ('egg', re.compile(r'^(?P<project>{})-(?P<version>{})(?:-{}(?:-{})?)?\.egg$'
                .format(PROJECT_NAME_NODASH, VERSION_NODASH, PYVER, PLAT_NAME))),
 
