@@ -12,7 +12,7 @@ digests, ``requires_python`` string, and PGP signature URL.
 Visit <https://github.com/jwodder/pypi-simple> for more information.
 """
 
-__version__      = '0.6.0'
+__version__      = '0.7.0.dev1'
 __author__       = 'John Thorvald Wodder II'
 __author_email__ = 'pypi-simple@varonathe.org'
 __license__      = 'MIT'
@@ -140,20 +140,25 @@ class DistributionPackage(
     release can be installed
 
     .. attribute:: filename
+
         The basename of the package file
 
     .. attribute:: url
+
         The URL from which the package file can be downloaded
 
     .. attribute:: project
+
         The name of the project (as extracted from the filename), or `None` if
         the filename cannot be parsed
 
     .. attribute:: version
+
         The project version (as extracted from the filename), or `None` if the
         filename cannot be parsed
 
     .. attribute:: package_type
+
         The type of the package, or `None` if the filename cannot be parsed.
         The recognized package types are:
 
@@ -166,14 +171,17 @@ class DistributionPackage(
         - ``'wininst'``
 
     .. attribute:: requires_python
+
         An optional version specifier string declaring the Python version(s) in
         which the package can be installed
 
     .. attribute:: has_sig
+
         Whether the package file is accompanied by a PGP signature file.  Note
         that Warehouse (as of 2020-03-01) does not report this information.
 
     .. attribute:: yanked
+
         If the package file has been "yanked" from the package repository
         (meaning that it should only be installed when that specific version is
         requested), this attribute will be a string giving the reason why it
