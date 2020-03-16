@@ -24,7 +24,7 @@ import re
 from   bs4                    import BeautifulSoup
 from   packaging.utils        import canonicalize_name as normalize
 import requests
-from   six.moves.urllib.parse import urljoin, urlunparse, urlparse
+from   six.moves.urllib.parse import urljoin, urlparse, urlunparse
 
 __all__ = [
     'DistributionPackage',

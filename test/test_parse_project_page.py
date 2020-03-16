@@ -1,5 +1,5 @@
 from os.path     import dirname, join
-from pypi_simple import PYPI_SIMPLE_ENDPOINT, DistributionPackage, \
+from pypi_simple import DistributionPackage, PYPI_SIMPLE_ENDPOINT, \
                             parse_project_page
 
 DATA_DIR = join(dirname(__file__), 'data')
