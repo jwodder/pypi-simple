@@ -220,7 +220,7 @@ def test_parse_qypi_mixed():
                 url="https://files.pythonhosted.org/packages/f9/3f/6b184713e79da15cd451f0dab91864633175242f4d321df0cacdd2dc8300/qypi-0.1.0.post1-py3-none-any.whl#sha256=5946a4557550479af90278e5418cd2c32a2626936075078a4c7096be52d43078",
                 requires_python=None,
                 has_sig=True,
-                yanked=None,
+                yanked='',
             ),
             DistributionPackage(
                 filename='qypi-0.1.0.post1.tar.gz',
