@@ -60,7 +60,7 @@ class PyPISimple(object):
     :param auth: Optional login/authentication details for the repository;
         either a ``(username, password)`` pair or `another authentication
         object accepted by requests
-        <http://docs.python-requests.org/en/master/user/authentication/>`_
+        <https://requests.readthedocs.io/en/master/user/authentication/>`_
 
     :param session: Optional `requests.Session` object to use instead of
         creating a fresh one

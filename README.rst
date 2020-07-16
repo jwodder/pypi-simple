@@ -83,7 +83,7 @@ repository
    If necessary, login/authentication details for the repository can be
    specified by setting the ``auth`` parameter to either a ``(username,
    password)`` pair or `another authentication object accepted by requests
-   <http://docs.python-requests.org/en/master/user/authentication/>`_.
+   <https://requests.readthedocs.io/en/master/user/authentication/>`_.
 
    If more complicated session configuration is desired (e.g., setting up
    caching), the user must create & configure a ``requests.Session`` object
