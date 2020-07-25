@@ -13,10 +13,11 @@ def parse_simple_index(html: Union[str, bytes], base_url: Optional[str] = None,
 
     :param html: the HTML to parse
     :type html: str or bytes
-    :param str base_url: an optional URL to join to the front of the URLs
-        returned
-    :param str from_encoding: an optional hint to Beautiful Soup as to the
-        encoding of ``html``
+    :param Optional[str] base_url: an optional URL to join to the front of the
+        URLs returned
+    :param Optional[str] from_encoding: an optional hint to Beautiful Soup as
+        to the encoding of ``html`` when it is `bytes`
+    :rtype: Iterable[Tuple[str, str]]
     """
     for filename, url, _ in parse_links(html, base_url, from_encoding):
         yield (filename, url)
@@ -31,12 +32,13 @@ def parse_project_page(html: Union[str, bytes], base_url: Optional[str] = None,
 
     :param html: the HTML to parse
     :type html: str or bytes
-    :param str base_url: an optional URL to join to the front of the packages'
-        URLs
-    :param str from_encoding: an optional hint to Beautiful Soup as to the
-        encoding of ``html``
-    :param str project_hint: The name of the project whose page is being
-        parsed; used to disambiguate the parsing of certain filenames
+    :param Optional[str] base_url: an optional URL to join to the front of the
+        packages' URLs
+    :param Optional[str] from_encoding: an optional hint to Beautiful Soup as
+        to the encoding of ``html`` when it is `bytes`
+    :param Optional[str] project_hint: The name of the project whose page is
+        being parsed; used to disambiguate the parsing of certain filenames
+    :rtype: List[DistributionPackage]
     """
     files = []
     for filename, url, attrs in parse_links(html, base_url, from_encoding):
@@ -75,10 +77,11 @@ def parse_links(html: Union[str, bytes], base_url: Optional[str] = None,
 
     :param html: the HTML to parse
     :type html: str or bytes
-    :param str base_url: an optional URL to join to the front of the URLs
-        returned
-    :param str from_encoding: an optional hint to Beautiful Soup as to the
-        encoding of ``html``
+    :param Optional[str] base_url: an optional URL to join to the front of the
+        URLs returned
+    :param Optional[str] from_encoding: an optional hint to Beautiful Soup as
+        to the encoding of ``html`` when it is `bytes`
+    :rtype: Iterable[Tuple[str, str, Dict[str, Union[str, List[str]]]]]
     """
     soup = BeautifulSoup(html, 'html.parser', from_encoding=from_encoding)
     base_tag = soup.find('base', href=True)

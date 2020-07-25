@@ -85,9 +85,10 @@ def parse_filename(filename: str, project_hint: Optional[str] = None) \
     unspecified point.
 
     :param str filename: The package filename to parse
-    :param str project_hint: Optionally, the expected value for the project
-        name (usually the name of the project page on which the filename was
-        found).  The name does not need to be normalized.
+    :param Optional[str] project_hint: Optionally, the expected value for the
+        project name (usually the name of the project page on which the
+        filename was found).  The name does not need to be normalized.
+    :rtype: Union[Tuple[str, str, str], Tuple[None, None, None]]
     """
     for pkg_type, rgx in GOOD_PACKAGE_RGXN:
         m = rgx.match(filename)

@@ -79,6 +79,7 @@ class PyPISimple:
 
         :param str project: The name of the project to fetch information on.
             The name does not need to be normalized.
+        :rtype: List[DistributionPackage]
         """
         url = self.get_project_url(project)
         r = self.s.get(url)
@@ -98,5 +99,6 @@ class PyPISimple:
 
         :param str project: The name of the project to build a URL for.  The
             name does not need to be normalized.
+        :rtype: str
         """
         return self.endpoint + normalize(project) + '/'

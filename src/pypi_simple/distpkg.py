@@ -51,7 +51,7 @@ class DistributionPackage(NamedTuple):
     def sig_url(self) -> str:
         """
         The URL of the package file's PGP signature file, if it exists; cf.
-        ``has_sig``
+        `has_sig`
         """
         u = urlparse(self.url)
         return urlunparse((u[0], u[1], u[2] + '.asc', '', '', ''))
