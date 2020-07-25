@@ -1,7 +1,7 @@
 .. currentmodule:: pypi_simple
 
-Functions
-=========
+Low-Level Functions
+===================
 
 Parsing Simple Repository Pages
 -------------------------------
