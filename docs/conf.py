@@ -14,6 +14,7 @@ autodoc_default_options = {
     'members': True,
     'undoc-members': True,
 }
+autodoc_member_order = 'bysource'
 
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),

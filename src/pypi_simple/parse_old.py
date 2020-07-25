@@ -1,8 +1,7 @@
-from typing       import Dict, Iterable, List, Optional, Tuple, Union, cast
+from typing       import Dict, Iterable, List, Optional, Tuple, Union
 from urllib.parse import urljoin
 from bs4          import BeautifulSoup
-from .distpkg     import DistributionPackage
-from .filenames   import parse_filename
+from .classes     import DistributionPackage, Link
 
 def parse_simple_index(html: Union[str, bytes], base_url: Optional[str] = None,
                        from_encoding: Optional[str] = None) \
@@ -41,26 +40,9 @@ def parse_project_page(html: Union[str, bytes], base_url: Optional[str] = None,
     :rtype: List[DistributionPackage]
     """
     files = []
-    for filename, url, attrs in parse_links(html, base_url, from_encoding):
-        project, version, pkg_type = parse_filename(filename, project_hint)
-        has_sig: Optional[bool]
-        try:
-            has_sig = cast(str, attrs["data-gpg-sig"]).lower() == 'true'
-        except KeyError:
-            has_sig = None
-        files.append(DistributionPackage(
-            filename = filename,
-            url = url,
-            has_sig = has_sig,
-            requires_python = cast(
-                Optional[str],
-                attrs.get('data-requires-python'),
-            ),
-            project = project,
-            version = version,
-            package_type = pkg_type,
-            yanked = cast(Optional[str], attrs.get('data-yanked')),
-        ))
+    for text, url, attrs in parse_links(html, base_url, from_encoding):
+        link = Link(text, url, attrs)
+        files.append(DistributionPackage.from_link(link, project_hint))
     return files
 
 def parse_links(html: Union[str, bytes], base_url: Optional[str] = None,

@@ -19,17 +19,24 @@ __author_email__ = 'pypi-simple@varonathe.org'
 __license__      = 'MIT'
 __url__          = 'https://github.com/jwodder/pypi-simple'
 
-from .client    import PYPI_SIMPLE_ENDPOINT, PyPISimple
-from .distpkg   import DistributionPackage
-from .filenames import parse_filename
-from .parsing   import parse_links, parse_project_page, parse_simple_index
+from .classes    import DistributionPackage, Link, ProjectPage
+from .client     import PYPI_SIMPLE_ENDPOINT, PyPISimple
+from .filenames  import parse_filename
+from .parse_old  import parse_links, parse_project_page, parse_simple_index
+from .parse_repo import parse_repo_links, parse_repo_project_page, \
+                            parse_repo_project_response
 
 __all__ = [
     'DistributionPackage',
+    'Link',
     'PYPI_SIMPLE_ENDPOINT',
+    'ProjectPage',
     'PyPISimple',
     'parse_filename',
     'parse_links',
     'parse_project_page',
+    'parse_repo_links',
+    'parse_repo_project_page',
+    'parse_repo_project_response',
     'parse_simple_index',
 ]

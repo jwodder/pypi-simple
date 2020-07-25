@@ -3,8 +3,9 @@ from   typing          import Any, Iterable, List, Optional
 from   packaging.utils import canonicalize_name as normalize
 import requests
 from   .               import __url__, __version__
-from   .distpkg        import DistributionPackage
-from   .parsing        import parse_project_page, parse_simple_index
+from   .classes        import DistributionPackage, ProjectPage
+from   .parse_old      import parse_project_page, parse_simple_index
+from   .parse_repo     import parse_repo_project_response
 
 #: The base URL for PyPI's simple API
 PYPI_SIMPLE_ENDPOINT: str = 'https://pypi.org/simple/'
@@ -67,6 +68,9 @@ class PyPISimple:
 
             PyPI's project index file is very large and takes several seconds
             to parse.  Use this method sparingly.
+
+        :raises requests.HTTPError: if the repository responds with an HTTP
+            error code
         """
         r = self.s.get(self.endpoint)
         r.raise_for_status()
@@ -90,6 +94,8 @@ class PyPISimple:
         :param str project: The name of the project to fetch information on.
             The name does not need to be normalized.
         :rtype: List[DistributionPackage]
+        :raises requests.HTTPError: if the repository responds with an HTTP
+            error code other than 404
         """
         url = self.get_project_url(project)
         r = self.s.get(url)
@@ -102,6 +108,26 @@ class PyPISimple:
         else:
             charset = None
         return parse_project_page(r.content, r.url, charset, project)
+
+    def get_project_page(self, project: str) -> Optional[ProjectPage]:
+        """
+        Fetches the page for the given project from the simple repsitory and
+        returns a `ProjectPage` instance.  Returns `None` if the repository
+        responds with a 404.  All other HTTP errors cause a
+        `requests.HTTPError` to be raised.
+
+        :param str project: The name of the project to fetch information on.
+            The name does not need to be normalized.
+        :rtype: ProjectPage
+        :raises requests.HTTPError: if the repository responds with an HTTP
+            error code other than 404
+        """
+        url = self.get_project_url(project)
+        r = self.s.get(url)
+        if r.status_code == 404:
+            return None
+        r.raise_for_status()
+        return parse_repo_project_response(project, r)
 
     def get_project_url(self, project: str) -> str:
         """
