@@ -36,10 +36,11 @@ digests, ``requires_python`` string, and PGP signature URL.
 
 Installation
 ============
-Just use `pip <https://pip.pypa.io>`_ (You have pip, right?) to install
+``pypi-simple`` requires Python 3.6 or higher.  Just use `pip
+<https://pip.pypa.io>`_ for Python 3 (You have pip, right?) to install
 ``pypi-simple`` and its dependencies::
 
-    pip install pypi-simple
+    python3 -m pip install pypi-simple
 
 
 Example

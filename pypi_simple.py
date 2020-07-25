@@ -21,10 +21,10 @@ __url__          = 'https://github.com/jwodder/pypi-simple'
 from   collections            import namedtuple
 import platform
 import re
+from   urllib.parse           import urljoin, urlparse, urlunparse
 from   bs4                    import BeautifulSoup
 from   packaging.utils        import canonicalize_name as normalize
 import requests
-from   six.moves.urllib.parse import urljoin, urlparse, urlunparse
 
 __all__ = [
     'DistributionPackage',
@@ -49,7 +49,7 @@ USER_AGENT = 'pypi-simple/{} ({}) requests/{} {}/{}'.format(
     platform.python_version(),
 )
 
-class PyPISimple(object):
+class PyPISimple:
     """
     A client for fetching package information from a Python simple package
     repository
