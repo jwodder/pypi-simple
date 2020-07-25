@@ -177,8 +177,8 @@ class DistributionPackage(
 
     .. attribute:: has_sig
 
-        Whether the package file is accompanied by a PGP signature file.  Note
-        that Warehouse (as of 2020-03-01) does not report this information.
+        Whether the package file is accompanied by a PGP signature file.   This
+        is `None` if the package repository does not report such information.
 
     .. attribute:: yanked
 
@@ -239,10 +239,14 @@ def parse_project_page(html, base_url=None, from_encoding=None,
     files = []
     for filename, url, attrs in parse_links(html, base_url, from_encoding):
         project, version, pkg_type = parse_filename(filename, project_hint)
+        try:
+            has_sig = attrs["data-gpg-sig"].lower() == 'true'
+        except KeyError:
+            has_sig = None
         files.append(DistributionPackage(
             filename = filename,
             url = url,
-            has_sig = attrs.get('data-gpg-sig', 'false').lower() == 'true',
+            has_sig = has_sig,
             requires_python = attrs.get('data-requires-python'),
             project = project,
             version = version,

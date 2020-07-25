@@ -51,7 +51,7 @@ Example
     >>> client = PyPISimple()
     >>> packages = client.get_project_files('requests')
     >>> packages[0]
-    DistributionPackage(filename='requests-0.2.0.tar.gz', url='https://files.pythonhosted.org/packages/ba/bb/dfa0141a32d773c47e4dede1a617c59a23b74dd302e449cf85413fc96bc4/requests-0.2.0.tar.gz#sha256=813202ace4d9301a3c00740c700e012fb9f3f8c73ddcfe02ab558a8df6f175fd', project='requests', version='0.2.0', package_type='sdist', requires_python=None, has_sig=False, yanked=None)
+    DistributionPackage(filename='requests-0.2.0.tar.gz', url='https://files.pythonhosted.org/packages/ba/bb/dfa0141a32d773c47e4dede1a617c59a23b74dd302e449cf85413fc96bc4/requests-0.2.0.tar.gz#sha256=813202ace4d9301a3c00740c700e012fb9f3f8c73ddcfe02ab558a8df6f175fd', project='requests', version='0.2.0', package_type='sdist', requires_python=None, has_sig=None, yanked=None)
     >>> packages[0].filename
     'requests-0.2.0.tar.gz'
     >>> packages[0].url
@@ -148,8 +148,8 @@ attributes and method:
    which the package can be installed
 
 ``has_sig``
-   Whether the package file is accompanied by a PGP signature file.  Note that
-   Warehouse (as of 2020-03-01) does not report this information.
+   Whether the package file is accompanied by a PGP signature file.   This is
+   ``None`` if the package repository does not report such information.
 
 ``sig_url``
    The URL of the package file's PGP signature file, if it exists; cf.

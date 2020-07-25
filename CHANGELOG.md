@@ -1,6 +1,8 @@
 v0.7.0 (in development)
 -----------------------
 - Drop support for Python 3.4
+- `DistributionPackage.has_sig` is now `None` if the package repository does
+  not report this information
 
 v0.6.0 (2020-03-01)
 -------------------
