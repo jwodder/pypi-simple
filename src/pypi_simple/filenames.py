@@ -1,4 +1,5 @@
 import re
+from   typing import Optional, Tuple, Union
 
 PROJECT_NAME = r'[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?'
 PROJECT_NAME_NODASH = r'[A-Za-z0-9](?:[A-Za-z0-9._]*[A-Za-z0-9])?'
@@ -54,7 +55,8 @@ BAD_PACKAGE_RGXN = [
     for pkg_type, rgx in BAD_PACKAGE_BASES
 ]
 
-def parse_filename(filename, project_hint=None):
+def parse_filename(filename: str, project_hint: Optional[str] = None) \
+        -> Union[Tuple[str, str, str], Tuple[None, None, None]]:
     """
     Given the filename of a distribution package, returns a triple of the
     project name, project version, and package type.  The name and version are

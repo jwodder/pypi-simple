@@ -1,15 +1,17 @@
 import platform
+from   typing          import Any, Iterable, List, Optional
 from   packaging.utils import canonicalize_name as normalize
 import requests
 from   .               import __url__, __version__
+from   .distpkg        import DistributionPackage
 from   .parsing        import parse_project_page, parse_simple_index
 
 #: The base URL for PyPI's simple API
-PYPI_SIMPLE_ENDPOINT = 'https://pypi.org/simple/'
+PYPI_SIMPLE_ENDPOINT: str = 'https://pypi.org/simple/'
 
 #: The User-Agent header used for requests; not used when the user provides eir
 #: own session object
-USER_AGENT = 'pypi-simple/{} ({}) requests/{} {}/{}'.format(
+USER_AGENT: str = 'pypi-simple/{} ({}) requests/{} {}/{}'.format(
     __version__,
     __url__,
     requests.__version__,
@@ -34,8 +36,10 @@ class PyPISimple:
         creating a fresh one
     """
 
-    def __init__(self, endpoint=PYPI_SIMPLE_ENDPOINT, auth=None, session=None):
-        self.endpoint = endpoint.rstrip('/') + '/'
+    def __init__(self, endpoint: str = PYPI_SIMPLE_ENDPOINT, auth: Any = None,
+                 session: Optional[requests.Session] = None) -> None:
+        self.endpoint: str = endpoint.rstrip('/') + '/'
+        self.s: requests.Session
         if session is not None:
             self.s = session
         else:
@@ -44,7 +48,7 @@ class PyPISimple:
         if auth is not None:
             self.s.auth = auth
 
-    def get_projects(self):
+    def get_projects(self) -> Iterable[str]:
         """
         Returns a generator of names of projects available in the repository.
         The names are not normalized.
@@ -56,6 +60,7 @@ class PyPISimple:
         """
         r = self.s.get(self.endpoint)
         r.raise_for_status()
+        charset: Optional[str]
         if 'charset' in r.headers.get('content-type', '').lower():
             charset = r.encoding
         else:
@@ -63,7 +68,7 @@ class PyPISimple:
         for name, _ in parse_simple_index(r.content, r.url, charset):
             yield name
 
-    def get_project_files(self, project):
+    def get_project_files(self, project: str) -> List[DistributionPackage]:
         """
         Returns a list of `DistributionPackage` objects representing all of the
         package files available in the repository for the given project.
@@ -80,13 +85,14 @@ class PyPISimple:
         if r.status_code == 404:
             return []
         r.raise_for_status()
+        charset: Optional[str]
         if 'charset' in r.headers.get('content-type', '').lower():
             charset = r.encoding
         else:
             charset = None
         return parse_project_page(r.content, r.url, charset, project)
 
-    def get_project_url(self, project):
+    def get_project_url(self, project: str) -> str:
         """
         Returns the URL for the given project's page in the repository.
 
