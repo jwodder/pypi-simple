@@ -22,7 +22,17 @@ USER_AGENT: str = 'pypi-simple/{} ({}) requests/{} {}/{}'.format(
 class PyPISimple:
     """
     A client for fetching package information from a Python simple package
-    repository
+    repository.
+
+    If necessary, login/authentication details for the repository can be
+    specified at initialization by setting the ``auth`` parameter to either a
+    ``(username, password)`` pair or `another authentication object accepted by
+    requests
+    <https://requests.readthedocs.io/en/master/user/authentication/>`_.
+
+    If more complicated session configuration is desired (e.g., setting up
+    caching), the user must create & configure a `requests.Session` object
+    appropriately and pass it to the constructor as the ``session`` parameter.
 
     :param str endpoint: The base URL of the simple API instance to query;
         defaults to the base URL for PyPI's simple API

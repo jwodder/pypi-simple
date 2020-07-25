@@ -9,7 +9,8 @@ projects and lists of each project's available package files.  The library also
 allows you to query package files for their project version, package type, file
 digests, ``requires_python`` string, and PGP signature URL.
 
-Visit <https://github.com/jwodder/pypi-simple> for more information.
+Visit <https://github.com/jwodder/pypi-simple> or <https://pypi-simple.rtfd.io>
+for more information.
 """
 
 __version__      = '0.7.0.dev1'

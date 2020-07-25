@@ -9,6 +9,7 @@ v0.7.0 (in development)
 - `DistributionPackage.has_sig` is now `None` if the package repository does
   not report this information
 - Added type annotations
+- Moved documentation from README file to a Read the Docs site
 
 v0.6.0 (2020-03-01)
 -------------------
