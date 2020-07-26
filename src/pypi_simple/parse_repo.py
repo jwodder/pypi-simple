@@ -50,8 +50,7 @@ def parse_repo_links(
     metadata = {}
     pep629_meta = soup.find(
         'meta',
-        name    = "pypi:repository-version",
-        content = True,
+        attrs = {"name": "pypi:repository-version", "content": True},
     )
     if pep629_meta is not None:
         metadata["repository_version"] = pep629_meta["content"]
