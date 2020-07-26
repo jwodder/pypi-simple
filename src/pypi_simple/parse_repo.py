@@ -2,7 +2,7 @@ from   typing       import Dict, List, Optional, Tuple, Union
 from   urllib.parse import urljoin
 from   bs4          import BeautifulSoup
 import requests
-from   .classes     import DistributionPackage, Link, ProjectPage
+from   .classes     import DistributionPackage, IndexPage, Link, ProjectPage
 
 def parse_repo_links(
     html: Union[str, bytes],
@@ -119,4 +119,46 @@ def parse_repo_project_response(project: str, r: requests.Response) \
         base_url      = r.url,
         from_encoding = charset,
     )
+    return page._replace(last_serial=r.headers.get("X-PyPI-Last-Serial"))
+
+def parse_repo_index_page(
+    html: Union[str, bytes],
+    from_encoding: Optional[str] = None,
+) -> IndexPage:
+    """
+    .. versionadded:: 0.7.0
+
+    Parse an index/root page from a simple repository into an `IndexPage`.
+    Note that the `~IndexPage.last_serial` attribute will be `None`.
+
+    :param html: the HTML to parse
+    :type html: str or bytes
+    :param Optional[str] from_encoding: an optional hint to Beautiful Soup as
+        to the encoding of ``html`` when it is `bytes` (usually the ``charset``
+        parameter of the response's :mailheader:`Content-Type` header)
+    :rtype: IndexPage
+    """
+    metadata, links = parse_repo_links(html, from_encoding=from_encoding)
+    return IndexPage(
+        projects = [link.text for link in links],
+        repository_version = metadata.get("repository_version"),
+        last_serial = None,
+    )
+
+def parse_repo_index_response(r: requests.Response) -> IndexPage:
+    """
+    .. versionadded:: 0.7.0
+
+    Parse an index page from a `requests.Response` returned from a
+    (non-streaming) request to a simple repository, and return an `IndexPage`.
+
+    :param requests.Response r: the response object to parse
+    :rtype: IndexPage
+    """
+    charset: Optional[str]
+    if 'charset' in r.headers.get('content-type', '').lower():
+        charset = r.encoding
+    else:
+        charset = None
+    page = parse_repo_index_page(html=r.content, from_encoding=charset)
     return page._replace(last_serial=r.headers.get("X-PyPI-Last-Serial"))

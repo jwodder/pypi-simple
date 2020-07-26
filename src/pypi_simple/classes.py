@@ -158,3 +158,21 @@ class ProjectPage(NamedTuple):
     #: The value of the :mailheader:`X-PyPI-Last-Serial` response header
     #: returned when fetching the page, or `None` if not specified
     last_serial: Optional[str]
+
+
+class IndexPage(NamedTuple):
+    """
+    .. versionadded:: 0.7.0
+
+    A parsed index/root page from a simple repository
+    """
+
+    #: The project names listed in the index.  The names are not normalized.
+    projects: List[str]
+
+    #: The repository version reported by the page, or `None` if not specified
+    repository_version: Optional[str]
+
+    #: The value of the :mailheader:`X-PyPI-Last-Serial` response header
+    #: returned when fetching the page, or `None` if not specified
+    last_serial: Optional[str]

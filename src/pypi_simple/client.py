@@ -3,9 +3,10 @@ from   typing          import Any, Iterator, List, Optional
 from   packaging.utils import canonicalize_name as normalize
 import requests
 from   .               import __url__, __version__
-from   .classes        import DistributionPackage, ProjectPage
+from   .classes        import DistributionPackage, IndexPage, ProjectPage
 from   .parse_old      import parse_project_page, parse_simple_index
-from   .parse_repo     import parse_repo_project_response
+from   .parse_repo     import parse_repo_index_response, \
+                                parse_repo_project_response
 from   .parse_stream   import parse_links_stream_response
 
 #: The base URL for PyPI's simple API
@@ -118,6 +119,26 @@ class PyPISimple:
         r.raise_for_status()
         for link in parse_links_stream_response(r, chunk_size):
             yield link.text
+
+    def get_index_page(self) -> IndexPage:
+        """
+        .. versionadded:: 0.7.0
+
+        Fetches the index/root page from the simple repository and returns an
+        `IndexPage` instance.
+
+        .. warning::
+
+            PyPI's project index file is very large and takes several seconds
+            to parse.  Use this method sparingly.
+
+        :rtype: IndexPage
+        :raises requests.HTTPError: if the repository responds with an HTTP
+            error code
+        """
+        r = self.s.get(self.endpoint)
+        r.raise_for_status()
+        return parse_repo_index_response(r)
 
     def get_project_files(self, project: str) -> List[DistributionPackage]:
         """
