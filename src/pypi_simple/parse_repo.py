@@ -27,7 +27,8 @@ def parse_repo_links(
     :param Optional[str] base_url: an optional URL to join to the front of the
         URLs returned (usually the URL of the page being parsed)
     :param Optional[str] from_encoding: an optional hint to Beautiful Soup as
-        to the encoding of ``html`` when it is `bytes`
+        to the encoding of ``html`` when it is `bytes` (usually the `charset`
+        parameter of the response's :mailheader:`Content-Type` header)
     :rtype: Tuple[Dict[str, str], List[Link]]
     """
     soup = BeautifulSoup(html, 'html.parser', from_encoding=from_encoding)
@@ -77,7 +78,8 @@ def parse_repo_project_page(
     :param Optional[str] base_url: an optional URL to join to the front of the
         packages' URLs (usually the URL of the page being parsed)
     :param Optional[str] from_encoding: an optional hint to Beautiful Soup as
-        to the encoding of ``html`` when it is `bytes`
+        to the encoding of ``html`` when it is `bytes` (usually the `charset`
+        parameter of the response's :mailheader:`Content-Type` header)
     :rtype: ProjectPage
     """
     metadata, links = parse_repo_links(html, base_url, from_encoding)

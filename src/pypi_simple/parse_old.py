@@ -15,7 +15,8 @@ def parse_simple_index(html: Union[str, bytes], base_url: Optional[str] = None,
     :param Optional[str] base_url: an optional URL to join to the front of the
         URLs returned (usually the URL of the page being parsed)
     :param Optional[str] from_encoding: an optional hint to Beautiful Soup as
-        to the encoding of ``html`` when it is `bytes`
+        to the encoding of ``html`` when it is `bytes` (usually the `charset`
+        parameter of the response's :mailheader:`Content-Type` header)
     :rtype: Iterable[Tuple[str, str]]
     """
     for filename, url, _ in parse_links(html, base_url, from_encoding):
@@ -34,7 +35,8 @@ def parse_project_page(html: Union[str, bytes], base_url: Optional[str] = None,
     :param Optional[str] base_url: an optional URL to join to the front of the
         packages' URLs (usually the URL of the page being parsed)
     :param Optional[str] from_encoding: an optional hint to Beautiful Soup as
-        to the encoding of ``html`` when it is `bytes`
+        to the encoding of ``html`` when it is `bytes` (usually the `charset`
+        parameter of the response's :mailheader:`Content-Type` header)
     :param Optional[str] project_hint: The name of the project whose page is
         being parsed; used to disambiguate the parsing of certain filenames
     :rtype: List[DistributionPackage]
@@ -62,7 +64,8 @@ def parse_links(html: Union[str, bytes], base_url: Optional[str] = None,
     :param Optional[str] base_url: an optional URL to join to the front of the
         URLs returned (usually the URL of the page being parsed)
     :param Optional[str] from_encoding: an optional hint to Beautiful Soup as
-        to the encoding of ``html`` when it is `bytes`
+        to the encoding of ``html`` when it is `bytes` (usually the `charset`
+        parameter of the response's :mailheader:`Content-Type` header)
     :rtype: Iterable[Tuple[str, str, Dict[str, Union[str, List[str]]]]]
     """
     soup = BeautifulSoup(html, 'html.parser', from_encoding=from_encoding)
