@@ -35,6 +35,12 @@ class PyPISimple:
     caching), the user must create & configure a `requests.Session` object
     appropriately and pass it to the constructor as the ``session`` parameter.
 
+    .. versionchanged:: 0.5.0
+        ``session`` argument added
+
+    .. versionchanged:: 0.4.0
+        ``auth`` argument added
+
     :param str endpoint: The base URL of the simple API instance to query;
         defaults to the base URL for PyPI's simple API
 
@@ -111,14 +117,16 @@ class PyPISimple:
 
     def get_project_page(self, project: str) -> Optional[ProjectPage]:
         """
-        Fetches the page for the given project from the simple repsitory and
+        .. versionadded:: 0.7.0
+
+        Fetches the page for the given project from the simple repository and
         returns a `ProjectPage` instance.  Returns `None` if the repository
         responds with a 404.  All other HTTP errors cause a
         `requests.HTTPError` to be raised.
 
         :param str project: The name of the project to fetch information on.
             The name does not need to be normalized.
-        :rtype: ProjectPage
+        :rtype: Optional[ProjectPage]
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code other than 404
         """

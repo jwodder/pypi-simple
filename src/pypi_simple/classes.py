@@ -3,7 +3,11 @@ from urllib.parse import urlparse, urlunparse
 from .filenames   import parse_filename
 
 class Link(NamedTuple):
-    """ A hyperlink extracted from an HTML page """
+    """
+    .. versionadded:: 0.7.0
+
+    A hyperlink extracted from an HTML page
+    """
 
     #: The text inside the link tag, with leading & trailing whitespace removed
     #: and with any tags nested inside the link tags ignored
@@ -24,8 +28,11 @@ class Link(NamedTuple):
 
 class DistributionPackage(NamedTuple):
     """
-    Information about a versioned archived file from which a Python project
+    Information about a versioned archive file from which a Python project
     release can be installed
+
+    .. versionchanged:: 0.5.0
+        `yanked` attribute added
     """
 
     #: The basename of the package file
@@ -60,6 +67,10 @@ class DistributionPackage(NamedTuple):
 
     #: Whether the package file is accompanied by a PGP signature file.   This
     #: is `None` if the package repository does not report such information.
+    #:
+    #: .. versionchanged:: 0.7.0
+    #:     Will now be `None` if not specified by repository; previously would
+    #:     be `False` in such a situation
     has_sig: Optional[bool]
 
     #: If the package file has been "yanked" from the package repository
@@ -73,6 +84,10 @@ class DistributionPackage(NamedTuple):
         """
         The URL of the package file's PGP signature file, if it exists; cf.
         `has_sig`
+
+        .. versionchanged:: 0.6.0
+            Now always defined; would previously be `None` if `has_sig` was
+            false
         """
         u = urlparse(self.url)
         return urlunparse((u[0], u[1], u[2] + '.asc', '', '', ''))
@@ -89,6 +104,8 @@ class DistributionPackage(NamedTuple):
     def from_link(cls, link: Link, project_hint: Optional[str] = None) \
             -> 'DistributionPackage':
         """
+        .. versionadded:: 0.7.0
+
         Construct a `DistributionPackage` from a `Link` on a project page.
 
         :param Link link: a link parsed from a project page
@@ -122,7 +139,11 @@ class DistributionPackage(NamedTuple):
 
 
 class ProjectPage(NamedTuple):
-    """ A parsed project page fom a simple repository """
+    """
+    .. versionadded:: 0.7.0
+
+    A parsed project page fom a simple repository
+    """
 
     #: The name of the project the page is for
     project: str

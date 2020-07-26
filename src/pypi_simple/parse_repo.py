@@ -10,6 +10,8 @@ def parse_repo_links(
     from_encoding: Optional[str] = None,
 ) -> Tuple[Dict[str, str], List[Link]]:
     """
+    .. versionadded:: 0.7.0
+
     Parse an HTML page from a simple repository and return a ``(metadata,
     links)`` pair.
 
@@ -27,7 +29,7 @@ def parse_repo_links(
     :param Optional[str] base_url: an optional URL to join to the front of the
         URLs returned (usually the URL of the page being parsed)
     :param Optional[str] from_encoding: an optional hint to Beautiful Soup as
-        to the encoding of ``html`` when it is `bytes` (usually the `charset`
+        to the encoding of ``html`` when it is `bytes` (usually the ``charset``
         parameter of the response's :mailheader:`Content-Type` header)
     :rtype: Tuple[Dict[str, str], List[Link]]
     """
@@ -69,6 +71,8 @@ def parse_repo_project_page(
     from_encoding: Optional[str] = None,
 ) -> ProjectPage:
     """
+    .. versionadded:: 0.7.0
+
     Parse a project page from a simple repository into a `ProjectPage`.  Note
     that the `~ProjectPage.last_serial` attribute will be `None`.
 
@@ -78,7 +82,7 @@ def parse_repo_project_page(
     :param Optional[str] base_url: an optional URL to join to the front of the
         packages' URLs (usually the URL of the page being parsed)
     :param Optional[str] from_encoding: an optional hint to Beautiful Soup as
-        to the encoding of ``html`` when it is `bytes` (usually the `charset`
+        to the encoding of ``html`` when it is `bytes` (usually the ``charset``
         parameter of the response's :mailheader:`Content-Type` header)
     :rtype: ProjectPage
     """
@@ -95,6 +99,8 @@ def parse_repo_project_page(
 def parse_repo_project_response(project: str, r: requests.Response) \
         -> ProjectPage:
     """
+    .. versionadded:: 0.7.0
+
     Parse a project page from a `requests.Response` returned from a
     (non-streaming) request to a simple repository, and return a `ProjectPage`.
 
