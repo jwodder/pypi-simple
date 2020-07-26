@@ -13,6 +13,11 @@ Parsing Simple Repository Pages
 .. autofunction:: parse_repo_links
 .. autoclass:: Link
 
+Streaming Parsers
+^^^^^^^^^^^^^^^^^
+.. autofunction:: parse_links_stream
+.. autofunction:: parse_links_stream_response
+
 Parsing Filenames
 -----------------
 .. autofunction:: parse_filename

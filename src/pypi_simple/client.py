@@ -1,11 +1,12 @@
 import platform
-from   typing          import Any, Iterable, List, Optional
+from   typing          import Any, Iterator, List, Optional
 from   packaging.utils import canonicalize_name as normalize
 import requests
 from   .               import __url__, __version__
 from   .classes        import DistributionPackage, ProjectPage
 from   .parse_old      import parse_project_page, parse_simple_index
 from   .parse_repo     import parse_repo_project_response
+from   .parse_stream   import parse_links_stream_response
 
 #: The base URL for PyPI's simple API
 PYPI_SIMPLE_ENDPOINT: str = 'https://pypi.org/simple/'
@@ -65,7 +66,7 @@ class PyPISimple:
         if auth is not None:
             self.s.auth = auth
 
-    def get_projects(self) -> Iterable[str]:
+    def get_projects(self) -> Iterator[str]:
         """
         Returns a generator of names of projects available in the repository.
         The names are not normalized.
@@ -75,6 +76,7 @@ class PyPISimple:
             PyPI's project index file is very large and takes several seconds
             to parse.  Use this method sparingly.
 
+        :rtype: Iterator[str]
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code
         """
@@ -87,6 +89,35 @@ class PyPISimple:
             charset = None
         for name, _ in parse_simple_index(r.content, r.url, charset):
             yield name
+
+    def stream_project_names(self, chunk_size: int = 65535) -> Iterator[str]:
+        """
+        .. versionadded:: 0.7.0
+
+        Returns a generator of names of projects available in the repository.
+        The names are not normalized.
+
+        Unlike `get_projects()`, this function makes a streaming request to the
+        server and parses the document in chunks.  It is intended to be faster
+        than `get_projects()`, especially when the complete document is very
+        large.
+
+        .. warning::
+
+            This function is rather experimental.  It does not have full
+            support for web encodings, encoding detection, or handling invalid
+            HTML.
+
+        :param int chunk_size: how many bytes to read from the response at a
+            time
+        :rtype: Iterator[str]
+        :raises requests.HTTPError: if the repository responds with an HTTP
+            error code
+        """
+        r = self.s.get(self.endpoint, stream=True)
+        r.raise_for_status()
+        for link in parse_links_stream_response(r, chunk_size):
+            yield link.text
 
     def get_project_files(self, project: str) -> List[DistributionPackage]:
         """

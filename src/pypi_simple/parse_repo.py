@@ -27,7 +27,7 @@ def parse_repo_links(
     :param html: the HTML to parse
     :type html: str or bytes
     :param Optional[str] base_url: an optional URL to join to the front of the
-        URLs returned (usually the URL of the page being parsed)
+        links' URLs (usually the URL of the page being parsed)
     :param Optional[str] from_encoding: an optional hint to Beautiful Soup as
         to the encoding of ``html`` when it is `bytes` (usually the ``charset``
         parameter of the response's :mailheader:`Content-Type` header)

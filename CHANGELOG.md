@@ -5,9 +5,11 @@ v0.7.0 (in development)
   not report this information
 - Added type annotations
 - Moved documentation from README file to a Read the Docs site
-- Gave `PyPISimple` a method `get_project_page()` that returns a `ProjectPage`
+- Gave `PyPISimple` a `get_project_page()` method that returns a `ProjectPage`
   instance with a `packages: List[DistributionPackage]` attribute plus other
   attributes for repository metadata
+- Gave `PyPISimple` a `stream_project_names()` method for retrieving project
+  names from a repository using a streaming request
 - New utility functions:
     - `parse_repo_links()` — Parses an HTML page, returns a pair of repository
       metadata and a list of `Link` objects
@@ -15,6 +17,10 @@ v0.7.0 (in development)
       `ProjectPage` instance
     - `parse_repo_project_reponse()` — Parses a `requests.Response` object
       containing a project page, returns a `ProjectPage` instance
+    - `parse_links_stream()` — Parses an HTML page as stream of `bytes` or
+      `str` and returns a generator of `Link` objects
+    - `parse_links_stream_response()` — Parses a streaming `requests.Response`
+      object containing an HTML page and returns a generator of `Link` objects
 
 v0.6.0 (2020-03-01)
 -------------------

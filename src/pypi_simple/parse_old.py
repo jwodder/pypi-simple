@@ -1,11 +1,11 @@
-from typing       import Dict, Iterable, List, Optional, Tuple, Union
+from typing       import Dict, Iterator, List, Optional, Tuple, Union
 from urllib.parse import urljoin
 from bs4          import BeautifulSoup
 from .classes     import DistributionPackage, Link
 
 def parse_simple_index(html: Union[str, bytes], base_url: Optional[str] = None,
                        from_encoding: Optional[str] = None) \
-        -> Iterable[Tuple[str, str]]:
+        -> Iterator[Tuple[str, str]]:
     """
     Parse a simple repository's index page and return a generator of ``(project
     name, project URL)`` pairs
@@ -17,7 +17,7 @@ def parse_simple_index(html: Union[str, bytes], base_url: Optional[str] = None,
     :param Optional[str] from_encoding: an optional hint to Beautiful Soup as
         to the encoding of ``html`` when it is `bytes` (usually the ``charset``
         parameter of the response's :mailheader:`Content-Type` header)
-    :rtype: Iterable[Tuple[str, str]]
+    :rtype: Iterator[Tuple[str, str]]
     """
     for filename, url, _ in parse_links(html, base_url, from_encoding):
         yield (filename, url)
@@ -49,7 +49,7 @@ def parse_project_page(html: Union[str, bytes], base_url: Optional[str] = None,
 
 def parse_links(html: Union[str, bytes], base_url: Optional[str] = None,
                 from_encoding: Optional[str] = None) \
-        -> Iterable[Tuple[str, str, Dict[str, Union[str, List[str]]]]]:
+        -> Iterator[Tuple[str, str, Dict[str, Union[str, List[str]]]]]:
     """
     Parse an HTML page and return a generator of links, where each link is
     represented as a triple of link text, link URL, and a `dict` of link tag
@@ -66,7 +66,7 @@ def parse_links(html: Union[str, bytes], base_url: Optional[str] = None,
     :param Optional[str] from_encoding: an optional hint to Beautiful Soup as
         to the encoding of ``html`` when it is `bytes` (usually the ``charset``
         parameter of the response's :mailheader:`Content-Type` header)
-    :rtype: Iterable[Tuple[str, str, Dict[str, Union[str, List[str]]]]]
+    :rtype: Iterator[Tuple[str, str, Dict[str, Union[str, List[str]]]]]
     """
     soup = BeautifulSoup(html, 'html.parser', from_encoding=from_encoding)
     base_tag = soup.find('base', href=True)
