@@ -10,6 +10,18 @@ v0.7.0 (in development)
   not report this information
 - Added type annotations
 - Moved documentation from README file to a Read the Docs site
+- Gave `PyPISimple` a method `~PyPISimple.get_project_page()` that returns a
+  `ProjectPage` instance with a ``packages: List[DistributionPackage]``
+  attribute plus other attributes for repository metadata
+- New utility functions:
+
+  - `parse_repo_links()` — Parses an HTML page, returns a pair of repository
+    metadata and a list of `Link` objects
+  - `parse_repo_project_page()` — Parses a project page, returns a
+    `ProjectPage` instance
+  - `parse_repo_project_reponse()` — Parses a `requests.Response` object
+    containing a project page, returns a `ProjectPage` instance
+
 
 v0.6.0 (2020-03-01)
 -------------------
