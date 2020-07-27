@@ -30,7 +30,6 @@ release = __version__
 today_fmt = '%Y %b %d'
 default_role = 'py:obj'
 pygments_style = 'sphinx'
-todo_include_todos = True
 
 html_theme = 'sphinx_rtd_theme'
 html_theme_options = {

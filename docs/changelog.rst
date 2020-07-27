@@ -27,7 +27,7 @@ v0.7.0 (in development)
     metadata and a list of `Link` objects
   - `parse_repo_project_page()` — Parses a project page and returns a
     `ProjectPage` instance
-  - `parse_repo_project_reponse()` — Parses a `requests.Response` object
+  - `parse_repo_project_response()` — Parses a `requests.Response` object
     containing a project page and returns a `ProjectPage` instance
   - `parse_links_stream()` — Parses an HTML page as stream of `bytes` or `str`
     and returns a generator of `Link` objects
