@@ -1,10 +1,10 @@
 import platform
 from   typing          import Any, Iterator, List, Optional
+from   warnings        import warn
 from   packaging.utils import canonicalize_name as normalize
 import requests
 from   .               import __url__, __version__
 from   .classes        import DistributionPackage, IndexPage, ProjectPage
-from   .parse_old      import parse_project_page, parse_simple_index
 from   .parse_repo     import parse_repo_index_response, \
                                 parse_repo_project_response
 from   .parse_stream   import parse_links_stream_response
@@ -165,15 +165,13 @@ class PyPISimple:
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code
         """
-        r = self.s.get(self.endpoint)
-        r.raise_for_status()
-        charset: Optional[str]
-        if 'charset' in r.headers.get('content-type', '').lower():
-            charset = r.encoding
-        else:
-            charset = None
-        for name, _ in parse_simple_index(r.content, r.url, charset):
-            yield name
+        warn(
+            'The get_projects() method is deprecated.  Use get_index_page() or'
+            ' stream_project_names() instead.',
+            DeprecationWarning,
+        )
+        page = self.get_index_page()
+        return iter(page.projects)
 
     def get_project_files(self, project: str) -> List[DistributionPackage]:
         """
@@ -193,14 +191,13 @@ class PyPISimple:
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code other than 404
         """
-        url = self.get_project_url(project)
-        r = self.s.get(url)
-        if r.status_code == 404:
+        warn(
+            'The get_project_files() method is deprecated.'
+            '  Use get_project_page() instead.',
+            DeprecationWarning,
+        )
+        page = self.get_project_page(project)
+        if page is None:
             return []
-        r.raise_for_status()
-        charset: Optional[str]
-        if 'charset' in r.headers.get('content-type', '').lower():
-            charset = r.encoding
         else:
-            charset = None
-        return parse_project_page(r.content, r.url, charset, project)
+            return page.packages

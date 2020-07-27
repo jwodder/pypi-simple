@@ -1,7 +1,9 @@
 from typing       import Dict, Iterator, List, Optional, Tuple, Union
 from urllib.parse import urljoin
+from warnings     import warn
 from bs4          import BeautifulSoup
-from .classes     import DistributionPackage, Link
+from .classes     import DistributionPackage
+from .parse_repo  import parse_repo_links
 
 def parse_simple_index(html: Union[str, bytes], base_url: Optional[str] = None,
                        from_encoding: Optional[str] = None) \
@@ -22,8 +24,13 @@ def parse_simple_index(html: Union[str, bytes], base_url: Optional[str] = None,
         parameter of the response's :mailheader:`Content-Type` header)
     :rtype: Iterator[Tuple[str, str]]
     """
-    for filename, url, _ in parse_links(html, base_url, from_encoding):
-        yield (filename, url)
+    warn(
+        'parse_simple_index() is deprecated.'
+        '  Use parse_repo_index_page() or parse_links_stream() instead.',
+        DeprecationWarning,
+    )
+    for link in parse_repo_links(html, base_url, from_encoding)[1]:
+        yield (link.text, link.url)
 
 def parse_project_page(html: Union[str, bytes], base_url: Optional[str] = None,
                        from_encoding: Optional[str] = None,
@@ -47,11 +54,15 @@ def parse_project_page(html: Union[str, bytes], base_url: Optional[str] = None,
         being parsed; used to disambiguate the parsing of certain filenames
     :rtype: List[DistributionPackage]
     """
-    files = []
-    for text, url, attrs in parse_links(html, base_url, from_encoding):
-        link = Link(text, url, attrs)
-        files.append(DistributionPackage.from_link(link, project_hint))
-    return files
+    warn(
+        'parse_project_page() is deprecated.'
+        '  Use parse_repo_project_page() instead.',
+        DeprecationWarning,
+    )
+    return [
+        DistributionPackage.from_link(link, project_hint)
+        for link in parse_repo_links(html, base_url, from_encoding)[1]
+    ]
 
 def parse_links(html: Union[str, bytes], base_url: Optional[str] = None,
                 from_encoding: Optional[str] = None) \
@@ -77,6 +88,10 @@ def parse_links(html: Union[str, bytes], base_url: Optional[str] = None,
         parameter of the response's :mailheader:`Content-Type` header)
     :rtype: Iterator[Tuple[str, str, Dict[str, Union[str, List[str]]]]]
     """
+    warn(
+        'parse_links() is deprecated.  Use parse_repo_links() instead.',
+        DeprecationWarning,
+    )
     soup = BeautifulSoup(html, 'html.parser', from_encoding=from_encoding)
     base_tag = soup.find('base', href=True)
     if base_tag is not None:

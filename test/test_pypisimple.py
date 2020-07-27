@@ -39,10 +39,14 @@ def test_session(content_type):
     )
 
     simple = PyPISimple('https://test.nil/simple/')
-    assert list(simple.get_projects()) == ['in_place', 'foo', 'BAR']
+    with pytest.warns(DeprecationWarning):
+        projects = list(simple.get_projects())
+    assert projects == ['in_place', 'foo', 'BAR']
     assert simple.get_project_url('IN.PLACE') == 'https://test.nil/simple/in-place/'
 
-    assert simple.get_project_files('IN.PLACE') == [
+    with pytest.warns(DeprecationWarning):
+        files = simple.get_project_files('IN.PLACE')
+    assert files == [
         DistributionPackage(
             filename='in_place-0.1.1-py2.py3-none-any.whl',
             project='in_place',
@@ -105,7 +109,9 @@ def test_session(content_type):
         ),
     ]
 
-    assert simple.get_project_files('nonexistent') == []
+    with pytest.warns(DeprecationWarning):
+        files = simple.get_project_files('nonexistent')
+    assert files == []
 
 
 @responses.activate
@@ -122,7 +128,9 @@ def test_project_hint_received():
             content_type='text/html',
         )
     simple = PyPISimple('https://test.nil/simple/')
-    assert simple.get_project_files('aws-adfs-ebsco') == [
+    with pytest.warns(DeprecationWarning):
+        files = simple.get_project_files('aws-adfs-ebsco')
+    assert files == [
         DistributionPackage(
             filename='aws-adfs-ebsco-0.3.6-2.tar.gz',
             project='aws-adfs-ebsco',
@@ -173,7 +181,9 @@ def test_redirected_project_page():
         content_type='text/html',
     )
     simple = PyPISimple('https://nil.test/simple/')
-    assert simple.get_project_files('project') == [
+    with pytest.warns(DeprecationWarning):
+        files = simple.get_project_files('project')
+    assert files == [
         DistributionPackage(
             filename='project-0.1.0.tar.gz',
             project='project',
@@ -200,7 +210,9 @@ def test_utf8_declarations(content_type, body_decl):
         content_type=content_type,
     )
     simple = PyPISimple('https://test.nil/simple/')
-    assert simple.get_project_files('project') == [
+    with pytest.warns(DeprecationWarning):
+        files = simple.get_project_files('project')
+    assert files == [
         DistributionPackage(
             filename=u'project-0.1.0-p\xFF42-none-any.whl',
             project='project',
@@ -230,7 +242,9 @@ def test_latin2_declarations(content_type, body_decl):
         content_type=content_type,
     )
     simple = PyPISimple('https://test.nil/simple/')
-    assert simple.get_project_files('project') == [
+    with pytest.warns(DeprecationWarning):
+        files = simple.get_project_files('project')
+    assert files == [
         DistributionPackage(
             filename=u'project-0.1.0-p\u0102\u017C42-none-any.whl',
             project='project',
