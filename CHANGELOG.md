@@ -28,6 +28,13 @@ v0.7.0 (in development)
       and returns an `IndexPage` instance
     - `parse_repo_index_response()` — Parses a `requests.Response` object
       containing an index page and returns an `IndexPage` instance
+- The following functions & methods are now deprecated and will be removed in a
+  future version:
+    - `PyPISimple.get_projects()`
+    - `PyPISimple.get_project_files()`
+    - `parse_simple_index()`
+    - `parse_project_page()`
+    - `parse_links()`
 
 v0.6.0 (2020-03-01)
 -------------------

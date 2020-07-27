@@ -10,6 +10,9 @@ def parse_simple_index(html: Union[str, bytes], base_url: Optional[str] = None,
     Parse a simple repository's index page and return a generator of ``(project
     name, project URL)`` pairs
 
+    .. deprecated:: 0.7.0
+        Use `parse_repo_index_page()` or `parse_links_stream()` instead
+
     :param html: the HTML to parse
     :type html: str or bytes
     :param Optional[str] base_url: an optional URL to join to the front of the
@@ -29,6 +32,9 @@ def parse_project_page(html: Union[str, bytes], base_url: Optional[str] = None,
     """
     Parse a project page from a simple repository and return a list of
     `DistributionPackage` objects
+
+    .. deprecated:: 0.7.0
+        Use `parse_repo_project_page()` instead
 
     :param html: the HTML to parse
     :type html: str or bytes
@@ -58,6 +64,9 @@ def parse_links(html: Union[str, bytes], base_url: Optional[str] = None,
     Link text has all leading & trailing whitespace removed.
 
     Keys in the attributes `dict` are converted to lowercase.
+
+    .. deprecated:: 0.7.0
+        Use `parse_repo_links()` instead
 
     :param html: the HTML to parse
     :type html: str or bytes

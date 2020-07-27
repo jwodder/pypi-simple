@@ -5,9 +5,6 @@ Low-Level Utilities
 
 Parsing Simple Repository Pages
 -------------------------------
-.. autofunction:: parse_simple_index
-.. autofunction:: parse_project_page
-.. autofunction:: parse_links
 .. autofunction:: parse_repo_index_page
 .. autofunction:: parse_repo_index_response
 .. autofunction:: parse_repo_project_page
@@ -19,6 +16,12 @@ Streaming Parsers
 ^^^^^^^^^^^^^^^^^
 .. autofunction:: parse_links_stream
 .. autofunction:: parse_links_stream_response
+
+Deprecated Functions
+^^^^^^^^^^^^^^^^^^^^
+.. autofunction:: parse_simple_index
+.. autofunction:: parse_project_page
+.. autofunction:: parse_links
 
 Parsing Filenames
 -----------------

@@ -67,59 +67,6 @@ class PyPISimple:
         if auth is not None:
             self.s.auth = auth
 
-    def get_projects(self) -> Iterator[str]:
-        """
-        Returns a generator of names of projects available in the repository.
-        The names are not normalized.
-
-        .. warning::
-
-            PyPI's project index file is very large and takes several seconds
-            to parse.  Use this method sparingly.
-
-        :rtype: Iterator[str]
-        :raises requests.HTTPError: if the repository responds with an HTTP
-            error code
-        """
-        r = self.s.get(self.endpoint)
-        r.raise_for_status()
-        charset: Optional[str]
-        if 'charset' in r.headers.get('content-type', '').lower():
-            charset = r.encoding
-        else:
-            charset = None
-        for name, _ in parse_simple_index(r.content, r.url, charset):
-            yield name
-
-    def stream_project_names(self, chunk_size: int = 65535) -> Iterator[str]:
-        """
-        .. versionadded:: 0.7.0
-
-        Returns a generator of names of projects available in the repository.
-        The names are not normalized.
-
-        Unlike `get_projects()`, this function makes a streaming request to the
-        server and parses the document in chunks.  It is intended to be faster
-        than `get_projects()`, especially when the complete document is very
-        large.
-
-        .. warning::
-
-            This function is rather experimental.  It does not have full
-            support for web encodings, encoding detection, or handling invalid
-            HTML.
-
-        :param int chunk_size: how many bytes to read from the response at a
-            time
-        :rtype: Iterator[str]
-        :raises requests.HTTPError: if the repository responds with an HTTP
-            error code
-        """
-        r = self.s.get(self.endpoint, stream=True)
-        r.raise_for_status()
-        for link in parse_links_stream_response(r, chunk_size):
-            yield link.text
-
     def get_index_page(self) -> IndexPage:
         """
         .. versionadded:: 0.7.0
@@ -140,32 +87,34 @@ class PyPISimple:
         r.raise_for_status()
         return parse_repo_index_response(r)
 
-    def get_project_files(self, project: str) -> List[DistributionPackage]:
+    def stream_project_names(self, chunk_size: int = 65535) -> Iterator[str]:
         """
-        Returns a list of `DistributionPackage` objects representing all of the
-        package files available in the repository for the given project.
+        .. versionadded:: 0.7.0
 
-        When fetching the project's information from the repository, a 404
-        response is treated the same as an empty page, resulting in an empty
-        list.  All other HTTP errors cause a `requests.HTTPError` to be raised.
+        Returns a generator of names of projects available in the repository.
+        The names are not normalized.
 
-        :param str project: The name of the project to fetch information on.
-            The name does not need to be normalized.
-        :rtype: List[DistributionPackage]
+        Unlike `get_index_page()` and `get_projects()`, this function makes a
+        streaming request to the server and parses the document in chunks.  It
+        is intended to be faster than `get_projects()`, especially when the
+        complete document is very large.
+
+        .. warning::
+
+            This function is rather experimental.  It does not have full
+            support for web encodings, encoding detection, or handling invalid
+            HTML.
+
+        :param int chunk_size: how many bytes to read from the response at a
+            time
+        :rtype: Iterator[str]
         :raises requests.HTTPError: if the repository responds with an HTTP
-            error code other than 404
+            error code
         """
-        url = self.get_project_url(project)
-        r = self.s.get(url)
-        if r.status_code == 404:
-            return []
+        r = self.s.get(self.endpoint, stream=True)
         r.raise_for_status()
-        charset: Optional[str]
-        if 'charset' in r.headers.get('content-type', '').lower():
-            charset = r.encoding
-        else:
-            charset = None
-        return parse_project_page(r.content, r.url, charset, project)
+        for link in parse_links_stream_response(r, chunk_size):
+            yield link.text
 
     def get_project_page(self, project: str) -> Optional[ProjectPage]:
         """
@@ -198,3 +147,60 @@ class PyPISimple:
         :rtype: str
         """
         return self.endpoint + normalize(project) + '/'
+
+    def get_projects(self) -> Iterator[str]:
+        """
+        Returns a generator of names of projects available in the repository.
+        The names are not normalized.
+
+        .. warning::
+
+            PyPI's project index file is very large and takes several seconds
+            to parse.  Use this method sparingly.
+
+        .. deprecated:: 0.7.0
+            Use `get_index_page()` or `stream_project_names()` instead
+
+        :rtype: Iterator[str]
+        :raises requests.HTTPError: if the repository responds with an HTTP
+            error code
+        """
+        r = self.s.get(self.endpoint)
+        r.raise_for_status()
+        charset: Optional[str]
+        if 'charset' in r.headers.get('content-type', '').lower():
+            charset = r.encoding
+        else:
+            charset = None
+        for name, _ in parse_simple_index(r.content, r.url, charset):
+            yield name
+
+    def get_project_files(self, project: str) -> List[DistributionPackage]:
+        """
+        Returns a list of `DistributionPackage` objects representing all of the
+        package files available in the repository for the given project.
+
+        When fetching the project's information from the repository, a 404
+        response is treated the same as an empty page, resulting in an empty
+        list.  All other HTTP errors cause a `requests.HTTPError` to be raised.
+
+        .. deprecated:: 0.7.0
+            Use `get_project_page()` instead
+
+        :param str project: The name of the project to fetch information on.
+            The name does not need to be normalized.
+        :rtype: List[DistributionPackage]
+        :raises requests.HTTPError: if the repository responds with an HTTP
+            error code other than 404
+        """
+        url = self.get_project_url(project)
+        r = self.s.get(url)
+        if r.status_code == 404:
+            return []
+        r.raise_for_status()
+        charset: Optional[str]
+        if 'charset' in r.headers.get('content-type', '').lower():
+            charset = r.encoding
+        else:
+            charset = None
+        return parse_project_page(r.content, r.url, charset, project)

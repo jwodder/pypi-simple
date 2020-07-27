@@ -42,20 +42,21 @@ Example
 
     >>> from pypi_simple import PyPISimple
     >>> client = PyPISimple()
-    >>> packages = client.get_project_files('requests')
-    >>> packages[0]
+    >>> requests_page = client.get_project_page('requests')
+    >>> pkg = requests_page.packages[0]
+    >>> pkg
     DistributionPackage(filename='requests-0.2.0.tar.gz', url='https://files.pythonhosted.org/packages/ba/bb/dfa0141a32d773c47e4dede1a617c59a23b74dd302e449cf85413fc96bc4/requests-0.2.0.tar.gz#sha256=813202ace4d9301a3c00740c700e012fb9f3f8c73ddcfe02ab558a8df6f175fd', project='requests', version='0.2.0', package_type='sdist', requires_python=None, has_sig=None, yanked=None)
-    >>> packages[0].filename
+    >>> pkg.filename
     'requests-0.2.0.tar.gz'
-    >>> packages[0].url
+    >>> pkg.url
     'https://files.pythonhosted.org/packages/ba/bb/dfa0141a32d773c47e4dede1a617c59a23b74dd302e449cf85413fc96bc4/requests-0.2.0.tar.gz#sha256=813202ace4d9301a3c00740c700e012fb9f3f8c73ddcfe02ab558a8df6f175fd'
-    >>> packages[0].project
+    >>> pkg.project
     'requests'
-    >>> packages[0].version
+    >>> pkg.version
     '0.2.0'
-    >>> packages[0].package_type
+    >>> pkg.package_type
     'sdist'
-    >>> packages[0].get_digests()
+    >>> pkg.get_digests()
     {'sha256': '813202ace4d9301a3c00740c700e012fb9f3f8c73ddcfe02ab558a8df6f175fd'}
 
 
