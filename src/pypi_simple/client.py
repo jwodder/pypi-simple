@@ -3,14 +3,11 @@ from   typing          import Any, Iterator, List, Optional
 from   warnings        import warn
 from   packaging.utils import canonicalize_name as normalize
 import requests
-from   .               import __url__, __version__
+from   .               import PYPI_SIMPLE_ENDPOINT, __url__, __version__
 from   .classes        import DistributionPackage, IndexPage, ProjectPage
 from   .parse_repo     import parse_repo_index_response, \
                                 parse_repo_project_response
 from   .parse_stream   import parse_links_stream_response
-
-#: The base URL for PyPI's simple API
-PYPI_SIMPLE_ENDPOINT: str = 'https://pypi.org/simple/'
 
 #: The User-Agent header used for requests; not used when the user provides eir
 #: own session object
@@ -82,6 +79,8 @@ class PyPISimple:
         :rtype: IndexPage
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code
+        :raises UnsupportedRepoVersionError: if the repository version has a
+            greater major component than the supported repository version
         """
         r = self.s.get(self.endpoint)
         r.raise_for_status()
@@ -110,6 +109,8 @@ class PyPISimple:
         :rtype: Iterator[str]
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code
+        :raises UnsupportedRepoVersionError: if the repository version has a
+            greater major component than the supported repository version
         """
         r = self.s.get(self.endpoint, stream=True)
         r.raise_for_status()
@@ -130,6 +131,8 @@ class PyPISimple:
         :rtype: Optional[ProjectPage]
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code other than 404
+        :raises UnsupportedRepoVersionError: if the repository version has a
+            greater major component than the supported repository version
         """
         url = self.get_project_url(project)
         r = self.s.get(url)
@@ -164,6 +167,8 @@ class PyPISimple:
         :rtype: Iterator[str]
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code
+        :raises UnsupportedRepoVersionError: if the repository version has a
+            greater major component than the supported repository version
         """
         warn(
             'The get_projects() method is deprecated.  Use get_index_page() or'
@@ -190,6 +195,8 @@ class PyPISimple:
         :rtype: List[DistributionPackage]
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code other than 404
+        :raises UnsupportedRepoVersionError: if the repository version has a
+            greater major component than the supported repository version
         """
         warn(
             'The get_project_files() method is deprecated.'

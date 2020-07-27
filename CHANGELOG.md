@@ -38,7 +38,9 @@ v0.7.0 (in development)
 - Support Warehouse's ``X-PyPI-Last-Serial`` header by attaching the value to
   the objects returned by `get_index_page()` and `get_project_page()`
 - Support PEP 629 by attaching the repository version to the objects returned
-  by `get_index_page()` and `get_project_page()`
+  by `get_index_page()` and `get_project_page()` and by raising an
+  `UnsupportedRepoVersionError` when a repository with an unsupported version
+  is encountered
 
 v0.6.0 (2020-03-01)
 -------------------

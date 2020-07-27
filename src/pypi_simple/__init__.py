@@ -19,14 +19,21 @@ __author_email__ = 'pypi-simple@varonathe.org'
 __license__      = 'MIT'
 __url__          = 'https://github.com/jwodder/pypi-simple'
 
+#: The base URL for PyPI's simple API
+PYPI_SIMPLE_ENDPOINT: str = 'https://pypi.org/simple/'
+
+#: The maximum supported simple repository version (See :pep:`629`)
+SUPPORTED_REPOSITORY_VERSION: str = '1.0'
+
 from .classes      import DistributionPackage, IndexPage, Link, ProjectPage
-from .client       import PYPI_SIMPLE_ENDPOINT, PyPISimple
+from .client       import PyPISimple
 from .filenames    import parse_filename
 from .parse_old    import parse_links, parse_project_page, parse_simple_index
 from .parse_repo   import parse_repo_index_page, parse_repo_index_response, \
                             parse_repo_links, parse_repo_project_page, \
                             parse_repo_project_response
 from .parse_stream import parse_links_stream, parse_links_stream_response
+from .util         import UnsupportedRepoVersionError
 
 __all__ = [
     'DistributionPackage',
@@ -35,6 +42,8 @@ __all__ = [
     'PYPI_SIMPLE_ENDPOINT',
     'ProjectPage',
     'PyPISimple',
+    'SUPPORTED_REPOSITORY_VERSION',
+    'UnsupportedRepoVersionError',
     'parse_filename',
     'parse_links',
     'parse_links_stream',

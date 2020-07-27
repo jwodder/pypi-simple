@@ -3,6 +3,7 @@ from   urllib.parse import urljoin
 from   bs4          import BeautifulSoup
 import requests
 from   .classes     import DistributionPackage, IndexPage, Link, ProjectPage
+from   .util        import check_repo_version
 
 def parse_repo_links(
     html: Union[str, bytes],
@@ -32,6 +33,8 @@ def parse_repo_links(
         to the encoding of ``html`` when it is `bytes` (usually the ``charset``
         parameter of the response's :mailheader:`Content-Type` header)
     :rtype: Tuple[Dict[str, str], List[Link]]
+    :raises UnsupportedRepoVersionError: if the repository version has a
+        greater major component than the supported repository version
     """
     soup = BeautifulSoup(html, 'html.parser', from_encoding=from_encoding)
     base_tag = soup.find('base', href=True)
@@ -54,6 +57,7 @@ def parse_repo_links(
     )
     if pep629_meta is not None:
         metadata["repository_version"] = pep629_meta["content"]
+        check_repo_version(metadata["repository_version"])
     links = []
     for link in soup.find_all('a', href=True):
         links.append(Link(
@@ -84,6 +88,8 @@ def parse_repo_project_page(
         to the encoding of ``html`` when it is `bytes` (usually the ``charset``
         parameter of the response's :mailheader:`Content-Type` header)
     :rtype: ProjectPage
+    :raises UnsupportedRepoVersionError: if the repository version has a
+        greater major component than the supported repository version
     """
     metadata, links = parse_repo_links(html, base_url, from_encoding)
     return ProjectPage(
@@ -106,6 +112,8 @@ def parse_repo_project_response(project: str, r: requests.Response) \
     :param str project: The name of the project whose page is being parsed
     :param requests.Response r: the response object to parse
     :rtype: ProjectPage
+    :raises UnsupportedRepoVersionError: if the repository version has a
+        greater major component than the supported repository version
     """
     charset: Optional[str]
     if 'charset' in r.headers.get('content-type', '').lower():
@@ -136,6 +144,8 @@ def parse_repo_index_page(
         to the encoding of ``html`` when it is `bytes` (usually the ``charset``
         parameter of the response's :mailheader:`Content-Type` header)
     :rtype: IndexPage
+    :raises UnsupportedRepoVersionError: if the repository version has a
+        greater major component than the supported repository version
     """
     metadata, links = parse_repo_links(html, from_encoding=from_encoding)
     return IndexPage(
@@ -153,6 +163,8 @@ def parse_repo_index_response(r: requests.Response) -> IndexPage:
 
     :param requests.Response r: the response object to parse
     :rtype: IndexPage
+    :raises UnsupportedRepoVersionError: if the repository version has a
+        greater major component than the supported repository version
     """
     charset: Optional[str]
     if 'charset' in r.headers.get('content-type', '').lower():

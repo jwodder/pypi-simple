@@ -7,6 +7,7 @@ from   urllib.parse import urljoin
 from   bs4.dammit   import EncodingDetector
 import requests
 from   .classes     import Link
+from   .util        import check_repo_version
 
 # List taken from BeautifulSoup4 source
 EMPTY_TAGS = {
@@ -41,10 +42,10 @@ class LinkParser(HTMLParser):
         elif tag == 'a':
             attrdict['#text'] = ''
             self.link_tag_stack.append(attrdict)
-        #elif tag == 'meta' and \
-        #        attrdict.get('name') == 'pypi:repository-version' and \
-        #        'content' in attrdict:
-        ### Do something?
+        elif tag == 'meta' and \
+                attrdict.get('name') == 'pypi:repository-version' and \
+                'content' in attrdict:
+            check_repo_version(attrdict["content"])
 
     def handle_endtag(self, tag: str) -> None:
         for i in range(len(self.tag_stack)-1, -1, -1):
@@ -92,6 +93,8 @@ def parse_links_stream_response(r: requests.Response, chunk_size: int = 65535) \
     :param requests.Response r: the streaming response object to parse
     :param int chunk_size: how many bytes to read from the response at a time
     :rtype: Iterator[Link]
+    :raises UnsupportedRepoVersionError: if the repository version has a
+        greater major component than the supported repository version
     """
     return parse_links_stream(
         r.iter_content(chunk_size),
@@ -131,6 +134,8 @@ def parse_links_stream(
         parameter of the :mailheader:`Content-Type` header of the HTTP response
         that returned the document
     :rtype: Iterator[Link]
+    :raises UnsupportedRepoVersionError: if the repository version has a
+        greater major component than the supported repository version
     """
     textseq = iterhtmldecode(htmlseq, http_charset=http_charset)
     parser = LinkParser(base_url=base_url)

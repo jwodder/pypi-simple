@@ -23,6 +23,8 @@ def parse_simple_index(html: Union[str, bytes], base_url: Optional[str] = None,
         to the encoding of ``html`` when it is `bytes` (usually the ``charset``
         parameter of the response's :mailheader:`Content-Type` header)
     :rtype: Iterator[Tuple[str, str]]
+    :raises UnsupportedRepoVersionError: if the repository version has a
+        greater major component than the supported repository version
     """
     warn(
         'parse_simple_index() is deprecated.'
@@ -53,6 +55,8 @@ def parse_project_page(html: Union[str, bytes], base_url: Optional[str] = None,
     :param Optional[str] project_hint: The name of the project whose page is
         being parsed; used to disambiguate the parsing of certain filenames
     :rtype: List[DistributionPackage]
+    :raises UnsupportedRepoVersionError: if the repository version has a
+        greater major component than the supported repository version
     """
     warn(
         'parse_project_page() is deprecated.'

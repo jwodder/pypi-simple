@@ -52,7 +52,9 @@ v0.7.0 (in development)
   `~PyPISimple.get_project_page()`
 - Support :pep:`629` by attaching the repository version to the objects
   returned by `~PyPISimple.get_index_page()` and
-  `~PyPISimple.get_project_page()`
+  `~PyPISimple.get_project_page()` and by raising an
+  `UnsupportedRepoVersionError` when a repository with an unsupported version
+  is encountered
 
 
 v0.6.0 (2020-03-01)
