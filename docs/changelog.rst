@@ -47,6 +47,13 @@ v0.7.0 (in development)
   - `parse_project_page()`
   - `parse_links()`
 
+- Support Warehouse's :mailheader:`X-PyPI-Last-Serial` header by attaching the
+  value to the objects returned by `~PyPISimple.get_index_page()` and
+  `~PyPISimple.get_project_page()`
+- Support :pep:`629` by attaching the repository version to the objects
+  returned by `~PyPISimple.get_index_page()` and
+  `~PyPISimple.get_project_page()`
+
 
 v0.6.0 (2020-03-01)
 -------------------
