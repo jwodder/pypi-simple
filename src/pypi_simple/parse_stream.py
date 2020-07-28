@@ -174,8 +174,9 @@ def iterhtmldecode(
     - encoding declared in document
     - default encoding
 
-    .. _encspec: https://html.spec.whatwg.org/multipage/parsing.html\
-#determining-the-character-encoding
+    .. _encspec:
+       https://html.spec.whatwg.org/multipage/parsing.html
+       #determining-the-character-encoding
 
     :param Iterable[AnyStr] iterable: an iterable of either `bytes` or `str`
         that, when joined together, form an HTML document
