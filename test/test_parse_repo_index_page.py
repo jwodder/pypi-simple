@@ -109,7 +109,6 @@ def test_parse_repo_index_page(filename, encoding, page):
     html = (DATA_DIR / filename).read_bytes()
     assert parse_repo_index_page(html, encoding) == page
 
-
 def test_parse_repo_index_page_unsupported_version():
     with pytest.raises(UnsupportedRepoVersionError) as excinfo:
         parse_repo_index_page('''
