@@ -1,8 +1,9 @@
+import os
 from   os.path     import dirname, join
 import pytest
 from   pypi_simple import PYPI_SIMPLE_ENDPOINT, parse_simple_index
 
-DATA_DIR = join(dirname(__file__), 'data')
+DATA_DIR = join(dirname(__file__), os.pardir, 'data')
 
 def test_empty():
     with pytest.warns(DeprecationWarning):

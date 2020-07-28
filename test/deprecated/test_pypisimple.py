@@ -1,3 +1,4 @@
+import os
 from   os.path     import dirname, join
 import pytest
 import requests
@@ -10,7 +11,7 @@ from   pypi_simple import DistributionPackage, PyPISimple
 ])
 @responses.activate
 def test_session(content_type):
-    session_dir = join(dirname(__file__), 'data', 'session01')
+    session_dir = join(dirname(__file__), os.pardir, 'data', 'session01')
     with open(join(session_dir, 'simple.html')) as fp:
         responses.add(
             method=responses.GET,
@@ -120,7 +121,7 @@ def test_project_hint_received():
     Test that the argument to ``get_project_files()`` is used to disambiguate
     filenames
     """
-    with open(join(dirname(__file__), 'data', 'aws-adfs-ebsco.html')) as fp:
+    with open(join(dirname(__file__), os.pardir, 'data', 'aws-adfs-ebsco.html')) as fp:
         responses.add(
             method=responses.GET,
             url='https://test.nil/simple/aws-adfs-ebsco/',
