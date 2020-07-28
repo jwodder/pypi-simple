@@ -1,5 +1,6 @@
 import pytest
-from   pypi_simple import Link, parse_repo_links
+from   pypi_simple import Link, SUPPORTED_REPOSITORY_VERSION, \
+                            UnsupportedRepoVersionError, parse_repo_links
 
 @pytest.mark.parametrize('html,base_url,links', [
     (
@@ -498,3 +499,23 @@ from   pypi_simple import Link, parse_repo_links
 ])
 def test_parse_repo_links(html, base_url, links):
     assert parse_repo_links(html, base_url) == links
+
+def test_parse_repo_links_unsupported_version():
+    with pytest.raises(UnsupportedRepoVersionError) as excinfo:
+        parse_repo_links('''
+            <html>
+            <head><title>Basic test</title></head>
+            <meta name="pypi:repository-version" content="42.0"/>
+            <body>
+            <a href="one.html">link1</a>
+            <a href="two.html">link-two</a>
+            <span href="zero.html">not-a-link</span>
+            </body>
+            </html>
+        ''')
+    assert excinfo.value.declared_version == '42.0'
+    assert excinfo.value.supported_version == SUPPORTED_REPOSITORY_VERSION
+    assert str(excinfo.value) == (
+        "Repository's version (42.0) has greater major component than"
+        f" supported version ({SUPPORTED_REPOSITORY_VERSION})"
+    )
