@@ -1,7 +1,6 @@
 import os
 from   os.path     import dirname, join
 import pytest
-import requests
 import responses
 from   pypi_simple import DistributionPackage, PyPISimple
 
@@ -154,19 +153,6 @@ def test_project_hint_received():
         ),
     ]
 
-@pytest.mark.parametrize('endpoint', [
-    'https://test.nil/simple',
-    'https://test.nil/simple/',
-])
-@pytest.mark.parametrize('project', [
-    'some-project',
-    'some.project',
-    'SOME_PROJECT',
-])
-def test_get_project_url(endpoint, project):
-    assert PyPISimple(endpoint).get_project_url(project) \
-        == 'https://test.nil/simple/some-project/'
-
 @responses.activate
 def test_redirected_project_page():
     responses.add(
@@ -257,31 +243,3 @@ def test_latin2_declarations(content_type, body_decl):
             yanked=None,
         ),
     ]
-
-def test_auth_new_session():
-    simple = PyPISimple('https://test.nil/simple/', auth=('user', 'password'))
-    assert simple.s.auth == ('user', 'password')
-
-def test_custom_session():
-    s = requests.Session()
-    simple = PyPISimple('https://test.nil/simple/', session=s)
-    assert simple.s is s
-    assert simple.s.auth is None
-
-def test_auth_custom_session():
-    simple = PyPISimple(
-        'https://test.nil/simple/',
-        auth=('user', 'password'),
-        session=requests.Session(),
-    )
-    assert simple.s.auth == ('user', 'password')
-
-def test_auth_override_custom_session():
-    s = requests.Session()
-    s.auth = ('login', 'secret')
-    simple = PyPISimple(
-        'https://test.nil/simple/',
-        auth=('user', 'password'),
-        session=s,
-    )
-    assert simple.s.auth == ('user', 'password')
