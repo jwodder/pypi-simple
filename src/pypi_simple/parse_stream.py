@@ -20,6 +20,7 @@ class LinkParser(HTMLParser):
     def __init__(self, base_url: Optional[str] = None) -> None:
         super().__init__(convert_charrefs=True)
         self.base_url: Optional[str] = base_url
+        self.base_seen = False
         self.tag_stack: List[str] = []
         self.finished_links: List[Link] = []
         self.link_tag_stack: List[Dict[str, str]] = []
@@ -34,11 +35,12 @@ class LinkParser(HTMLParser):
         if tag not in EMPTY_TAGS:
             self.tag_stack.append(tag)
         attrdict = {k: v or '' for k,v in attrs}
-        if tag == 'base' and 'href' in attrdict:
+        if tag == 'base' and 'href' in attrdict and not self.base_seen:
             if self.base_url is None:
                 self.base_url = attrdict["href"]
             else:
                 self.base_url = urljoin(self.base_url, attrdict['href'])
+            self.base_seen = True
         elif tag == 'a':
             attrdict['#text'] = ''
             self.link_tag_stack.append(attrdict)
