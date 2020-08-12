@@ -112,10 +112,10 @@ class PyPISimple:
         :raises UnsupportedRepoVersionError: if the repository version has a
             greater major component than the supported repository version
         """
-        r = self.s.get(self.endpoint, stream=True)
-        r.raise_for_status()
-        for link in parse_links_stream_response(r, chunk_size):
-            yield link.text
+        with self.s.get(self.endpoint, stream=True) as r:
+            r.raise_for_status()
+            for link in parse_links_stream_response(r, chunk_size):
+                yield link.text
 
     def get_project_page(self, project: str) -> Optional[ProjectPage]:
         """
