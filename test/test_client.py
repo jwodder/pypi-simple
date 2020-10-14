@@ -301,3 +301,24 @@ def test_auth_override_custom_session():
         session=s,
     )
     assert simple.s.auth == ('user', 'password')
+
+@responses.activate
+def test_stream_project_names():
+    session_dir = DATA_DIR / 'session01'
+    with (session_dir / 'simple.html').open() as fp:
+        responses.add(
+            method=responses.GET,
+            url='https://test.nil/simple/',
+            body=fp.read(),
+            content_type="text/html",
+            headers={"x-pypi-last-serial": "12345"},
+            stream=True,
+        )
+    responses.add(
+        method=responses.GET,
+        url='https://test.nil/simple/',
+        body='This URL should only be requested once.',
+        status=500,
+    )
+    simple = PyPISimple('https://test.nil/simple/')
+    assert list(simple.stream_project_names()) == ['in_place', 'foo', 'BAR']
