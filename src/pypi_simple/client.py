@@ -95,7 +95,7 @@ class PyPISimple:
 
         Unlike `get_index_page()` and `get_projects()`, this function makes a
         streaming request to the server and parses the document in chunks.  It
-        is intended to be faster than `get_projects()`, especially when the
+        is intended to be faster than the other methods, especially when the
         complete document is very large.
 
         .. warning::
