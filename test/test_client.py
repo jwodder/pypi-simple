@@ -12,7 +12,7 @@ DATA_DIR = Path(__file__).with_name('data')
     'text/html; charset=utf-8',
 ])
 @responses.activate
-def test_session(content_type):
+def test_session(mocker, content_type):
     session_dir = DATA_DIR / 'session01'
     with (session_dir / 'simple.html').open() as fp:
         responses.add(
@@ -43,14 +43,18 @@ def test_session(content_type):
         status=404,
     )
     simple = PyPISimple('https://test.nil/simple/')
-    assert simple.get_index_page() == IndexPage(
+    spy = mocker.spy(simple.s, 'get')
+    assert simple.get_index_page(timeout=3.14) == IndexPage(
         projects=['in_place', 'foo', 'BAR'],
         last_serial='12345',
         repository_version='1.0',
     )
+    call, = spy.call_args_list
+    assert call.kwargs["timeout"] == 3.14
+    spy.reset_mock()
     assert simple.get_project_url('IN.PLACE') \
         == 'https://test.nil/simple/in-place/'
-    assert simple.get_project_page('IN.PLACE') == ProjectPage(
+    assert simple.get_project_page('IN.PLACE', timeout=2.718) == ProjectPage(
         project='IN.PLACE',
         packages=[
             DistributionPackage(
@@ -117,6 +121,8 @@ def test_session(content_type):
         last_serial='54321',
         repository_version='1.0',
     )
+    call, = spy.call_args_list
+    assert call.kwargs["timeout"] == 2.718
     assert simple.get_project_page('nonexistent') is None
 
 @responses.activate
@@ -303,7 +309,7 @@ def test_auth_override_custom_session():
     assert simple.s.auth == ('user', 'password')
 
 @responses.activate
-def test_stream_project_names():
+def test_stream_project_names(mocker):
     session_dir = DATA_DIR / 'session01'
     with (session_dir / 'simple.html').open() as fp:
         responses.add(
@@ -321,4 +327,8 @@ def test_stream_project_names():
         status=500,
     )
     simple = PyPISimple('https://test.nil/simple/')
-    assert list(simple.stream_project_names()) == ['in_place', 'foo', 'BAR']
+    spy = mocker.spy(simple.s, 'get')
+    assert list(simple.stream_project_names(timeout=1.618)) \
+        == ['in_place', 'foo', 'BAR']
+    call, = spy.call_args_list
+    assert call.kwargs["timeout"] == 1.618

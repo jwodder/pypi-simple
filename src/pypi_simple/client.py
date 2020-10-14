@@ -1,5 +1,5 @@
 import platform
-from   typing          import Any, Iterator, List, Optional
+from   typing          import Any, Iterator, List, Optional, Tuple, Union
 from   warnings        import warn
 from   packaging.utils import canonicalize_name as normalize
 import requests
@@ -64,7 +64,10 @@ class PyPISimple:
         if auth is not None:
             self.s.auth = auth
 
-    def get_index_page(self) -> IndexPage:
+    def get_index_page(
+        self,
+        timeout: Union[float, Tuple[float,float], None] = None,
+    ) -> IndexPage:
         """
         .. versionadded:: 0.7.0
 
@@ -76,17 +79,23 @@ class PyPISimple:
             PyPI's project index file is very large and takes several seconds
             to parse.  Use this method sparingly.
 
+        :param timeout: optional timeout to pass to the ``requests`` call
+        :type timeout: Union[float, Tuple[float,float], None]
         :rtype: IndexPage
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code
         :raises UnsupportedRepoVersionError: if the repository version has a
             greater major component than the supported repository version
         """
-        r = self.s.get(self.endpoint)
+        r = self.s.get(self.endpoint, timeout=timeout)
         r.raise_for_status()
         return parse_repo_index_response(r)
 
-    def stream_project_names(self, chunk_size: int = 65535) -> Iterator[str]:
+    def stream_project_names(
+        self,
+        chunk_size: int = 65535,
+        timeout: Union[float, Tuple[float,float], None] = None,
+    ) -> Iterator[str]:
         """
         .. versionadded:: 0.7.0
 
@@ -106,18 +115,24 @@ class PyPISimple:
 
         :param int chunk_size: how many bytes to read from the response at a
             time
+        :param timeout: optional timeout to pass to the ``requests`` call
+        :type timeout: Union[float, Tuple[float,float], None]
         :rtype: Iterator[str]
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code
         :raises UnsupportedRepoVersionError: if the repository version has a
             greater major component than the supported repository version
         """
-        with self.s.get(self.endpoint, stream=True) as r:
+        with self.s.get(self.endpoint, stream=True, timeout=timeout) as r:
             r.raise_for_status()
             for link in parse_links_stream_response(r, chunk_size):
                 yield link.text
 
-    def get_project_page(self, project: str) -> Optional[ProjectPage]:
+    def get_project_page(
+        self,
+        project: str,
+        timeout: Union[float, Tuple[float,float], None] = None,
+    ) -> Optional[ProjectPage]:
         """
         .. versionadded:: 0.7.0
 
@@ -128,6 +143,8 @@ class PyPISimple:
 
         :param str project: The name of the project to fetch information on.
             The name does not need to be normalized.
+        :param timeout: optional timeout to pass to the ``requests`` call
+        :type timeout: Union[float, Tuple[float,float], None]
         :rtype: Optional[ProjectPage]
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code other than 404
@@ -135,7 +152,7 @@ class PyPISimple:
             greater major component than the supported repository version
         """
         url = self.get_project_url(project)
-        r = self.s.get(url)
+        r = self.s.get(url, timeout=timeout)
         if r.status_code == 404:
             return None
         r.raise_for_status()
