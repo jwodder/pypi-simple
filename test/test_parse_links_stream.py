@@ -426,9 +426,225 @@ from   pypi_simple import Link, SUPPORTED_REPOSITORY_VERSION, \
         ],
     ),
 
+    (
+        '''
+            <html>
+            <head>
+            <title>Basic test</title>
+            </head>
+            <body>
+            <a href="one.html">link1</a>
+            <a href="two.html">link-two
+        ''',
+        None,
+        [
+            Link('link1', 'one.html', {'href': 'one.html'}),
+            Link('link-two', 'two.html', {'href': 'two.html'}),
+        ],
+    )
 ])
 def test_parse_links_stream(html, base_url, links):
     assert list(parse_links_stream(StringIO(html), base_url)) == links
+
+@pytest.mark.parametrize('htmlseq,charset,links', [
+    ([], None, []),
+
+    (
+        [
+            b'\xFF\xFE<\x00h\x00t\x00m\x00l\x00>\x00\n\x00',
+            '<head><title>UTF-16LE</title></head>\n'.encode('utf-16le'),
+            '<body>\n'.encode('utf-16le'),
+            '<a href="one.html">link1</a>\n'.encode('utf-16le'),
+            '<a href="two.html">link-two</a>\n'.encode('utf-16le'),
+            '</body>\n'.encode('utf-16le'),
+            '</html>\n'.encode('utf-16le'),
+        ],
+        None,
+        [
+            Link('link1', 'one.html', {'href': 'one.html'}),
+            Link('link-two', 'two.html', {'href': 'two.html'}),
+        ],
+    ),
+
+    (
+        [
+            b'\xFF\xFE<\x00h\x00t\x00m\x00l\x00>\x00\n\x00',
+            "<!-- This is a very long comment to ensure that `scan_window = 1024` bytes are consumed before reaching the end of all of the data.  What can I write about... So, how about that sports team?  Aren't they very sporty?  ... Forget it, I'll just multiply this string a few times. -->".encode('utf-16le') * 2,
+            '<head><title>UTF-16LE</title></head>\n'.encode('utf-16le'),
+            '<body>\n'.encode('utf-16le'),
+            '<a href="one.html">link1</a>\n'.encode('utf-16le'),
+            '<a href="two.html">link-two</a>\n'.encode('utf-16le'),
+            '</body>\n'.encode('utf-16le'),
+            '</html>\n'.encode('utf-16le'),
+        ],
+        None,
+        [
+            Link('link1', 'one.html', {'href': 'one.html'}),
+            Link('link-two', 'two.html', {'href': 'two.html'}),
+        ],
+    ),
+
+    (
+        [
+            b'\xFF\xFE<\x00h\x00t\x00m\x00l\x00>\x00\n\x00',
+            '<head>\n'.encode('utf-16le'),
+            '<title>UTF-16LE</title>\n'.encode('utf-16le'),
+            '<meta charset="iso-8859-1"/>\n'.encode('utf-16le'),
+            '</head>\n'.encode('utf-16le'),
+            '<body>\n'.encode('utf-16le'),
+            '<a href="one.html">link1</a>\n'.encode('utf-16le'),
+            '<a href="two.html">link-two</a>\n'.encode('utf-16le'),
+            '</body>\n'.encode('utf-16le'),
+            '</html>\n'.encode('utf-16le'),
+        ],
+        "utf-8",
+        [
+            Link('link1', 'one.html', {'href': 'one.html'}),
+            Link('link-two', 'two.html', {'href': 'two.html'}),
+        ],
+    ),
+
+    (
+        [
+            b'<html>\n',
+            b'<head>\n',
+            b'<title>MacRoman</title>\n',
+            b'<meta charset="macroman"/>\n',
+            b'</head>\n',
+            b'<body>\n',
+            b'<a href="one.html">link1</a>\n',
+            b'<a href="two.html">link-\xB9</a>\n',
+            b'</body>\n',
+            b'</html>\n',
+        ],
+        None,
+        [
+            Link('link1', 'one.html', {'href': 'one.html'}),
+            Link('link-π', 'two.html', {'href': 'two.html'}),
+        ],
+    ),
+
+    (
+        [
+            b'<html>\n',
+            b'<head>\n',
+            b'<title>Latin-1</title>\n',
+            b'<meta charset="latin-1"/>\n',
+            b'</head>\n',
+            b'<body>\n',
+            b'<a href="one.html">link1</a>\n',
+            b'<a href="two.html">link-\xC3\xB0</a>\n',
+            b'</body>\n',
+            b'</html>\n',
+        ],
+        None,
+        [
+            Link('link1', 'one.html', {'href': 'one.html'}),
+            Link('link-\xC3\xB0', 'two.html', {'href': 'two.html'}),
+        ],
+    ),
+
+    (
+        [
+            b'<html>\n',
+            b'<head>\n',
+            b'<title>UTF-8</title>\n',
+            b'<meta charset="latin-1"/>\n',
+            b'</head>\n',
+            b'<body>\n',
+            b'<a href="one.html">link1</a>\n',
+            b'<a href="two.html">link-\xC3\xB0</a>\n',
+            b'</body>\n',
+            b'</html>\n',
+        ],
+        "utf-8",
+        [
+            Link('link1', 'one.html', {'href': 'one.html'}),
+            Link('link-\xF0', 'two.html', {'href': 'two.html'}),
+        ],
+    ),
+
+    (
+        [
+            b'<html>\n',
+            b'<head>\n',
+            b'<title>CP437</title>\n',
+            b'<meta charset="cp437"/>\n',
+            b'</head>\n',
+            b'<body>\n',
+            b'<a href="one.html">link1</a>\n',
+            b'<a href="two.html">link-\x8E</a>\n',
+            b'</body>\n',
+            b'</html>\n',
+        ],
+        None,
+        [
+            Link('link1', 'one.html', {'href': 'one.html'}),
+            Link('link-Ä', 'two.html', {'href': 'two.html'}),
+        ],
+    ),
+
+    (
+        [
+            b'<html>\n',
+            b'<head>\n',
+            b'<title>CP437</title>\n',
+            b'<meta http-equiv="Content-Type" content="text/html; charset=cp437"/>\n',
+            b'</head>\n',
+            b'<body>\n',
+            b'<a href="one.html">link1</a>\n',
+            b'<a href="two.html">link-\x8E</a>\n',
+            b'</body>\n',
+            b'</html>\n',
+        ],
+        None,
+        [
+            Link('link1', 'one.html', {'href': 'one.html'}),
+            Link('link-Ä', 'two.html', {'href': 'two.html'}),
+        ],
+    ),
+
+    (
+        [
+            b'<?xml version="1.0" encoding="cp437"?>\n',
+            b'<html>\n',
+            b'<head>\n',
+            b'<title>CP437</title>\n',
+            b'</head>\n',
+            b'<body>\n',
+            b'<a href="one.html">link1</a>\n',
+            b'<a href="two.html">link-\x8E</a>\n',
+            b'</body>\n',
+            b'</html>\n',
+        ],
+        None,
+        [
+            Link('link1', 'one.html', {'href': 'one.html'}),
+            Link('link-Ä', 'two.html', {'href': 'two.html'}),
+        ],
+    ),
+
+    (
+        [
+            b'<html>\n',
+            b'<head>\n',
+            b'<title>CP1252</title>\n',
+            b'</head>\n',
+            b'<body>\n',
+            b'<a href="one.html">link1</a>\n',
+            b'<a href="two.html">link-\x8E</a>\n',
+            b'</body>\n',
+            b'</html>\n',
+        ],
+        None,
+        [
+            Link('link1', 'one.html', {'href': 'one.html'}),
+            Link('link-Ž', 'two.html', {'href': 'two.html'}),
+        ],
+    ),
+])
+def test_parse_links_stream_iterable_bytes(htmlseq, charset, links):
+    assert list(parse_links_stream(htmlseq, http_charset=charset)) == links
 
 @pytest.mark.parametrize('html,version', [
     (
