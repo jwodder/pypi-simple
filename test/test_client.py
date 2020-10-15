@@ -50,7 +50,7 @@ def test_session(mocker, content_type):
         repository_version='1.0',
     )
     call, = spy.call_args_list
-    assert call.kwargs["timeout"] == 3.14
+    assert call[1]["timeout"] == 3.14
     spy.reset_mock()
     assert simple.get_project_url('IN.PLACE') \
         == 'https://test.nil/simple/in-place/'
@@ -122,7 +122,7 @@ def test_session(mocker, content_type):
         repository_version='1.0',
     )
     call, = spy.call_args_list
-    assert call.kwargs["timeout"] == 2.718
+    assert call[1]["timeout"] == 2.718
     assert simple.get_project_page('nonexistent') is None
 
 @responses.activate
@@ -331,4 +331,4 @@ def test_stream_project_names(mocker):
     assert list(simple.stream_project_names(timeout=1.618)) \
         == ['in_place', 'foo', 'BAR']
     call, = spy.call_args_list
-    assert call.kwargs["timeout"] == 1.618
+    assert call[1]["timeout"] == 1.618
