@@ -6,9 +6,18 @@ python:
     - '3.7'
     - '3.8'
     - pypy3
+
+env:
+     - TOXENV=py
+
+jobs:
+    include:
+        - python: '3.6'
+          env: TOXENV=typing
+
 install:
     - pip install -U codecov tox virtualenv
 script:
-    - tox -e py
+    - tox
 after_success:
     - codecov
