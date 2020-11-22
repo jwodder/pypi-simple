@@ -3,8 +3,9 @@
     :alt: Project Status: Active — The project has reached a stable, usable
           state and is being actively developed.
 
-.. image:: https://travis-ci.com/jwodder/pypi-simple.svg?branch=master
-    :target: https://travis-ci.com/jwodder/pypi-simple
+.. image:: https://github.com/jwodder/pypi-simple/workflows/Test/badge.svg?branch=master
+    :target: https://github.com/jwodder/pypi-simple/actions?workflow=Test
+    :alt: CI Status
 
 .. image:: https://codecov.io/gh/jwodder/pypi-simple/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/jwodder/pypi-simple
