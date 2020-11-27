@@ -201,11 +201,11 @@ def test_utf8_declarations(content_type, body_decl):
         files = simple.get_project_files('project')
     assert files == [
         DistributionPackage(
-            filename=u'project-0.1.0-p\xFF42-none-any.whl',
+            filename='project-0.1.0-p\xFF42-none-any.whl',
             project='project',
             version='0.1.0',
             package_type='wheel',
-            url=u"https://test.nil/simple/files/project-0.1.0-p\xFF42-none-any.whl",
+            url="https://test.nil/simple/files/project-0.1.0-p\xFF42-none-any.whl",
             requires_python=None,
             has_sig=None,
             yanked=None,
@@ -233,11 +233,11 @@ def test_latin2_declarations(content_type, body_decl):
         files = simple.get_project_files('project')
     assert files == [
         DistributionPackage(
-            filename=u'project-0.1.0-p\u0102\u017C42-none-any.whl',
+            filename='project-0.1.0-p\u0102\u017C42-none-any.whl',
             project='project',
             version='0.1.0',
             package_type='wheel',
-            url=u"https://test.nil/simple/files/project-0.1.0-p\u0102\u017C42-none-any.whl",
+            url="https://test.nil/simple/files/project-0.1.0-p\u0102\u017C42-none-any.whl",
             requires_python=None,
             has_sig=None,
             yanked=None,

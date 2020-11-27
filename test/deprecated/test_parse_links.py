@@ -246,10 +246,10 @@ def test_escaped_text():
             <a href="https://test.nil/simple/files/project-0.1.0-p&#xFF;42-none-any.whl">project-0.1.0-p&#xFF;42-none-any.whl</a>
         '''))
     assert links == [(
-        u'project-0.1.0-p\xFF42-none-any.whl',
-        u"https://test.nil/simple/files/project-0.1.0-p\xFF42-none-any.whl",
+        'project-0.1.0-p\xFF42-none-any.whl',
+        "https://test.nil/simple/files/project-0.1.0-p\xFF42-none-any.whl",
         {
-            "href": u"https://test.nil/simple/files/project-0.1.0-p\xFF42-none-any.whl",
+            "href": "https://test.nil/simple/files/project-0.1.0-p\xFF42-none-any.whl",
         },
     )]
 
@@ -259,9 +259,9 @@ def test_named_escaped_text():
             <a href="https://test.nil/simple/files/project-0.1.0-p&yuml;42-none-any.whl">project-0.1.0-p&yuml;42-none-any.whl</a>
         '''))
     assert links == [(
-        u'project-0.1.0-p\xFF42-none-any.whl',
-        u"https://test.nil/simple/files/project-0.1.0-p\xFF42-none-any.whl",
+        'project-0.1.0-p\xFF42-none-any.whl',
+        "https://test.nil/simple/files/project-0.1.0-p\xFF42-none-any.whl",
         {
-            "href": u"https://test.nil/simple/files/project-0.1.0-p\xFF42-none-any.whl",
+            "href": "https://test.nil/simple/files/project-0.1.0-p\xFF42-none-any.whl",
         },
     )]
