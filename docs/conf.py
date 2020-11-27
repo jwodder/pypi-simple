@@ -34,6 +34,7 @@ pygments_style = 'sphinx'
 html_theme = 'sphinx_rtd_theme'
 html_theme_options = {
     "collapse_navigation": False,
+    "prev_next_buttons_location": "both",
 }
 html_last_updated_fmt = '%Y %b %d'
 html_show_sourcelink = True
