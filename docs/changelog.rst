@@ -6,6 +6,8 @@ Changelog
 v0.8.0 (in development)
 -----------------------
 - Support Python 3.9
+- `PyPISimple` is now usable as a context manager that will close the session
+  on exit
 
 
 v0.7.0 (2020-10-15)

@@ -34,6 +34,13 @@ class PyPISimple:
     caching), the user must create & configure a `requests.Session` object
     appropriately and pass it to the constructor as the ``session`` parameter.
 
+    A `PyPISimple` instance can be used as a context manager that will
+    automatically close its session on exit, regardless of where the session
+    object came from.
+
+    .. versionchanged:: 0.8.0
+        Now usable as a context manager
+
     .. versionchanged:: 0.5.0
         ``session`` argument added
 
@@ -63,6 +70,12 @@ class PyPISimple:
             self.s.headers["User-Agent"] = USER_AGENT
         if auth is not None:
             self.s.auth = auth
+
+    def __enter__(self) -> "PyPISimple":
+        return self
+
+    def __exit__(self, exc_type: Any, exc_value: Any, exc_tb: Any) -> None:
+        self.s.close()
 
     def get_index_page(
         self,
