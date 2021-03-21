@@ -74,7 +74,7 @@ class PyPISimple:
     def __enter__(self) -> "PyPISimple":
         return self
 
-    def __exit__(self, exc_type: Any, exc_value: Any, exc_tb: Any) -> None:
+    def __exit__(self, _exc_type: Any, _exc_value: Any, _exc_tb: Any) -> None:
         self.s.close()
 
     def get_index_page(
