@@ -142,7 +142,7 @@ class ProjectPage(NamedTuple):
     """
     .. versionadded:: 0.7.0
 
-    A parsed project page fom a simple repository
+    A parsed project page from a simple repository
     """
 
     #: The name of the project the page is for
