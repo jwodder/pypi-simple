@@ -21,6 +21,8 @@ jobs:
         toxenv: [py]
         include:
           - python-version: '3.6'
+            toxenv: lint
+          - python-version: '3.6'
             toxenv: typing
     steps:
       - name: Check out repository
