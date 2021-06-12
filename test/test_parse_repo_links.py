@@ -1,10 +1,17 @@
 import pytest
-from   pypi_simple import Link, SUPPORTED_REPOSITORY_VERSION, \
-                            UnsupportedRepoVersionError, parse_repo_links
+from pypi_simple import (
+    Link,
+    SUPPORTED_REPOSITORY_VERSION,
+    UnsupportedRepoVersionError,
+    parse_repo_links,
+)
 
-@pytest.mark.parametrize('html,base_url,links', [
-    (
-        '''
+
+@pytest.mark.parametrize(
+    "html,base_url,links",
+    [
+        (
+            """
             <html>
             <head><title>Basic test</title></head>
             <body>
@@ -13,19 +20,18 @@ from   pypi_simple import Link, SUPPORTED_REPOSITORY_VERSION, \
             <span href="zero.html">not-a-link</span>
             </body>
             </html>
-        ''',
-        None,
-        (
-            {},
-            [
-                Link('link1', 'one.html', {'href': 'one.html'}),
-                Link('link-two', 'two.html', {'href': 'two.html'}),
-            ],
+        """,
+            None,
+            (
+                {},
+                [
+                    Link("link1", "one.html", {"href": "one.html"}),
+                    Link("link-two", "two.html", {"href": "two.html"}),
+                ],
+            ),
         ),
-    ),
-
-    (
-        '''
+        (
+            """
             <html>
             <head><title>Test with base_url</title></head>
             <body>
@@ -34,27 +40,26 @@ from   pypi_simple import Link, SUPPORTED_REPOSITORY_VERSION, \
             <span href="zero.html">not-a-link</span>
             </body>
             </html>
-        ''',
-        'https://test.nil/base/',
-        (
-            {},
-            [
-                Link(
-                    'link1',
-                    'https://test.nil/base/one.html',
-                    {'href': 'one.html'},
-                ),
-                Link(
-                    'link-two',
-                    'https://test.nil/base/two.html',
-                    {'href': 'two.html'},
-                ),
-            ],
+        """,
+            "https://test.nil/base/",
+            (
+                {},
+                [
+                    Link(
+                        "link1",
+                        "https://test.nil/base/one.html",
+                        {"href": "one.html"},
+                    ),
+                    Link(
+                        "link-two",
+                        "https://test.nil/base/two.html",
+                        {"href": "two.html"},
+                    ),
+                ],
+            ),
         ),
-    ),
-
-    (
-        '''
+        (
+            """
             <html>
             <head>
                 <title>Test with &lt;base&gt; tag</title>
@@ -66,27 +71,26 @@ from   pypi_simple import Link, SUPPORTED_REPOSITORY_VERSION, \
             <span href="zero.html">not-a-link</span>
             </body>
             </html>
-        ''',
-        None,
-        (
-            {},
-            [
-                Link(
-                    'link1',
-                    'https://nil.test/path/one.html',
-                    {'href': 'one.html'},
-                ),
-                Link(
-                    'link-two',
-                    'https://nil.test/path/two.html',
-                    {'href': 'two.html'}
-                ),
-            ],
+        """,
+            None,
+            (
+                {},
+                [
+                    Link(
+                        "link1",
+                        "https://nil.test/path/one.html",
+                        {"href": "one.html"},
+                    ),
+                    Link(
+                        "link-two",
+                        "https://nil.test/path/two.html",
+                        {"href": "two.html"},
+                    ),
+                ],
+            ),
         ),
-    ),
-
-    (
-        '''
+        (
+            """
             <html>
             <head>
                 <title>Test with &lt;base&gt; tag</title>
@@ -98,19 +102,18 @@ from   pypi_simple import Link, SUPPORTED_REPOSITORY_VERSION, \
             <span href="zero.html">not-a-link</span>
             </body>
             </html>
-        ''',
-        None,
-        (
-            {},
-            [
-                Link('link1', 'one.html', {'href': 'one.html'}),
-                Link('link-two', 'two.html', {'href': 'two.html'}),
-            ],
+        """,
+            None,
+            (
+                {},
+                [
+                    Link("link1", "one.html", {"href": "one.html"}),
+                    Link("link-two", "two.html", {"href": "two.html"}),
+                ],
+            ),
         ),
-    ),
-
-    (
-        '''
+        (
+            """
             <html>
             <head>
                 <title>Test with &lt;base&gt; tag</title>
@@ -123,29 +126,28 @@ from   pypi_simple import Link, SUPPORTED_REPOSITORY_VERSION, \
             <span href="zero.html">not-a-link</span>
             </body>
             </html>
-        ''',
-        None,
-        (
-            {},
-            [
-                Link(
-                    'link1',
-                    'https://nil.test/path/one.html',
-                    {'href': 'one.html'},
-                ),
-                Link(
-                    'link-two',
-                    'https://nil.test/path/two.html',
-                    {'href': 'two.html'},
-                ),
-            ],
+        """,
+            None,
+            (
+                {},
+                [
+                    Link(
+                        "link1",
+                        "https://nil.test/path/one.html",
+                        {"href": "one.html"},
+                    ),
+                    Link(
+                        "link-two",
+                        "https://nil.test/path/two.html",
+                        {"href": "two.html"},
+                    ),
+                ],
+            ),
         ),
-    ),
-
-    # I'm not sure if this is how HTML is supposed to work, but it is how pip
-    # works: <https://git.io/fAVZF>
-    (
-        '''
+        # I'm not sure if this is how HTML is supposed to work, but it is how
+        # pip works: <https://git.io/fAVZF>
+        (
+            """
             <html>
             <head>
                 <title>Test with &lt;base&gt; tag</title>
@@ -158,27 +160,26 @@ from   pypi_simple import Link, SUPPORTED_REPOSITORY_VERSION, \
             <span href="zero.html">not-a-link</span>
             </body>
             </html>
-        ''',
-        None,
-        (
-            {},
-            [
-                Link(
-                    'link1',
-                    'https://nil.test/path/one.html',
-                    {'href': 'one.html'},
-                ),
-                Link(
-                    'link-two',
-                    'https://nil.test/path/two.html',
-                    {'href': 'two.html'},
-                ),
-            ],
+        """,
+            None,
+            (
+                {},
+                [
+                    Link(
+                        "link1",
+                        "https://nil.test/path/one.html",
+                        {"href": "one.html"},
+                    ),
+                    Link(
+                        "link-two",
+                        "https://nil.test/path/two.html",
+                        {"href": "two.html"},
+                    ),
+                ],
+            ),
         ),
-    ),
-
-    (
-        '''
+        (
+            """
             <html>
             <head>
                 <title>Test with both base_url and an absolute &lt;base&gt; tag</title>
@@ -190,27 +191,26 @@ from   pypi_simple import Link, SUPPORTED_REPOSITORY_VERSION, \
             <span href="zero.html">not-a-link</span>
             </body>
             </html>
-        ''',
-        'https://test.nil/base/',
-        (
-            {},
-            [
-                Link(
-                    'link1',
-                    'https://nil.test/path/one.html',
-                    {'href': 'one.html'},
-                ),
-                Link(
-                    'link-two',
-                    'https://nil.test/path/two.html',
-                    {'href': 'two.html'},
-                ),
-            ],
+        """,
+            "https://test.nil/base/",
+            (
+                {},
+                [
+                    Link(
+                        "link1",
+                        "https://nil.test/path/one.html",
+                        {"href": "one.html"},
+                    ),
+                    Link(
+                        "link-two",
+                        "https://nil.test/path/two.html",
+                        {"href": "two.html"},
+                    ),
+                ],
+            ),
         ),
-    ),
-
-    (
-        '''
+        (
+            """
             <html>
             <head>
                 <title>Test with both base_url and a relative &lt;base&gt; tag</title>
@@ -222,27 +222,26 @@ from   pypi_simple import Link, SUPPORTED_REPOSITORY_VERSION, \
             <span href="zero.html">not-a-link</span>
             </body>
             </html>
-        ''',
-        'https://test.nil/base/',
-        (
-            {},
-            [
-                Link(
-                    'link1',
-                    'https://test.nil/base/subdir/one.html',
-                    {'href': 'one.html'},
-                ),
-                Link(
-                    'link-two',
-                    'https://test.nil/base/subdir/two.html',
-                    {'href': 'two.html'},
-                ),
-            ],
+        """,
+            "https://test.nil/base/",
+            (
+                {},
+                [
+                    Link(
+                        "link1",
+                        "https://test.nil/base/subdir/one.html",
+                        {"href": "one.html"},
+                    ),
+                    Link(
+                        "link-two",
+                        "https://test.nil/base/subdir/two.html",
+                        {"href": "two.html"},
+                    ),
+                ],
+            ),
         ),
-    ),
-
-    (
-        '''
+        (
+            """
             <html>
             <head>
                 <title>Test with uppercase tags &amp; attributes</title>
@@ -254,27 +253,26 @@ from   pypi_simple import Link, SUPPORTED_REPOSITORY_VERSION, \
             <span href="zero.html">not-a-link</span>
             </body>
             </html>
-        ''',
-        None,
-        (
-            {},
-            [
-                Link(
-                    'link1',
-                    'https://nil.test/path/one.html',
-                    {'href': 'one.html'},
-                ),
-                Link(
-                    'link-two',
-                    'https://nil.test/path/two.html',
-                    {'href': 'two.html'},
-                ),
-            ],
+        """,
+            None,
+            (
+                {},
+                [
+                    Link(
+                        "link1",
+                        "https://nil.test/path/one.html",
+                        {"href": "one.html"},
+                    ),
+                    Link(
+                        "link-two",
+                        "https://nil.test/path/two.html",
+                        {"href": "two.html"},
+                    ),
+                ],
+            ),
         ),
-    ),
-
-    (
-        '''
+        (
+            """
             <html>
             <head>
                 <title>Test links with leading &amp; trailing whitespace</title>
@@ -285,24 +283,23 @@ from   pypi_simple import Link, SUPPORTED_REPOSITORY_VERSION, \
             <a href="three.html"> <!-- comment -->  preceded by a comment </a>
             </body>
             </html>
-        ''',
-        None,
-        (
-            {},
-            [
-                Link('whitespaced', 'one.html', {'href': 'one.html'}),
-                Link('multiple words', 'two.html', {'href': 'two.html'}),
-                Link(
-                    'preceded by a comment',
-                    'three.html',
-                    {'href': 'three.html'},
-                ),
-            ],
+        """,
+            None,
+            (
+                {},
+                [
+                    Link("whitespaced", "one.html", {"href": "one.html"}),
+                    Link("multiple words", "two.html", {"href": "two.html"}),
+                    Link(
+                        "preceded by a comment",
+                        "three.html",
+                        {"href": "three.html"},
+                    ),
+                ],
+            ),
         ),
-    ),
-
-    (
-        '''
+        (
+            """
             <html>
             <head>
                 <title>Test that &lt;a&gt; tags without href are ignored</title>
@@ -312,103 +309,97 @@ from   pypi_simple import Link, SUPPORTED_REPOSITORY_VERSION, \
             <a name="two">target</a>
             </body>
             </html>
-        ''',
-        None,
-        (
-            {},
-            [Link('link1', 'one.html', {'href': 'one.html'})],
+        """,
+            None,
+            (
+                {},
+                [Link("link1", "one.html", {"href": "one.html"})],
+            ),
         ),
-    ),
-
-    (
-        '''
+        (
+            """
             <a href="one.html">link1</a>
             <a href="two.html">link-two</a>
             <span href="zero.html">not-a-link</span>
-        ''',
-        None,
-        (
-            {},
-            [
-                Link('link1', 'one.html', {'href': 'one.html'}),
-                Link('link-two', 'two.html', {'href': 'two.html'}),
-            ],
+        """,
+            None,
+            (
+                {},
+                [
+                    Link("link1", "one.html", {"href": "one.html"}),
+                    Link("link-two", "two.html", {"href": "two.html"}),
+                ],
+            ),
         ),
-    ),
-
-    (
-        '<a href="https://files.pythonhosted.org/packages/05/35/'
-        'aa8dc452b753bd9b405a0d23ee3ebac693edd2d0a5896bcc2c98f6263039/'
-        'txtble-0.1.0-py2.py3-none-any.whl#sha256='
-        '25103e370ee304327751856ef5ecd7f59f9be88269838c7b558d4ac692d3e375"'
-        ' data-requires-python="&gt;=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*,'
-        ' &lt;4">txtble-0.1.0-py2.py3-none-any.whl</a><br/>',
-        None,
         (
-            {},
-            [
-                Link(
-                    'txtble-0.1.0-py2.py3-none-any.whl',
-                    "https://files.pythonhosted.org/packages/05/35/aa8dc452b75"
-                    "3bd9b405a0d23ee3ebac693edd2d0a5896bcc2c98f6263039/txtble-"
-                    "0.1.0-py2.py3-none-any.whl#sha256=25103e370ee304327751856"
-                    "ef5ecd7f59f9be88269838c7b558d4ac692d3e375",
-                    {
-                        "href": "https://files.pythonhosted.org/packages/05/35"
-                                "/aa8dc452b753bd9b405a0d23ee3ebac693edd2d0a589"
-                                "6bcc2c98f6263039/txtble-0.1.0-py2.py3-none-an"
-                                "y.whl#sha256=25103e370ee304327751856ef5ecd7f5"
-                                "9f9be88269838c7b558d4ac692d3e375",
-                        "data-requires-python":
-                            ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, <4",
-                    },
-                ),
-            ],
+            '<a href="https://files.pythonhosted.org/packages/05/35/'
+            "aa8dc452b753bd9b405a0d23ee3ebac693edd2d0a5896bcc2c98f6263039/"
+            "txtble-0.1.0-py2.py3-none-any.whl#sha256="
+            '25103e370ee304327751856ef5ecd7f59f9be88269838c7b558d4ac692d3e375"'
+            ' data-requires-python="&gt;=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*,'
+            ' &lt;4">txtble-0.1.0-py2.py3-none-any.whl</a><br/>',
+            None,
+            (
+                {},
+                [
+                    Link(
+                        "txtble-0.1.0-py2.py3-none-any.whl",
+                        "https://files.pythonhosted.org/packages/05/35/aa8dc452b75"
+                        "3bd9b405a0d23ee3ebac693edd2d0a5896bcc2c98f6263039/txtble-"
+                        "0.1.0-py2.py3-none-any.whl#sha256=25103e370ee304327751856"
+                        "ef5ecd7f59f9be88269838c7b558d4ac692d3e375",
+                        {
+                            "href": "https://files.pythonhosted.org/packages/05/35"
+                            "/aa8dc452b753bd9b405a0d23ee3ebac693edd2d0a589"
+                            "6bcc2c98f6263039/txtble-0.1.0-py2.py3-none-an"
+                            "y.whl#sha256=25103e370ee304327751856ef5ecd7f5"
+                            "9f9be88269838c7b558d4ac692d3e375",
+                            "data-requires-python": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, <4",
+                        },
+                    ),
+                ],
+            ),
         ),
-    ),
-
-    (
-        '<a href="https://test.nil/simple/files/project-0.1.0-p&#xFF;42-none'
-        '-any.whl">project-0.1.0-p&#xFF;42-none-any.whl</a>',
-        None,
         (
-            {},
-            [
-                Link(
-                    'project-0.1.0-p\xFF42-none-any.whl',
-                    "https://test.nil/simple/files/project-0.1.0-p\xFF42-none"
+            '<a href="https://test.nil/simple/files/project-0.1.0-p&#xFF;42-none'
+            '-any.whl">project-0.1.0-p&#xFF;42-none-any.whl</a>',
+            None,
+            (
+                {},
+                [
+                    Link(
+                        "project-0.1.0-p\xFF42-none-any.whl",
+                        "https://test.nil/simple/files/project-0.1.0-p\xFF42-none"
                         "-any.whl",
-                    {
-                        "href": "https://test.nil/simple/files/project-0.1.0-"
-                                "p\xFF42-none-any.whl",
-                    },
-                )
-            ],
+                        {
+                            "href": "https://test.nil/simple/files/project-0.1.0-"
+                            "p\xFF42-none-any.whl",
+                        },
+                    )
+                ],
+            ),
         ),
-    ),
-
-    (
-        '<a href="https://test.nil/simple/files/project-0.1.0-p&yuml;42-none'
-        '-any.whl">project-0.1.0-p&yuml;42-none-any.whl</a>',
-        None,
         (
-            {},
-            [
-                Link(
-                    'project-0.1.0-p\xFF42-none-any.whl',
-                    "https://test.nil/simple/files/project-0.1.0-p\xFF42-none"
+            '<a href="https://test.nil/simple/files/project-0.1.0-p&yuml;42-none'
+            '-any.whl">project-0.1.0-p&yuml;42-none-any.whl</a>',
+            None,
+            (
+                {},
+                [
+                    Link(
+                        "project-0.1.0-p\xFF42-none-any.whl",
+                        "https://test.nil/simple/files/project-0.1.0-p\xFF42-none"
                         "-any.whl",
-                    {
-                        "href": "https://test.nil/simple/files/project-0.1.0-"
-                                "p\xFF42-none-any.whl",
-                    },
-                ),
-            ],
+                        {
+                            "href": "https://test.nil/simple/files/project-0.1.0-"
+                            "p\xFF42-none-any.whl",
+                        },
+                    ),
+                ],
+            ),
         ),
-    ),
-
-    (
-        '''
+        (
+            """
             <html>
             <head>
             <title>Basic test</title>
@@ -420,19 +411,18 @@ from   pypi_simple import Link, SUPPORTED_REPOSITORY_VERSION, \
             <span href="zero.html">not-a-link</span>
             </body>
             </html>
-        ''',
-        None,
-        (
-            {"repository_version": "1.0"},
-            [
-                Link('link1', 'one.html', {'href': 'one.html'}),
-                Link('link-two', 'two.html', {'href': 'two.html'}),
-            ],
+        """,
+            None,
+            (
+                {"repository_version": "1.0"},
+                [
+                    Link("link1", "one.html", {"href": "one.html"}),
+                    Link("link-two", "two.html", {"href": "two.html"}),
+                ],
+            ),
         ),
-    ),
-
-    (
-        '''
+        (
+            """
             <html>
             <head>
             <title>Basic test</title>
@@ -444,19 +434,18 @@ from   pypi_simple import Link, SUPPORTED_REPOSITORY_VERSION, \
             <span href="zero.html">not-a-link</span>
             </body>
             </html>
-        ''',
-        None,
-        (
-            {},
-            [
-                Link('link1', 'one.html', {'href': 'one.html'}),
-                Link('link-two', 'two.html', {'href': 'two.html'}),
-            ],
+        """,
+            None,
+            (
+                {},
+                [
+                    Link("link1", "one.html", {"href": "one.html"}),
+                    Link("link-two", "two.html", {"href": "two.html"}),
+                ],
+            ),
         ),
-    ),
-
-    (
-        '''
+        (
+            """
             <html>
             <head>
             <title>Basic test</title>
@@ -468,19 +457,18 @@ from   pypi_simple import Link, SUPPORTED_REPOSITORY_VERSION, \
             <span href="zero.html">not-a-link</span>
             </body>
             </html>
-        ''',
-        None,
-        (
-            {},
-            [
-                Link('link1', 'one.html', {'href': 'one.html'}),
-                Link('link-two', 'two.html', {'href': 'two.html'}),
-            ],
+        """,
+            None,
+            (
+                {},
+                [
+                    Link("link1", "one.html", {"href": "one.html"}),
+                    Link("link-two", "two.html", {"href": "two.html"}),
+                ],
+            ),
         ),
-    ),
-
-    (
-        '''
+        (
+            """
             <html>
             <head>
             <title>Basic test</title>
@@ -493,24 +481,26 @@ from   pypi_simple import Link, SUPPORTED_REPOSITORY_VERSION, \
             <span href="zero.html">not-a-link</span>
             </body>
             </html>
-        ''',
-        None,
-        (
-            {"repository_version": "1.0"},
-            [
-                Link('link1', 'one.html', {'href': 'one.html'}),
-                Link('link-two', 'two.html', {'href': 'two.html'}),
-            ],
+        """,
+            None,
+            (
+                {"repository_version": "1.0"},
+                [
+                    Link("link1", "one.html", {"href": "one.html"}),
+                    Link("link-two", "two.html", {"href": "two.html"}),
+                ],
+            ),
         ),
-    ),
-
-])
+    ],
+)
 def test_parse_repo_links(html, base_url, links):
     assert parse_repo_links(html, base_url) == links
 
+
 def test_parse_repo_links_unsupported_version():
     with pytest.raises(UnsupportedRepoVersionError) as excinfo:
-        parse_repo_links('''
+        parse_repo_links(
+            """
             <html>
             <head>
             <title>Basic test</title>
@@ -522,8 +512,9 @@ def test_parse_repo_links_unsupported_version():
             <span href="zero.html">not-a-link</span>
             </body>
             </html>
-        ''')
-    assert excinfo.value.declared_version == '42.0'
+        """
+        )
+    assert excinfo.value.declared_version == "42.0"
     assert excinfo.value.supported_version == SUPPORTED_REPOSITORY_VERSION
     assert str(excinfo.value) == (
         "Repository's version (42.0) has greater major component than"

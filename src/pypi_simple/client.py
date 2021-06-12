@@ -1,23 +1,23 @@
 import platform
-from   typing          import Any, Iterator, List, Optional, Tuple, Union
-from   warnings        import warn
-from   packaging.utils import canonicalize_name as normalize
+from typing import Any, Iterator, List, Optional, Tuple, Union
+from warnings import warn
+from packaging.utils import canonicalize_name as normalize
 import requests
-from   .               import PYPI_SIMPLE_ENDPOINT, __url__, __version__
-from   .classes        import DistributionPackage, IndexPage, ProjectPage
-from   .parse_repo     import parse_repo_index_response, \
-                                parse_repo_project_response
-from   .parse_stream   import parse_links_stream_response
+from . import PYPI_SIMPLE_ENDPOINT, __url__, __version__
+from .classes import DistributionPackage, IndexPage, ProjectPage
+from .parse_repo import parse_repo_index_response, parse_repo_project_response
+from .parse_stream import parse_links_stream_response
 
 #: The User-Agent header used for requests; not used when the user provides eir
 #: own session object
-USER_AGENT: str = 'pypi-simple/{} ({}) requests/{} {}/{}'.format(
+USER_AGENT: str = "pypi-simple/{} ({}) requests/{} {}/{}".format(
     __version__,
     __url__,
     requests.__version__,
     platform.python_implementation(),
     platform.python_version(),
 )
+
 
 class PyPISimple:
     """
@@ -59,9 +59,13 @@ class PyPISimple:
         creating a fresh one
     """
 
-    def __init__(self, endpoint: str = PYPI_SIMPLE_ENDPOINT, auth: Any = None,
-                 session: Optional[requests.Session] = None) -> None:
-        self.endpoint: str = endpoint.rstrip('/') + '/'
+    def __init__(
+        self,
+        endpoint: str = PYPI_SIMPLE_ENDPOINT,
+        auth: Any = None,
+        session: Optional[requests.Session] = None,
+    ) -> None:
+        self.endpoint: str = endpoint.rstrip("/") + "/"
         self.s: requests.Session
         if session is not None:
             self.s = session
@@ -79,7 +83,7 @@ class PyPISimple:
 
     def get_index_page(
         self,
-        timeout: Union[float, Tuple[float,float], None] = None,
+        timeout: Union[float, Tuple[float, float], None] = None,
     ) -> IndexPage:
         """
         .. versionadded:: 0.7.0
@@ -107,7 +111,7 @@ class PyPISimple:
     def stream_project_names(
         self,
         chunk_size: int = 65535,
-        timeout: Union[float, Tuple[float,float], None] = None,
+        timeout: Union[float, Tuple[float, float], None] = None,
     ) -> Iterator[str]:
         """
         .. versionadded:: 0.7.0
@@ -144,7 +148,7 @@ class PyPISimple:
     def get_project_page(
         self,
         project: str,
-        timeout: Union[float, Tuple[float,float], None] = None,
+        timeout: Union[float, Tuple[float, float], None] = None,
     ) -> Optional[ProjectPage]:
         """
         .. versionadded:: 0.7.0
@@ -179,7 +183,7 @@ class PyPISimple:
             name does not need to be normalized.
         :rtype: str
         """
-        return self.endpoint + normalize(project) + '/'
+        return self.endpoint + normalize(project) + "/"
 
     def get_projects(self) -> Iterator[str]:
         """
@@ -201,8 +205,8 @@ class PyPISimple:
             greater major component than the supported repository version
         """
         warn(
-            'The get_projects() method is deprecated.  Use get_index_page() or'
-            ' stream_project_names() instead.',
+            "The get_projects() method is deprecated.  Use get_index_page() or"
+            " stream_project_names() instead.",
             DeprecationWarning,
         )
         page = self.get_index_page()
@@ -229,8 +233,8 @@ class PyPISimple:
             greater major component than the supported repository version
         """
         warn(
-            'The get_project_files() method is deprecated.'
-            '  Use get_project_page() instead.',
+            "The get_project_files() method is deprecated."
+            "  Use get_project_page() instead.",
             DeprecationWarning,
         )
         page = self.get_project_page(project)

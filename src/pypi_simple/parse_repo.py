@@ -1,9 +1,10 @@
-from   typing       import Dict, List, Optional, Tuple, Union
-from   urllib.parse import urljoin
-from   bs4          import BeautifulSoup
+from typing import Dict, List, Optional, Tuple, Union
+from urllib.parse import urljoin
+from bs4 import BeautifulSoup
 import requests
-from   .classes     import DistributionPackage, IndexPage, Link, ProjectPage
-from   .util        import check_repo_version
+from .classes import DistributionPackage, IndexPage, Link, ProjectPage
+from .util import check_repo_version
+
 
 def parse_repo_links(
     html: Union[str, bytes],
@@ -36,36 +37,43 @@ def parse_repo_links(
     :raises UnsupportedRepoVersionError: if the repository version has a
         greater major component than the supported repository version
     """
-    soup = BeautifulSoup(html, 'html.parser', from_encoding=from_encoding)
-    base_tag = soup.find('base', href=True)
+    soup = BeautifulSoup(html, "html.parser", from_encoding=from_encoding)
+    base_tag = soup.find("base", href=True)
     if base_tag is not None:
         if base_url is None:
-            base_url = base_tag['href']
+            base_url = base_tag["href"]
         else:
-            base_url = urljoin(base_url, base_tag['href'])
+            base_url = urljoin(base_url, base_tag["href"])
     if base_url is None:
+
         def basejoin(url: str) -> str:
             return url
+
     else:
+
         def basejoin(url: str) -> str:
             assert isinstance(base_url, str)
             return urljoin(base_url, url)
+
     metadata = {}
     pep629_meta = soup.find(
-        'meta',
-        attrs = {"name": "pypi:repository-version", "content": True},
+        "meta",
+        attrs={"name": "pypi:repository-version", "content": True},
     )
     if pep629_meta is not None:
         metadata["repository_version"] = pep629_meta["content"]
         check_repo_version(metadata["repository_version"])
     links = []
-    for link in soup.find_all('a', href=True):
-        links.append(Link(
-            text  = ''.join(link.strings).strip(),
-            url   = basejoin(link['href']),
-            attrs = link.attrs,
-        ))
+    for link in soup.find_all("a", href=True):
+        links.append(
+            Link(
+                text="".join(link.strings).strip(),
+                url=basejoin(link["href"]),
+                attrs=link.attrs,
+            )
+        )
     return (metadata, links)
+
 
 def parse_repo_project_page(
     project: str,
@@ -93,16 +101,14 @@ def parse_repo_project_page(
     """
     metadata, links = parse_repo_links(html, base_url, from_encoding)
     return ProjectPage(
-        project = project,
-        packages = [
-            DistributionPackage.from_link(link, project) for link in links
-        ],
-        repository_version = metadata.get("repository_version"),
-        last_serial = None,
+        project=project,
+        packages=[DistributionPackage.from_link(link, project) for link in links],
+        repository_version=metadata.get("repository_version"),
+        last_serial=None,
     )
 
-def parse_repo_project_response(project: str, r: requests.Response) \
-        -> ProjectPage:
+
+def parse_repo_project_response(project: str, r: requests.Response) -> ProjectPage:
     """
     .. versionadded:: 0.7.0
 
@@ -116,17 +122,18 @@ def parse_repo_project_response(project: str, r: requests.Response) \
         greater major component than the supported repository version
     """
     charset: Optional[str]
-    if 'charset' in r.headers.get('content-type', '').lower():
+    if "charset" in r.headers.get("content-type", "").lower():
         charset = r.encoding
     else:
         charset = None
     page = parse_repo_project_page(
-        project       = project,
-        html          = r.content,
-        base_url      = r.url,
-        from_encoding = charset,
+        project=project,
+        html=r.content,
+        base_url=r.url,
+        from_encoding=charset,
     )
     return page._replace(last_serial=r.headers.get("X-PyPI-Last-Serial"))
+
 
 def parse_repo_index_page(
     html: Union[str, bytes],
@@ -149,10 +156,11 @@ def parse_repo_index_page(
     """
     metadata, links = parse_repo_links(html, from_encoding=from_encoding)
     return IndexPage(
-        projects = [link.text for link in links],
-        repository_version = metadata.get("repository_version"),
-        last_serial = None,
+        projects=[link.text for link in links],
+        repository_version=metadata.get("repository_version"),
+        last_serial=None,
     )
+
 
 def parse_repo_index_response(r: requests.Response) -> IndexPage:
     """
@@ -167,7 +175,7 @@ def parse_repo_index_response(r: requests.Response) -> IndexPage:
         greater major component than the supported repository version
     """
     charset: Optional[str]
-    if 'charset' in r.headers.get('content-type', '').lower():
+    if "charset" in r.headers.get("content-type", "").lower():
         charset = r.encoding
     else:
         charset = None

@@ -1,20 +1,41 @@
-from   codecs       import getincrementaldecoder
-from   html.parser  import HTMLParser
-from   itertools    import chain
-from   typing       import AnyStr, Dict, Iterable, Iterator, List, Optional, \
-                                Tuple, Union, cast
-from   urllib.parse import urljoin
-from   bs4.dammit   import EncodingDetector
+from codecs import getincrementaldecoder
+from html.parser import HTMLParser
+from itertools import chain
+from typing import AnyStr, Dict, Iterable, Iterator, List, Optional, Tuple, Union, cast
+from urllib.parse import urljoin
+from bs4.dammit import EncodingDetector
 import requests
-from   .classes     import Link
-from   .util        import check_repo_version
+from .classes import Link
+from .util import check_repo_version
 
 # List taken from BeautifulSoup4 source
 EMPTY_TAGS = {
-    'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen',
-    'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr', 'basefont',
-    'bgsound', 'command', 'frame', 'image', 'isindex', 'nextid', 'spacer',
+    "area",
+    "base",
+    "br",
+    "col",
+    "embed",
+    "hr",
+    "img",
+    "input",
+    "keygen",
+    "link",
+    "menuitem",
+    "meta",
+    "param",
+    "source",
+    "track",
+    "wbr",
+    "basefont",
+    "bgsound",
+    "command",
+    "frame",
+    "image",
+    "isindex",
+    "nextid",
+    "spacer",
 }
+
 
 class LinkParser(HTMLParser):
     def __init__(self, base_url: Optional[str] = None) -> None:
@@ -30,30 +51,31 @@ class LinkParser(HTMLParser):
         self.finished_links = []
         return links
 
-    def handle_starttag(self, tag: str, attrs: List[Tuple[str, Optional[str]]])\
-            -> None:
+    def handle_starttag(self, tag: str, attrs: List[Tuple[str, Optional[str]]]) -> None:
         if tag not in EMPTY_TAGS:
             self.tag_stack.append(tag)
-        attrdict = {k: v or '' for k,v in attrs}
-        if tag == 'base' and 'href' in attrdict and not self.base_seen:
+        attrdict = {k: v or "" for k, v in attrs}
+        if tag == "base" and "href" in attrdict and not self.base_seen:
             if self.base_url is None:
                 self.base_url = attrdict["href"]
             else:
-                self.base_url = urljoin(self.base_url, attrdict['href'])
+                self.base_url = urljoin(self.base_url, attrdict["href"])
             self.base_seen = True
-        elif tag == 'a':
-            attrdict['#text'] = ''
+        elif tag == "a":
+            attrdict["#text"] = ""
             self.link_tag_stack.append(attrdict)
-        elif tag == 'meta' and \
-                attrdict.get('name') == 'pypi:repository-version' and \
-                'content' in attrdict:
+        elif (
+            tag == "meta"
+            and attrdict.get("name") == "pypi:repository-version"
+            and "content" in attrdict
+        ):
             check_repo_version(attrdict["content"])
 
     def handle_endtag(self, tag: str) -> None:
-        for i in range(len(self.tag_stack)-1, -1, -1):
+        for i in range(len(self.tag_stack) - 1, -1, -1):
             if self.tag_stack[i] == tag:
                 for t in self.tag_stack[i:]:
-                    if t == 'a':
+                    if t == "a":
                         self.end_link_tag()
                 del self.tag_stack[i:]
                 break
@@ -61,29 +83,32 @@ class LinkParser(HTMLParser):
     def end_link_tag(self) -> None:
         attrs = self.link_tag_stack.pop()
         if "href" in attrs:
-            text = attrs.pop('#text')
+            text = attrs.pop("#text")
             if self.base_url is not None:
-                url = urljoin(self.base_url, attrs['href'])
+                url = urljoin(self.base_url, attrs["href"])
             else:
                 url = attrs["href"]
-            self.finished_links.append(Link(
-                text  = text.strip(),
-                url   = url,
-                attrs = cast(Dict[str, Union[str, List[str]]], attrs),
-            ))
+            self.finished_links.append(
+                Link(
+                    text=text.strip(),
+                    url=url,
+                    attrs=cast(Dict[str, Union[str, List[str]]], attrs),
+                )
+            )
 
     def handle_data(self, data: str) -> None:
         for link in self.link_tag_stack:
-            link['#text'] += data
+            link["#text"] += data
 
     def close(self) -> None:
         while self.link_tag_stack:
-            self.handle_endtag('a')
+            self.handle_endtag("a")
         super().close()
 
 
-def parse_links_stream_response(r: requests.Response, chunk_size: int = 65535) \
-        -> Iterator[Link]:
+def parse_links_stream_response(
+    r: requests.Response, chunk_size: int = 65535
+) -> Iterator[Link]:
     """
     .. versionadded:: 0.7.0
 
@@ -100,9 +125,10 @@ def parse_links_stream_response(r: requests.Response, chunk_size: int = 65535) \
     """
     return parse_links_stream(
         r.iter_content(chunk_size),
-        base_url = r.url,
-        http_charset = r.encoding,
+        base_url=r.url,
+        http_charset=r.encoding,
     )
+
 
 def parse_links_stream(
     htmlseq: Iterable[AnyStr],
@@ -149,11 +175,12 @@ def parse_links_stream(
     for link in parser.fetch_links():
         yield link
 
+
 def iterhtmldecode(
     iterable: Iterable[AnyStr],
     http_charset: Optional[str] = None,
-    default_encoding: str = 'cp1252',
-    errors: str = 'replace',
+    default_encoding: str = "cp1252",
+    errors: str = "replace",
     scan_window: int = 1024,
 ) -> Iterator[str]:
     """
@@ -230,10 +257,11 @@ def iterhtmldecode(
     assert isinstance(enc, str)
     return iterdecode(chain([initblob], iterator), enc, errors=errors)
 
+
 def iterdecode(
     iterable: Iterable[bytes],
     encoding: str,
-    errors: str = 'strict',
+    errors: str = "strict",
 ) -> Iterator[str]:
     """
     .. versionadded:: 0.7.0
@@ -249,4 +277,4 @@ def iterdecode(
     decoder = getincrementaldecoder(encoding)(errors=errors)
     for blob in iterable:
         yield decoder.decode(blob)
-    yield decoder.decode(b'', True)
+    yield decoder.decode(b"", True)

@@ -1,6 +1,7 @@
-from typing       import Dict, List, NamedTuple, Optional, Union
+from typing import Dict, List, NamedTuple, Optional, Union
 from urllib.parse import urlparse, urlunparse
-from .filenames   import parse_filename
+from .filenames import parse_filename
+
 
 class Link(NamedTuple):
     """
@@ -90,19 +91,20 @@ class DistributionPackage(NamedTuple):
             false
         """
         u = urlparse(self.url)
-        return urlunparse((u[0], u[1], u[2] + '.asc', '', '', ''))
+        return urlunparse((u[0], u[1], u[2] + ".asc", "", "", ""))
 
     def get_digests(self) -> Dict[str, str]:
         """
         Extracts the hash digests from the package file's URL and returns a
         `dict` mapping hash algorithm names to hex-encoded digest strings
         """
-        name, sep, value = urlparse(self.url).fragment.partition('=')
+        name, sep, value = urlparse(self.url).fragment.partition("=")
         return {name: value} if value else {}
 
     @classmethod
-    def from_link(cls, link: Link, project_hint: Optional[str] = None) \
-            -> 'DistributionPackage':
+    def from_link(
+        cls, link: Link, project_hint: Optional[str] = None
+    ) -> "DistributionPackage":
         """
         .. versionadded:: 0.7.0
 
@@ -114,27 +116,29 @@ class DistributionPackage(NamedTuple):
             link was found).  The name does not need to be normalized.
         :rtype: DistributionPackage
         """
+
         def get_str_attrib(attrib: str) -> Optional[str]:
             value = link.attrs.get(attrib)
             if value is not None:
                 assert isinstance(value, str)
             return value
+
         project, version, pkg_type = parse_filename(link.text, project_hint)
         has_sig: Optional[bool]
         gpg_sig = get_str_attrib("data-gpg-sig")
         if gpg_sig is not None:
-            has_sig = gpg_sig.lower() == 'true'
+            has_sig = gpg_sig.lower() == "true"
         else:
             has_sig = None
         return cls(
-            filename        = link.text,
-            url             = link.url,
-            has_sig         = has_sig,
-            requires_python = get_str_attrib("data-requires-python"),
-            project         = project,
-            version         = version,
-            package_type    = pkg_type,
-            yanked          = get_str_attrib("data-yanked"),
+            filename=link.text,
+            url=link.url,
+            has_sig=has_sig,
+            requires_python=get_str_attrib("data-requires-python"),
+            project=project,
+            version=version,
+            package_type=pkg_type,
+            yanked=get_str_attrib("data-yanked"),
         )
 
 

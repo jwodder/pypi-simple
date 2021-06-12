@@ -1,5 +1,6 @@
 from packaging.version import Version
-from .                 import SUPPORTED_REPOSITORY_VERSION
+from . import SUPPORTED_REPOSITORY_VERSION
+
 
 def check_repo_version(
     declared_version: str,
