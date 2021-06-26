@@ -1,7 +1,7 @@
 import os
 from os.path import dirname, join
 import pytest
-from pypi_simple import DistributionPackage, PYPI_SIMPLE_ENDPOINT, parse_project_page
+from pypi_simple import PYPI_SIMPLE_ENDPOINT, DistributionPackage, parse_project_page
 
 DATA_DIR = join(dirname(__file__), os.pardir, "data")
 

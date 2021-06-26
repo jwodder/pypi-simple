@@ -1,8 +1,8 @@
 from io import StringIO
 import pytest
 from pypi_simple import (
-    Link,
     SUPPORTED_REPOSITORY_VERSION,
+    Link,
     UnsupportedRepoVersionError,
     parse_links_stream,
 )

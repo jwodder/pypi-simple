@@ -1,10 +1,10 @@
 from pathlib import Path
 import pytest
 from pypi_simple import (
-    DistributionPackage,
     PYPI_SIMPLE_ENDPOINT,
-    ProjectPage,
     SUPPORTED_REPOSITORY_VERSION,
+    DistributionPackage,
+    ProjectPage,
     UnsupportedRepoVersionError,
     parse_repo_project_page,
 )

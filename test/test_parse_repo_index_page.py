@@ -1,8 +1,8 @@
 from pathlib import Path
 import pytest
 from pypi_simple import (
-    IndexPage,
     SUPPORTED_REPOSITORY_VERSION,
+    IndexPage,
     UnsupportedRepoVersionError,
     parse_repo_index_page,
 )

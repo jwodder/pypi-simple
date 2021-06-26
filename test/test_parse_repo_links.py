@@ -1,7 +1,7 @@
 import pytest
 from pypi_simple import (
-    Link,
     SUPPORTED_REPOSITORY_VERSION,
+    Link,
     UnsupportedRepoVersionError,
     parse_repo_links,
 )
