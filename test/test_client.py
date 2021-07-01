@@ -68,6 +68,7 @@ def test_session(mocker, content_type):
                     requires_python=None,
                     has_sig=None,
                     yanked=None,
+                    metadata_digests=None,
                 ),
                 DistributionPackage(
                     filename="in_place-0.1.1.tar.gz",
@@ -78,6 +79,7 @@ def test_session(mocker, content_type):
                     requires_python=None,
                     has_sig=None,
                     yanked=None,
+                    metadata_digests=None,
                 ),
                 DistributionPackage(
                     filename="in_place-0.2.0-py2.py3-none-any.whl",
@@ -88,6 +90,7 @@ def test_session(mocker, content_type):
                     requires_python=None,
                     has_sig=None,
                     yanked=None,
+                    metadata_digests=None,
                 ),
                 DistributionPackage(
                     filename="in_place-0.2.0.tar.gz",
@@ -98,6 +101,7 @@ def test_session(mocker, content_type):
                     requires_python=None,
                     has_sig=None,
                     yanked=None,
+                    metadata_digests=None,
                 ),
                 DistributionPackage(
                     filename="in_place-0.3.0-py2.py3-none-any.whl",
@@ -108,6 +112,7 @@ def test_session(mocker, content_type):
                     requires_python=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, <4",
                     has_sig=None,
                     yanked=None,
+                    metadata_digests=None,
                 ),
                 DistributionPackage(
                     filename="in_place-0.3.0.tar.gz",
@@ -118,6 +123,7 @@ def test_session(mocker, content_type):
                     requires_python=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, <4",
                     has_sig=None,
                     yanked=None,
+                    metadata_digests=None,
                 ),
             ],
             last_serial="54321",
@@ -154,6 +160,7 @@ def test_project_hint_received():
                     requires_python=None,
                     has_sig=None,
                     yanked=None,
+                    metadata_digests=None,
                 ),
                 DistributionPackage(
                     filename="aws-adfs-ebsco-0.3.7-1.tar.gz",
@@ -164,6 +171,7 @@ def test_project_hint_received():
                     requires_python=None,
                     has_sig=None,
                     yanked=None,
+                    metadata_digests=None,
                 ),
             ],
             last_serial=None,
@@ -220,6 +228,7 @@ def test_redirected_project_page():
                     requires_python=None,
                     has_sig=None,
                     yanked=None,
+                    metadata_digests=None,
                 ),
             ],
             last_serial=None,
@@ -260,6 +269,7 @@ def test_utf8_declarations(content_type, body_decl):
                     requires_python=None,
                     has_sig=None,
                     yanked=None,
+                    metadata_digests=None,
                 ),
             ],
             last_serial=None,
@@ -303,6 +313,7 @@ def test_latin2_declarations(content_type, body_decl):
                     requires_python=None,
                     has_sig=None,
                     yanked=None,
+                    metadata_digests=None,
                 ),
             ],
             last_serial=None,

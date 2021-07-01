@@ -30,6 +30,7 @@ def test_parse_qypi():
             requires_python="~=3.4",
             has_sig=None,
             yanked=None,
+            metadata_digests=None,
         ),
         DistributionPackage(
             filename="qypi-0.1.0.tar.gz",
@@ -40,6 +41,7 @@ def test_parse_qypi():
             requires_python="~=3.4",
             has_sig=None,
             yanked=None,
+            metadata_digests=None,
         ),
         DistributionPackage(
             filename="qypi-0.1.0.post1-py3-none-any.whl",
@@ -50,6 +52,7 @@ def test_parse_qypi():
             requires_python="~=3.4",
             has_sig=None,
             yanked=None,
+            metadata_digests=None,
         ),
         DistributionPackage(
             filename="qypi-0.1.0.post1.tar.gz",
@@ -60,6 +63,7 @@ def test_parse_qypi():
             requires_python="~=3.4",
             has_sig=None,
             yanked=None,
+            metadata_digests=None,
         ),
         DistributionPackage(
             filename="qypi-0.2.0-py3-none-any.whl",
@@ -70,6 +74,7 @@ def test_parse_qypi():
             requires_python="~=3.4",
             has_sig=None,
             yanked=None,
+            metadata_digests=None,
         ),
         DistributionPackage(
             filename="qypi-0.2.0.tar.gz",
@@ -80,6 +85,7 @@ def test_parse_qypi():
             requires_python="~=3.4",
             has_sig=None,
             yanked=None,
+            metadata_digests=None,
         ),
         DistributionPackage(
             filename="qypi-0.3.0-py3-none-any.whl",
@@ -90,6 +96,7 @@ def test_parse_qypi():
             requires_python="~=3.4",
             has_sig=None,
             yanked=None,
+            metadata_digests=None,
         ),
         DistributionPackage(
             filename="qypi-0.3.0.tar.gz",
@@ -100,6 +107,7 @@ def test_parse_qypi():
             requires_python="~=3.4",
             has_sig=None,
             yanked=None,
+            metadata_digests=None,
         ),
         DistributionPackage(
             filename="qypi-0.4.0-py3-none-any.whl",
@@ -110,6 +118,7 @@ def test_parse_qypi():
             requires_python="~=3.4",
             has_sig=None,
             yanked=None,
+            metadata_digests=None,
         ),
         DistributionPackage(
             filename="qypi-0.4.0.tar.gz",
@@ -120,6 +129,7 @@ def test_parse_qypi():
             requires_python="~=3.4",
             has_sig=None,
             yanked=None,
+            metadata_digests=None,
         ),
         DistributionPackage(
             filename="qypi-0.4.1-py3-none-any.whl",
@@ -130,6 +140,7 @@ def test_parse_qypi():
             requires_python="~=3.4",
             has_sig=None,
             yanked=None,
+            metadata_digests=None,
         ),
         DistributionPackage(
             filename="qypi-0.4.1.tar.gz",
@@ -140,6 +151,7 @@ def test_parse_qypi():
             requires_python="~=3.4",
             has_sig=None,
             yanked=None,
+            metadata_digests=None,
         ),
     ]
 
@@ -162,6 +174,7 @@ def test_parse_qypi_base():
             requires_python="~=3.4",
             has_sig=None,
             yanked=None,
+            metadata_digests=None,
         ),
         DistributionPackage(
             filename="qypi-0.1.0.tar.gz",
@@ -172,6 +185,7 @@ def test_parse_qypi_base():
             requires_python="~=3.4",
             has_sig=None,
             yanked=None,
+            metadata_digests=None,
         ),
         DistributionPackage(
             filename="qypi-0.1.0.post1-py3-none-any.whl",
@@ -182,6 +196,7 @@ def test_parse_qypi_base():
             requires_python="~=3.4",
             has_sig=None,
             yanked=None,
+            metadata_digests=None,
         ),
         DistributionPackage(
             filename="qypi-0.1.0.post1.tar.gz",
@@ -192,6 +207,7 @@ def test_parse_qypi_base():
             requires_python="~=3.4",
             has_sig=None,
             yanked=None,
+            metadata_digests=None,
         ),
     ]
 
@@ -214,6 +230,7 @@ def test_parse_qypi_mixed():
             requires_python=None,
             has_sig=None,
             yanked="Metadata was smelly",
+            metadata_digests=None,
         ),
         DistributionPackage(
             filename="qypi-0.1.0.tar.gz",
@@ -224,6 +241,7 @@ def test_parse_qypi_mixed():
             requires_python="~=3.4",
             has_sig=None,
             yanked="",
+            metadata_digests=None,
         ),
         DistributionPackage(
             filename="qypi-0.1.0.post1-py3-none-any.whl",
@@ -234,6 +252,7 @@ def test_parse_qypi_mixed():
             requires_python=None,
             has_sig=True,
             yanked="",
+            metadata_digests=None,
         ),
         DistributionPackage(
             filename="qypi-0.1.0.post1.tar.gz",
@@ -244,6 +263,7 @@ def test_parse_qypi_mixed():
             requires_python="~=3.4",
             has_sig=True,
             yanked=None,
+            metadata_digests=None,
         ),
         DistributionPackage(
             filename="qypi-0.2.0-py3-none-any.whl",
@@ -254,6 +274,7 @@ def test_parse_qypi_mixed():
             requires_python=None,
             has_sig=False,
             yanked=None,
+            metadata_digests=None,
         ),
     ]
 
@@ -276,6 +297,7 @@ def test_parse_devpi_devpi():
             requires_python=None,
             has_sig=None,
             yanked=None,
+            metadata_digests=None,
         ),
         DistributionPackage(
             filename="devpi-2.1.0.tar.gz",
@@ -286,6 +308,7 @@ def test_parse_devpi_devpi():
             requires_python=None,
             has_sig=None,
             yanked=None,
+            metadata_digests=None,
         ),
         DistributionPackage(
             filename="devpi-2.0.3.tar.gz",
@@ -296,6 +319,7 @@ def test_parse_devpi_devpi():
             requires_python=None,
             has_sig=None,
             yanked=None,
+            metadata_digests=None,
         ),
         DistributionPackage(
             filename="devpi-2.0.2.tar.gz",
@@ -306,6 +330,7 @@ def test_parse_devpi_devpi():
             requires_python=None,
             has_sig=None,
             yanked=None,
+            metadata_digests=None,
         ),
         DistributionPackage(
             filename="devpi-2.0.1.tar.gz",
@@ -316,5 +341,6 @@ def test_parse_devpi_devpi():
             requires_python=None,
             has_sig=None,
             yanked=None,
+            metadata_digests=None,
         ),
     ]

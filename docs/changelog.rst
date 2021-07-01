@@ -3,6 +3,13 @@
 Changelog
 =========
 
+v0.9.0 (in development)
+-----------------------
+- Support :pep:`658` by adding `~DistributionPackage.has_metadata`,
+  `~DistributionPackage.metadata_url`, and
+  `~DistributionPackage.metadata_digests` attributes to `DistributionPackage`
+
+
 v0.8.0 (2020-12-13)
 -------------------
 - Support Python 3.9

@@ -1,3 +1,4 @@
+import re
 from typing import Dict, List, NamedTuple, Optional, Union
 from urllib.parse import urlparse, urlunparse
 from .filenames import parse_filename
@@ -34,6 +35,9 @@ class DistributionPackage(NamedTuple):
 
     .. versionchanged:: 0.5.0
         `yanked` attribute added
+
+    .. versionchanged:: 0.9.0
+        `has_metadata`, `metadata_url`, and `metadata_digests` attributes added
     """
 
     #: The basename of the package file
@@ -80,6 +84,12 @@ class DistributionPackage(NamedTuple):
     #: yanked; otherwise, it is `None`.
     yanked: Optional[str]
 
+    #: If the package repository provides a Core Metadata file for the package,
+    #: this is a (possibly empty) `dict` of digests of the file, given as a
+    #: mapping from hash algorithm names to hex-encoded digest strings;
+    #: otherwise, it is `None`
+    metadata_digests: Optional[Dict[str, str]]
+
     @property
     def sig_url(self) -> str:
         """
@@ -92,6 +102,23 @@ class DistributionPackage(NamedTuple):
         """
         u = urlparse(self.url)
         return urlunparse((u[0], u[1], u[2] + ".asc", "", "", ""))
+
+    @property
+    def has_metadata(self) -> bool:
+        """Whether the package file is accompanied by a Core Metadata file"""
+        return self.metadata_digests is not None
+
+    @property
+    def metadata_url(self) -> Optional[str]:
+        """
+        If the package repository provides a Core Metadata file for the
+        package, this is the URL for that file; otherwise, it is `None`.
+        """
+        if self.has_metadata:
+            u = urlparse(self.url)
+            return urlunparse((u[0], u[1], u[2] + ".metadata", "", "", ""))
+        else:
+            return None
 
     def get_digests(self) -> Dict[str, str]:
         """
@@ -130,6 +157,15 @@ class DistributionPackage(NamedTuple):
             has_sig = gpg_sig.lower() == "true"
         else:
             has_sig = None
+        mddigest = get_str_attrib("data-dist-info-metadata")
+        metadata_digests: Optional[Dict[str, str]]
+        if mddigest is not None:
+            metadata_digests = {}
+            m = re.fullmatch(r"(\w+)=([0-9A-Fa-f]+)", mddigest)
+            if m:
+                metadata_digests[m[1]] = m[2]
+        else:
+            metadata_digests = None
         return cls(
             filename=link.text,
             url=link.url,
@@ -139,6 +175,7 @@ class DistributionPackage(NamedTuple):
             version=version,
             package_type=pkg_type,
             yanked=get_str_attrib("data-yanked"),
+            metadata_digests=metadata_digests,
         )
 
 

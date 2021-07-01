@@ -1,3 +1,8 @@
+v0.9.0 (in development)
+-----------------------
+- Support PEP 658 by adding `has_metadata`, `metadata_url`, and
+  `metadata_digests` attributes to `DistributionPackage`
+
 v0.8.0 (2020-12-13)
 -------------------
 - Support Python 3.9
