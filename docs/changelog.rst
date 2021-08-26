@@ -3,8 +3,8 @@
 Changelog
 =========
 
-v0.9.0 (in development)
------------------------
+v0.9.0 (2021-08-26)
+-------------------
 - Support :pep:`658` by adding `~DistributionPackage.has_metadata`,
   `~DistributionPackage.metadata_url`, and
   `~DistributionPackage.metadata_digests` attributes to `DistributionPackage`
