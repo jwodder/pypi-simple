@@ -1,3 +1,7 @@
+v0.10.0 (in development)
+------------------------
+- Support Python 3.10
+
 v0.9.0 (2021-08-26)
 -------------------
 - Support PEP 658 by adding `has_metadata`, `metadata_url`, and
