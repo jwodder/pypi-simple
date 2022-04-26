@@ -32,7 +32,7 @@ GOOD_PACKAGE_RGXN = [
             )
         ),
     ),
-    # Regex adapted from <https://git.io/fAclu>:
+    # Regex adapted from <https://github.com/pypa/pip/blob/18.0/src/pip/_internal/wheel.py#L569>:
     (
         "wheel",
         re.compile(
@@ -47,12 +47,12 @@ GOOD_PACKAGE_RGXN = [
 #: when trying to determine a match; otherwise, a generic pattern that matches
 #: all project names will be prepended.
 BAD_PACKAGE_BASES = [
-    # See <https://git.io/fAclc>:
+    # See <https://github.com/python/cpython/blob/v3.7.0/Lib/distutils/command/bdist_dumb.py#L93>:
     (
         "dumb",
         re.compile(r"-(?P<version>{})\.{}{}$".format(VERSION, PLAT_NAME, ARCHIVE_EXT)),
     ),
-    # See <https://git.io/fAclv>:
+    # See <https://github.com/python/cpython/blob/v3.7.0/Lib/distutils/command/bdist_msi.py#L733>:
     (
         "msi",
         re.compile(
@@ -60,7 +60,7 @@ BAD_PACKAGE_BASES = [
         ),
     ),
     ("sdist", re.compile(r"-(?P<version>{}){}$".format(VERSION, ARCHIVE_EXT))),
-    # See <https://git.io/fAclL>:
+    # See <https://github.com/python/cpython/blob/v3.7.0/Lib/distutils/command/bdist_wininst.py#L292>:
     (
         "wininst",
         re.compile(

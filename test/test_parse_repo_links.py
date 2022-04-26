@@ -145,7 +145,7 @@ from pypi_simple import (
             ),
         ),
         # I'm not sure if this is how HTML is supposed to work, but it is how
-        # pip works: <https://git.io/fAVZF>
+        # pip works: <https://github.com/pypa/pip/blob/18.0/src/pip/_internal/index.py#L878>
         (
             """
             <html>

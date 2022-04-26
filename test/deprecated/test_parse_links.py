@@ -125,7 +125,7 @@ def test_bare_base_and_href_base_tag():
 
 def test_many_base_tags():
     # I'm not sure if this is how HTML is supposed to work, but it is how pip
-    # works: <https://git.io/fAVZF>
+    # works: <https://github.com/pypa/pip/blob/18.0/src/pip/_internal/index.py#L878>
     with pytest.warns(DeprecationWarning):
         links = list(
             parse_links(
