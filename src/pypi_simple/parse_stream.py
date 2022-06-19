@@ -217,7 +217,7 @@ def iterhtmldecode(
         of the other sources succeed in determining the encoding; defaults to
         CP1252
     :param str errors: the error handler to use when decoding the document;
-        defauts to ``"replace"``
+        defaults to ``"replace"``
     :param int scan_window: how many bytes to consume from the iterable when
         checking for an encoding declaration
     :rtype: Iterator[str]
