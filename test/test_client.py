@@ -3,7 +3,13 @@ from pathlib import Path
 import pytest
 import requests
 import responses
-from pypi_simple import DistributionPackage, IndexPage, ProjectPage, PyPISimple
+from pypi_simple import (
+    DistributionPackage,
+    IndexPage,
+    ProjectPage,
+    PyPISimple,
+    UnsupportedContentTypeError,
+)
 
 DATA_DIR = Path(__file__).with_name("data")
 
@@ -465,3 +471,38 @@ def test_json_session(mocker):
         (call,) = spy.call_args_list
         assert call[1]["timeout"] == 2.718
         assert simple.get_project_page("nonexistent") is None
+
+
+@responses.activate
+def test_unsupported_content_type():
+    responses.add(
+        method=responses.GET,
+        url="https://test.nil/simple/",
+        json={
+            "meta": {"_last-serial": 14267765, "api-version": "1.0"},
+            "projects": [{"name": "argset"}, {"name": "banana"}, {"name": "coconut"}],
+        },
+    )
+    responses.add(
+        method=responses.GET,
+        url="https://test.nil/simple/empty/",
+        json={"files": [], "name": "empty", "meta": {"api-version": "1.0"}},
+        content_type="application/json; charset=utf-8",
+    )
+    with PyPISimple("https://test.nil/simple/") as simple:
+        with pytest.raises(UnsupportedContentTypeError) as excinfo:
+            simple.get_index_page()
+        assert excinfo.value.url == "https://test.nil/simple/"
+        assert excinfo.value.content_type == "application/json"
+        assert (
+            str(excinfo.value)
+            == "Response from https://test.nil/simple/ has unsupported Content-Type 'application/json'"
+        )
+        with pytest.raises(UnsupportedContentTypeError) as excinfo:
+            simple.get_project_page("empty")
+        assert excinfo.value.url == "https://test.nil/simple/empty/"
+        assert excinfo.value.content_type == "application/json; charset=\"utf-8\""
+        assert (
+            str(excinfo.value)
+            == "Response from https://test.nil/simple/empty/ has unsupported Content-Type 'application/json; charset=\"utf-8\"'"
+        )

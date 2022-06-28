@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 from mailbits import ContentType
 import requests
 from .classes import DistributionPackage, IndexPage, Link, ProjectPage
-from .util import check_repo_version
+from .util import UnsupportedContentTypeError, check_repo_version
 
 
 def parse_repo_links(
@@ -177,7 +177,7 @@ def parse_repo_project_response(project: str, r: requests.Response) -> ProjectPa
             from_encoding=charset,
         )
     else:
-        raise ValueError(f"Response has unsupported Content-Type {str(ct)!r}")
+        raise UnsupportedContentTypeError(r.url, str(ct))
     if page.last_serial is None:
         page = page._replace(last_serial=r.headers.get("X-PyPI-Last-Serial"))
     return page
@@ -268,7 +268,7 @@ def parse_repo_index_response(r: requests.Response) -> IndexPage:
             charset = None
         page = parse_repo_index_page(html=r.content, from_encoding=charset)
     else:
-        raise ValueError(f"Response has unsupported Content-Type {str(ct)!r}")
+        raise UnsupportedContentTypeError(r.url, str(ct))
     if page.last_serial is None:
         page = page._replace(last_serial=r.headers.get("X-PyPI-Last-Serial"))
     return page

@@ -116,6 +116,8 @@ class PyPISimple:
         :rtype: IndexPage
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code
+        :raises UnsupportedContentTypeError: if the repository responds with an
+            unsupported :mailheader:`Content-Type`
         :raises UnsupportedRepoVersionError: if the repository version has a
             greater major component than the supported repository version
         """
@@ -182,6 +184,8 @@ class PyPISimple:
         :rtype: Optional[ProjectPage]
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code other than 404
+        :raises UnsupportedContentTypeError: if the repository responds with an
+            unsupported :mailheader:`Content-Type`
         :raises UnsupportedRepoVersionError: if the repository version has a
             greater major component than the supported repository version
         """
@@ -218,6 +222,8 @@ class PyPISimple:
         :rtype: Iterator[str]
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code
+        :raises UnsupportedContentTypeError: if the repository responds with an
+            unsupported :mailheader:`Content-Type`
         :raises UnsupportedRepoVersionError: if the repository version has a
             greater major component than the supported repository version
         """
@@ -246,6 +252,8 @@ class PyPISimple:
         :rtype: List[DistributionPackage]
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code other than 404
+        :raises UnsupportedContentTypeError: if the repository responds with an
+            unsupported :mailheader:`Content-Type`
         :raises UnsupportedRepoVersionError: if the repository version has a
             greater major component than the supported repository version
         """

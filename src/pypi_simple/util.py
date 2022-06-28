@@ -34,3 +34,22 @@ class UnsupportedRepoVersionError(Exception):
             f"Repository's version ({self.declared_version}) has greater major"
             f" component than supported version ({self.supported_version})"
         )
+
+
+class UnsupportedContentTypeError(ValueError):
+    """
+    Raised when a response from a simple repository has an unsupported
+    :mailheader:`Content-Type`
+    """
+
+    def __init__(self, url: str, content_type: str) -> None:
+        #: The URL that returned the response
+        self.url = url
+        #: The unsupported :mailheader:`Content-Type`
+        self.content_type = content_type
+
+    def __str__(self) -> str:
+        return (
+            f"Response from {self.url} has unsupported Content-Type"
+            f" {self.content_type!r}"
+        )
