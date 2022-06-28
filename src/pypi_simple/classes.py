@@ -39,6 +39,9 @@ class DistributionPackage(NamedTuple):
 
     .. versionchanged:: 0.9.0
         `has_metadata`, `metadata_url`, and `metadata_digests` attributes added
+
+    .. versionchanged:: 0.10.0
+        `digests` attribute added
     """
 
     #: The basename of the package file
@@ -101,8 +104,6 @@ class DistributionPackage(NamedTuple):
     #: A collection of hash digests for the file, if provided separately from
     #: the URL, as a `dict` mapping hash algorithm names to hex-encoded digest
     #: strings
-    #:
-    #: .. versionadded:: 0.10.0
     digests: Optional[Dict[str, str]] = None
 
     @property
