@@ -1,3 +1,5 @@
+from typing import Optional
+from urllib.parse import urljoin
 from packaging.version import Version
 from . import SUPPORTED_REPOSITORY_VERSION
 
@@ -53,3 +55,10 @@ class UnsupportedContentTypeError(ValueError):
             f"Response from {self.url} has unsupported Content-Type"
             f" {self.content_type!r}"
         )
+
+
+def basejoin(base_url: Optional[str], url: str) -> str:
+    if base_url is None:
+        return url
+    else:
+        return urljoin(base_url, url)

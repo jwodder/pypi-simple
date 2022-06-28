@@ -110,6 +110,48 @@ def test_parse_repo_project_json(filename, page):
     assert parse_repo_project_json(data) == page
 
 
+def test_parse_repo_project_json_relative_urls():
+    with (DATA_DIR / "argset-relative.json").open() as fp:
+        data = json.load(fp)
+    assert parse_repo_project_json(
+        data, "https://test.nil/simple/argset/"
+    ) == ProjectPage(
+        project="argset",
+        packages=[
+            DistributionPackage(
+                filename="argset-0.1.0-py3-none-any.whl",
+                project="argset",
+                version="0.1.0",
+                package_type="wheel",
+                url="https://test.nil/simple/argset/packages/argset-0.1.0-py3-none-any.whl",
+                requires_python="~=3.6",
+                has_sig=None,
+                yanked=None,
+                metadata_digests=None,
+                digests={
+                    "sha256": "107a632c7112faceb9fd6e93658dd461154713db250f7ffde5bd473e17cf1db5"
+                },
+            ),
+            DistributionPackage(
+                filename="argset-0.1.0.tar.gz",
+                project="argset",
+                version="0.1.0",
+                package_type="sdist",
+                url="https://test.nil/simple/argset/packages/argset-0.1.0.tar.gz",
+                requires_python="~=3.6",
+                has_sig=None,
+                yanked=None,
+                metadata_digests=None,
+                digests={
+                    "sha256": "8a41ee4789d37517c259984c11f2aa3639a90dc8fa446ff905ecc5fe6623c12d"
+                },
+            ),
+        ],
+        repository_version="1.0",
+        last_serial="10562871",
+    )
+
+
 def test_parse_repo_project_json_unsupported_version():
     with pytest.raises(UnsupportedRepoVersionError) as excinfo:
         parse_repo_project_json(

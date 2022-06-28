@@ -2,6 +2,7 @@ import re
 from typing import Any, Dict, List, NamedTuple, Optional, Union
 from urllib.parse import urlparse, urlunparse
 from .filenames import parse_filename
+from .util import basejoin
 
 
 class Link(NamedTuple):
@@ -191,7 +192,10 @@ class DistributionPackage(NamedTuple):
 
     @classmethod
     def from_pep691_details(
-        cls, data: Any, project_hint: Optional[str] = None
+        cls,
+        data: Any,
+        project_hint: Optional[str] = None,
+        base_url: Optional[str] = None,
     ) -> "DistributionPackage":
         """
         .. versionadded:: 0.10.0
@@ -203,6 +207,8 @@ class DistributionPackage(NamedTuple):
         :param Optional[str] project_hint: Optionally, the expected value for
             the project name (usually the name of the project page on which the
             link was found).  The name does not need to be normalized.
+        :param Optional[str] base_url: an optional URL to join to the front of
+            a relative file URL (usually the URL of the page being parsed)
         :rtype: DistributionPackage
         :raises TypeError: if `data` is not a `dict`
         """
@@ -233,7 +239,7 @@ class DistributionPackage(NamedTuple):
             metadata_digests = mddigest
         return cls(
             filename=data["filename"],
-            url=data["url"],
+            url=basejoin(base_url, data["url"]),
             has_sig=data.get("gpg-sig"),
             requires_python=data.get("requires-python"),
             project=project,

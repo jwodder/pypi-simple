@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 from mailbits import ContentType
 import requests
 from .classes import DistributionPackage, IndexPage, Link, ProjectPage
-from .util import UnsupportedContentTypeError, check_repo_version
+from .util import UnsupportedContentTypeError, basejoin, check_repo_version
 
 
 def parse_repo_links(
@@ -45,17 +45,6 @@ def parse_repo_links(
             base_url = base_tag["href"]
         else:
             base_url = urljoin(base_url, base_tag["href"])
-    if base_url is None:
-
-        def basejoin(url: str) -> str:
-            return url
-
-    else:
-
-        def basejoin(url: str) -> str:
-            assert isinstance(base_url, str)
-            return urljoin(base_url, url)
-
     metadata = {}
     pep629_meta = soup.find(
         "meta",
@@ -69,7 +58,7 @@ def parse_repo_links(
         links.append(
             Link(
                 text="".join(link.strings).strip(),
-                url=basejoin(link["href"]),
+                url=basejoin(base_url, link["href"]),
                 attrs=link.attrs,
             )
         )
@@ -109,7 +98,7 @@ def parse_repo_project_page(
     )
 
 
-def parse_repo_project_json(data: Any) -> ProjectPage:
+def parse_repo_project_json(data: Any, base_url: Optional[str] = None) -> ProjectPage:
     """
     .. versionadded:: 0.10.0
 
@@ -119,6 +108,8 @@ def parse_repo_project_json(data: Any) -> ProjectPage:
     ``.meta._last-serial`` field, if any.
 
     :param data: The decoded body of the JSON response
+    :param Optional[str] base_url: an optional URL to join to the front of any
+        relative file URLs (usually the URL of the page being parsed)
     :rtype: ProjectPage
     :raises TypeError: if ``data`` is not a `dict`
     :raises UnsupportedRepoVersionError: if the repository version has a
@@ -135,7 +126,7 @@ def parse_repo_project_json(data: Any) -> ProjectPage:
     return ProjectPage(
         project=data["name"],
         packages=[
-            DistributionPackage.from_pep691_details(filedata, data["name"])
+            DistributionPackage.from_pep691_details(filedata, data["name"], base_url)
             for filedata in data["files"]
         ],
         repository_version=repository_version,
@@ -160,7 +151,7 @@ def parse_repo_project_response(project: str, r: requests.Response) -> ProjectPa
     """
     ct = ContentType.parse(r.headers.get("content-type", "text/html"))
     if ct.content_type == "application/vnd.pypi.simple.v1+json":
-        page = parse_repo_project_json(r.json())
+        page = parse_repo_project_json(r.json(), r.url)
     elif (
         ct.content_type == "application/vnd.pypi.simple.v1+html"
         or ct.content_type == "text/html"
