@@ -6,8 +6,10 @@ Low-Level Utilities
 Parsing Simple Repository Pages
 -------------------------------
 .. autofunction:: parse_repo_index_page
+.. autofunction:: parse_repo_index_json
 .. autofunction:: parse_repo_index_response
 .. autofunction:: parse_repo_project_page
+.. autofunction:: parse_repo_project_json
 .. autofunction:: parse_repo_project_response
 .. autofunction:: parse_repo_links
 .. autoclass:: Link

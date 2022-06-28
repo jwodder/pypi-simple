@@ -31,9 +31,11 @@ from .client import PyPISimple
 from .filenames import parse_filename
 from .parse_old import parse_links, parse_project_page, parse_simple_index
 from .parse_repo import (
+    parse_repo_index_json,
     parse_repo_index_page,
     parse_repo_index_response,
     parse_repo_links,
+    parse_repo_project_json,
     parse_repo_project_page,
     parse_repo_project_response,
 )
@@ -54,9 +56,11 @@ __all__ = [
     "parse_links_stream",
     "parse_links_stream_response",
     "parse_project_page",
+    "parse_repo_index_json",
     "parse_repo_index_page",
     "parse_repo_index_response",
     "parse_repo_links",
+    "parse_repo_project_json",
     "parse_repo_project_page",
     "parse_repo_project_response",
     "parse_simple_index",

@@ -6,6 +6,17 @@ Changelog
 v0.10.0 (in development)
 ------------------------
 - Support Python 3.10
+- Support :pep:`691`
+
+  - Requests now include :mailheader:`Accept` headers that prefer the new JSON
+    format over the old HTML format
+  - `parse_repo_project_response()` and `parse_repo_index_response()` now
+    support both the JSON and HTML formats
+  - Add `parse_repo_index_json()` and `parse_repo_project_json()` functions
+  - Gave `DistributionPackage` a `~DistributionPackage.digests` attribute for
+    storing the contents of the ``"hashes"`` field in JSON project details
+  - Gave `DistributionPackage` a `~DistributionPackage.from_pep691_details()`
+    classmethod
 
 
 v0.9.0 (2021-08-26)

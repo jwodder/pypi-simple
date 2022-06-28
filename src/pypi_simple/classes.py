@@ -1,5 +1,5 @@
 import re
-from typing import Dict, List, NamedTuple, Optional, Union
+from typing import Any, Dict, List, NamedTuple, Optional, Union
 from urllib.parse import urlparse, urlunparse
 from .filenames import parse_filename
 
@@ -90,6 +90,13 @@ class DistributionPackage(NamedTuple):
     #: otherwise, it is `None`
     metadata_digests: Optional[Dict[str, str]]
 
+    #: A collection of hash digests for the file, if provided separately from
+    #: the URL, as a `dict` mapping hash algorithm names to hex-encoded digest
+    #: strings
+    #:
+    #: .. versionadded:: 0.10.0
+    digests: Optional[Dict[str, str]] = None
+
     @property
     def sig_url(self) -> str:
         """
@@ -122,11 +129,15 @@ class DistributionPackage(NamedTuple):
 
     def get_digests(self) -> Dict[str, str]:
         """
-        Extracts the hash digests from the package file's URL and returns a
-        `dict` mapping hash algorithm names to hex-encoded digest strings
+        Fetches the hash digests for the file — either from `digests` or by
+        parsing `url` — and returns a `dict` mapping hash algorithm names to
+        hex-encoded digest strings
         """
-        name, sep, value = urlparse(self.url).fragment.partition("=")
-        return {name: value} if value else {}
+        if self.digests is not None:
+            return self.digests
+        else:
+            name, sep, value = urlparse(self.url).fragment.partition("=")
+            return {name: value} if value else {}
 
     @classmethod
     def from_link(
@@ -176,6 +187,61 @@ class DistributionPackage(NamedTuple):
             package_type=pkg_type,
             yanked=get_str_attrib("data-yanked"),
             metadata_digests=metadata_digests,
+        )
+
+    @classmethod
+    def from_pep691_details(
+        cls, data: Any, project_hint: Optional[str] = None
+    ) -> "DistributionPackage":
+        """
+        .. versionadded:: 0.10.0
+
+        Construct a `DistributionPackage` from an object taken from the
+        ``"files"`` field of a :pep:`691` project detail response.
+
+        :param data: a file dictionary
+        :param Optional[str] project_hint: Optionally, the expected value for
+            the project name (usually the name of the project page on which the
+            link was found).  The name does not need to be normalized.
+        :rtype: DistributionPackage
+        :raises TypeError: if `data` is not a `dict`
+        """
+        if not isinstance(data, dict):
+            raise TypeError(
+                f"JSON file details object is {type(data)} instead of a dict"
+            )
+        project, version, pkg_type = parse_filename(data["filename"], project_hint)
+        yankfield = data.get("yanked", False)
+        yanked: Optional[str]
+        if yankfield is True:
+            yanked = ""
+        elif yankfield is False:
+            yanked = None
+        else:
+            if not isinstance(yankfield, str):
+                raise TypeError(f'"yanked" field is not a str: {yankfield!r}')
+            yanked = yankfield
+        mddigest = data.get("dist-info-metadata")
+        metadata_digests: Optional[Dict[str, str]]
+        if mddigest is True:
+            metadata_digests = {}
+        elif not mddigest:
+            # TODO: A missing dist-info-metadata should mean that the metadata
+            # may or may not exist
+            metadata_digests = None
+        else:
+            metadata_digests = mddigest
+        return cls(
+            filename=data["filename"],
+            url=data["url"],
+            has_sig=data.get("gpg-sig"),
+            requires_python=data.get("requires-python"),
+            project=project,
+            version=version,
+            package_type=pkg_type,
+            yanked=yanked,
+            metadata_digests=metadata_digests,
+            digests=data["hashes"],
         )
 
 

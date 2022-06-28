@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 import pytest
 import requests
@@ -12,6 +13,8 @@ DATA_DIR = Path(__file__).with_name("data")
     [
         "text/html",
         "text/html; charset=utf-8",
+        "application/vnd.pypi.simple.v1+html",
+        "application/vnd.pypi.simple.v1+html; charset=utf-8",
     ],
 )
 @responses.activate
@@ -363,7 +366,6 @@ def test_stream_project_names(mocker):
             body=fp.read(),
             content_type="text/html",
             headers={"x-pypi-last-serial": "12345"},
-            stream=True,
         )
     responses.add(
         method=responses.GET,
@@ -380,3 +382,86 @@ def test_stream_project_names(mocker):
         ]
         (call,) = spy.call_args_list
         assert call[1]["timeout"] == 1.618
+
+
+@responses.activate
+def test_json_session(mocker):
+    responses.add(
+        method=responses.GET,
+        url="https://test.nil/simple/",
+        json={
+            "meta": {"_last-serial": 14267765, "api-version": "1.0"},
+            "projects": [{"name": "argset"}, {"name": "banana"}, {"name": "coconut"}],
+        },
+        content_type="application/vnd.pypi.simple.v1+json",
+        headers={"x-pypi-last-serial": "12345"},
+    )
+    responses.add(
+        method=responses.GET,
+        url="https://test.nil/simple/",
+        body="This URL should only be requested once.",
+        status=500,
+    )
+    with (DATA_DIR / "argset.json").open() as fp:
+        data = json.load(fp)
+    responses.add(
+        method=responses.GET,
+        url="https://test.nil/simple/argset/",
+        json=data,
+        content_type="application/vnd.pypi.simple.v1+json",
+        headers={"X-PYPI-LAST-SERIAL": "54321"},
+    )
+    responses.add(
+        method=responses.GET,
+        url="https://test.nil/simple/nonexistent/",
+        body="Does not exist",
+        status=404,
+    )
+    with PyPISimple("https://test.nil/simple/") as simple:
+        spy = mocker.spy(simple.s, "get")
+        assert simple.get_index_page(timeout=3.14) == IndexPage(
+            projects=["argset", "banana", "coconut"],
+            last_serial="14267765",
+            repository_version="1.0",
+        )
+        (call,) = spy.call_args_list
+        assert call[1]["timeout"] == 3.14
+        spy.reset_mock()
+        assert simple.get_project_page("ARGSET", timeout=2.718) == ProjectPage(
+            project="argset",
+            packages=[
+                DistributionPackage(
+                    filename="argset-0.1.0-py3-none-any.whl",
+                    project="argset",
+                    version="0.1.0",
+                    package_type="wheel",
+                    url="https://files.pythonhosted.org/packages/b5/2b/7aa284f345e37f955d86e4cd57b1039b573552b0fc29d1a522ec05c1ee41/argset-0.1.0-py3-none-any.whl",
+                    requires_python="~=3.6",
+                    has_sig=None,
+                    yanked=None,
+                    metadata_digests=None,
+                    digests={
+                        "sha256": "107a632c7112faceb9fd6e93658dd461154713db250f7ffde5bd473e17cf1db5"
+                    },
+                ),
+                DistributionPackage(
+                    filename="argset-0.1.0.tar.gz",
+                    project="argset",
+                    version="0.1.0",
+                    package_type="sdist",
+                    url="https://files.pythonhosted.org/packages/d0/ee/1c25e68d029e8daaf3228dababbf3261fa5d9569f6f705867b2ad4df9b6d/argset-0.1.0.tar.gz",
+                    requires_python="~=3.6",
+                    has_sig=None,
+                    yanked=None,
+                    metadata_digests=None,
+                    digests={
+                        "sha256": "8a41ee4789d37517c259984c11f2aa3639a90dc8fa446ff905ecc5fe6623c12d"
+                    },
+                ),
+            ],
+            last_serial="10562871",
+            repository_version="1.0",
+        )
+        (call,) = spy.call_args_list
+        assert call[1]["timeout"] == 2.718
+        assert simple.get_project_page("nonexistent") is None

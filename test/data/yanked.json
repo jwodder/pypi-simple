@@ -1,0 +1,26 @@
+{
+  "files": [
+    {
+      "filename": "yanked-0.0.0-py3-none-any.whl",
+      "hashes": {
+        "sha256": "81aaff3b2a51d570771c32656909950387c7380d321b0305aaad1cd692645932"
+      },
+      "requires-python": "",
+      "url": "https://files.pythonhosted.org/packages/9b/af/67c4c6b7f98f2789e4073a0b589f71ad865b3bb8d3e508c51d5f70962fb1/yanked-0.0.0-py3-none-any.whl",
+      "yanked": true
+    },
+    {
+      "filename": "yanked-0.0.0.tar.gz",
+      "hashes": {
+        "sha256": "ca14bde2c9c14a5fe7ad9ab9078fdcd8fe09b6de4ca341cc9c286159a8acba41"
+      },
+      "requires-python": "",
+      "url": "https://files.pythonhosted.org/packages/2c/9b/23d7985793a487f53fdfbc78e6180cb74b293d200da94895a8a932a4ccc6/yanked-0.0.0.tar.gz",
+      "yanked": "not good"
+    }
+  ],
+  "meta": {
+    "api-version": "1.0"
+  },
+  "name": "yanked"
+}

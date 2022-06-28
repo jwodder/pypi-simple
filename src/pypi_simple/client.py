@@ -18,6 +18,21 @@ USER_AGENT: str = "pypi-simple/{} ({}) requests/{} {}/{}".format(
     platform.python_version(),
 )
 
+ACCEPT = ", ".join(
+    [
+        "application/vnd.pypi.simple.v1+json",
+        "application/vnd.pypi.simple.v1+html;q=0.2",
+        "text/html;q=0.01",
+    ]
+)
+
+ACCEPT_HTML = ", ".join(
+    [
+        "application/vnd.pypi.simple.v1+html",
+        "text/html;q=0.01",
+    ]
+)
+
 
 class PyPISimple:
     """
@@ -104,7 +119,7 @@ class PyPISimple:
         :raises UnsupportedRepoVersionError: if the repository version has a
             greater major component than the supported repository version
         """
-        r = self.s.get(self.endpoint, timeout=timeout)
+        r = self.s.get(self.endpoint, timeout=timeout, headers={"Accept": ACCEPT})
         r.raise_for_status()
         return parse_repo_index_response(r)
 
@@ -140,7 +155,9 @@ class PyPISimple:
         :raises UnsupportedRepoVersionError: if the repository version has a
             greater major component than the supported repository version
         """
-        with self.s.get(self.endpoint, stream=True, timeout=timeout) as r:
+        with self.s.get(
+            self.endpoint, stream=True, timeout=timeout, headers={"Accept": ACCEPT_HTML}
+        ) as r:
             r.raise_for_status()
             for link in parse_links_stream_response(r, chunk_size):
                 yield link.text
@@ -169,7 +186,7 @@ class PyPISimple:
             greater major component than the supported repository version
         """
         url = self.get_project_url(project)
-        r = self.s.get(url, timeout=timeout)
+        r = self.s.get(url, timeout=timeout, headers={"Accept": ACCEPT})
         if r.status_code == 404:
             return None
         r.raise_for_status()
