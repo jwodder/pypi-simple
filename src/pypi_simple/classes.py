@@ -71,7 +71,7 @@ class DistributionPackage(NamedTuple):
     #: which the package can be installed
     requires_python: Optional[str]
 
-    #: Whether the package file is accompanied by a PGP signature file.   This
+    #: Whether the package file is accompanied by a PGP signature file.  This
     #: is `None` if the package repository does not report such information.
     #:
     #: .. versionchanged:: 0.7.0
@@ -85,11 +85,18 @@ class DistributionPackage(NamedTuple):
     #: yanked; otherwise, it is `None`.
     yanked: Optional[str]
 
+    #: Whether the package file is accompanied by a Core Metadata file.  This
+    #: is `None` if the package repository does not report such information.
+    #:
+    #: .. versionchanged:: 0.10.0
+    #:     Will now be `None` if not specified by repository
+    has_metadata: Optional[bool] = None
+
     #: If the package repository provides a Core Metadata file for the package,
     #: this is a (possibly empty) `dict` of digests of the file, given as a
     #: mapping from hash algorithm names to hex-encoded digest strings;
     #: otherwise, it is `None`
-    metadata_digests: Optional[Dict[str, str]]
+    metadata_digests: Optional[Dict[str, str]] = None
 
     #: A collection of hash digests for the file, if provided separately from
     #: the URL, as a `dict` mapping hash algorithm names to hex-encoded digest
@@ -112,21 +119,17 @@ class DistributionPackage(NamedTuple):
         return urlunparse((u[0], u[1], u[2] + ".asc", "", "", ""))
 
     @property
-    def has_metadata(self) -> bool:
-        """Whether the package file is accompanied by a Core Metadata file"""
-        return self.metadata_digests is not None
+    def metadata_url(self) -> str:
+        """
+        The URL of the package file's Core Metadata file, if it exists; cf.
+        `has_metadata`
 
-    @property
-    def metadata_url(self) -> Optional[str]:
+        .. versionchanged:: 0.10.0
+            Now always defined; would previously be `None` if `has_metadata`
+            was false
         """
-        If the package repository provides a Core Metadata file for the
-        package, this is the URL for that file; otherwise, it is `None`.
-        """
-        if self.has_metadata:
-            u = urlparse(self.url)
-            return urlunparse((u[0], u[1], u[2] + ".metadata", "", "", ""))
-        else:
-            return None
+        u = urlparse(self.url)
+        return urlunparse((u[0], u[1], u[2] + ".metadata", "", "", ""))
 
     def get_digests(self) -> Dict[str, str]:
         """
@@ -188,6 +191,7 @@ class DistributionPackage(NamedTuple):
             package_type=pkg_type,
             yanked=get_str_attrib("data-yanked"),
             metadata_digests=metadata_digests,
+            has_metadata=metadata_digests is not None,
         )
 
     @classmethod
@@ -229,13 +233,17 @@ class DistributionPackage(NamedTuple):
             yanked = yankfield
         mddigest = data.get("dist-info-metadata")
         metadata_digests: Optional[Dict[str, str]]
-        if mddigest is True:
-            metadata_digests = {}
-        elif not mddigest:
-            # TODO: A missing dist-info-metadata should mean that the metadata
-            # may or may not exist
+        if mddigest is None:
+            has_metadata = None
             metadata_digests = None
+        elif mddigest is False:
+            has_metadata = False
+            metadata_digests = None
+        elif mddigest is True:
+            has_metadata = True
+            metadata_digests = {}
         else:
+            has_metadata = True
             metadata_digests = mddigest
         return cls(
             filename=data["filename"],
@@ -246,8 +254,9 @@ class DistributionPackage(NamedTuple):
             version=version,
             package_type=pkg_type,
             yanked=yanked,
-            metadata_digests=metadata_digests,
             digests=data["hashes"],
+            metadata_digests=metadata_digests,
+            has_metadata=has_metadata,
         )
 
 

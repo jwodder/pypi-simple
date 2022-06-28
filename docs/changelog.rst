@@ -17,6 +17,9 @@ v0.10.0 (in development)
     storing the contents of the ``"hashes"`` field in JSON project details
   - Gave `DistributionPackage` a `~DistributionPackage.from_pep691_details()`
     classmethod
+  - `DistributionPackage.has_metadata` will now be `None` if not specified by a
+    JSON response
+  - `DistributionPackage.metadata_url` is now always non-`None`
 
 
 v0.9.0 (2021-08-26)

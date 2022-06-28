@@ -41,6 +41,7 @@ def test_empty():
                         has_sig=None,
                         yanked=None,
                         metadata_digests=None,
+                        has_metadata=None,
                         digests={
                             "sha256": "107a632c7112faceb9fd6e93658dd461154713db250f7ffde5bd473e17cf1db5"
                         },
@@ -55,6 +56,7 @@ def test_empty():
                         has_sig=None,
                         yanked=None,
                         metadata_digests=None,
+                        has_metadata=None,
                         digests={
                             "sha256": "8a41ee4789d37517c259984c11f2aa3639a90dc8fa446ff905ecc5fe6623c12d"
                         },
@@ -79,6 +81,7 @@ def test_empty():
                         has_sig=None,
                         yanked="",
                         metadata_digests=None,
+                        has_metadata=None,
                         digests={
                             "sha256": "81aaff3b2a51d570771c32656909950387c7380d321b0305aaad1cd692645932"
                         },
@@ -93,6 +96,7 @@ def test_empty():
                         has_sig=None,
                         yanked="not good",
                         metadata_digests=None,
+                        has_metadata=None,
                         digests={
                             "sha256": "ca14bde2c9c14a5fe7ad9ab9078fdcd8fe09b6de4ca341cc9c286159a8acba41"
                         },
@@ -128,6 +132,7 @@ def test_parse_repo_project_json_relative_urls():
                 has_sig=None,
                 yanked=None,
                 metadata_digests=None,
+                has_metadata=None,
                 digests={
                     "sha256": "107a632c7112faceb9fd6e93658dd461154713db250f7ffde5bd473e17cf1db5"
                 },
@@ -142,6 +147,7 @@ def test_parse_repo_project_json_relative_urls():
                 has_sig=None,
                 yanked=None,
                 metadata_digests=None,
+                has_metadata=None,
                 digests={
                     "sha256": "8a41ee4789d37517c259984c11f2aa3639a90dc8fa446ff905ecc5fe6623c12d"
                 },

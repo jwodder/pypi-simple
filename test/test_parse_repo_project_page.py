@@ -42,6 +42,7 @@ def test_empty():
                         has_sig=None,
                         yanked=None,
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                     DistributionPackage(
                         filename="qypi-0.1.0.tar.gz",
@@ -53,6 +54,7 @@ def test_empty():
                         has_sig=None,
                         yanked=None,
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                     DistributionPackage(
                         filename="qypi-0.1.0.post1-py3-none-any.whl",
@@ -64,6 +66,7 @@ def test_empty():
                         has_sig=None,
                         yanked=None,
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                     DistributionPackage(
                         filename="qypi-0.1.0.post1.tar.gz",
@@ -75,6 +78,7 @@ def test_empty():
                         has_sig=None,
                         yanked=None,
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                     DistributionPackage(
                         filename="qypi-0.2.0-py3-none-any.whl",
@@ -86,6 +90,7 @@ def test_empty():
                         has_sig=None,
                         yanked=None,
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                     DistributionPackage(
                         filename="qypi-0.2.0.tar.gz",
@@ -97,6 +102,7 @@ def test_empty():
                         has_sig=None,
                         yanked=None,
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                     DistributionPackage(
                         filename="qypi-0.3.0-py3-none-any.whl",
@@ -108,6 +114,7 @@ def test_empty():
                         has_sig=None,
                         yanked=None,
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                     DistributionPackage(
                         filename="qypi-0.3.0.tar.gz",
@@ -119,6 +126,7 @@ def test_empty():
                         has_sig=None,
                         yanked=None,
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                     DistributionPackage(
                         filename="qypi-0.4.0-py3-none-any.whl",
@@ -130,6 +138,7 @@ def test_empty():
                         has_sig=None,
                         yanked=None,
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                     DistributionPackage(
                         filename="qypi-0.4.0.tar.gz",
@@ -141,6 +150,7 @@ def test_empty():
                         has_sig=None,
                         yanked=None,
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                     DistributionPackage(
                         filename="qypi-0.4.1-py3-none-any.whl",
@@ -152,6 +162,7 @@ def test_empty():
                         has_sig=None,
                         yanked=None,
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                     DistributionPackage(
                         filename="qypi-0.4.1.tar.gz",
@@ -163,6 +174,7 @@ def test_empty():
                         has_sig=None,
                         yanked=None,
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                 ],
                 repository_version=None,
@@ -187,6 +199,7 @@ def test_empty():
                         has_sig=None,
                         yanked=None,
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                     DistributionPackage(
                         filename="qypi-0.1.0.tar.gz",
@@ -198,6 +211,7 @@ def test_empty():
                         has_sig=None,
                         yanked=None,
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                     DistributionPackage(
                         filename="qypi-0.1.0.post1-py3-none-any.whl",
@@ -209,6 +223,7 @@ def test_empty():
                         has_sig=None,
                         yanked=None,
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                     DistributionPackage(
                         filename="qypi-0.1.0.post1.tar.gz",
@@ -220,6 +235,7 @@ def test_empty():
                         has_sig=None,
                         yanked=None,
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                 ],
                 repository_version=None,
@@ -244,6 +260,7 @@ def test_empty():
                         has_sig=None,
                         yanked="Metadata was smelly",
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                     DistributionPackage(
                         filename="qypi-0.1.0.tar.gz",
@@ -255,6 +272,7 @@ def test_empty():
                         has_sig=None,
                         yanked="",
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                     DistributionPackage(
                         filename="qypi-0.1.0.post1-py3-none-any.whl",
@@ -266,6 +284,7 @@ def test_empty():
                         has_sig=True,
                         yanked="",
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                     DistributionPackage(
                         filename="qypi-0.1.0.post1.tar.gz",
@@ -277,6 +296,7 @@ def test_empty():
                         has_sig=True,
                         yanked=None,
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                     DistributionPackage(
                         filename="qypi-0.2.0-py3-none-any.whl",
@@ -288,6 +308,7 @@ def test_empty():
                         has_sig=False,
                         yanked=None,
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                 ],
                 repository_version=None,
@@ -312,6 +333,7 @@ def test_empty():
                         has_sig=None,
                         yanked=None,
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                     DistributionPackage(
                         filename="qypi-0.1.0.tar.gz",
@@ -323,6 +345,7 @@ def test_empty():
                         has_sig=None,
                         yanked=None,
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                 ],
                 repository_version="1.0",
@@ -347,6 +370,7 @@ def test_empty():
                         has_sig=None,
                         yanked=None,
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                     DistributionPackage(
                         filename="devpi-2.1.0.tar.gz",
@@ -358,6 +382,7 @@ def test_empty():
                         has_sig=None,
                         yanked=None,
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                     DistributionPackage(
                         filename="devpi-2.0.3.tar.gz",
@@ -369,6 +394,7 @@ def test_empty():
                         has_sig=None,
                         yanked=None,
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                     DistributionPackage(
                         filename="devpi-2.0.2.tar.gz",
@@ -380,6 +406,7 @@ def test_empty():
                         has_sig=None,
                         yanked=None,
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                     DistributionPackage(
                         filename="devpi-2.0.1.tar.gz",
@@ -391,6 +418,7 @@ def test_empty():
                         has_sig=None,
                         yanked=None,
                         metadata_digests=None,
+                        has_metadata=False,
                     ),
                 ],
                 repository_version=None,

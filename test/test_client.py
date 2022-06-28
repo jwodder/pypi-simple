@@ -78,6 +78,7 @@ def test_session(mocker, content_type):
                     has_sig=None,
                     yanked=None,
                     metadata_digests=None,
+                    has_metadata=False,
                 ),
                 DistributionPackage(
                     filename="in_place-0.1.1.tar.gz",
@@ -89,6 +90,7 @@ def test_session(mocker, content_type):
                     has_sig=None,
                     yanked=None,
                     metadata_digests=None,
+                    has_metadata=False,
                 ),
                 DistributionPackage(
                     filename="in_place-0.2.0-py2.py3-none-any.whl",
@@ -100,6 +102,7 @@ def test_session(mocker, content_type):
                     has_sig=None,
                     yanked=None,
                     metadata_digests=None,
+                    has_metadata=False,
                 ),
                 DistributionPackage(
                     filename="in_place-0.2.0.tar.gz",
@@ -111,6 +114,7 @@ def test_session(mocker, content_type):
                     has_sig=None,
                     yanked=None,
                     metadata_digests=None,
+                    has_metadata=False,
                 ),
                 DistributionPackage(
                     filename="in_place-0.3.0-py2.py3-none-any.whl",
@@ -122,6 +126,7 @@ def test_session(mocker, content_type):
                     has_sig=None,
                     yanked=None,
                     metadata_digests=None,
+                    has_metadata=False,
                 ),
                 DistributionPackage(
                     filename="in_place-0.3.0.tar.gz",
@@ -133,6 +138,7 @@ def test_session(mocker, content_type):
                     has_sig=None,
                     yanked=None,
                     metadata_digests=None,
+                    has_metadata=False,
                 ),
             ],
             last_serial="54321",
@@ -170,6 +176,7 @@ def test_project_hint_received():
                     has_sig=None,
                     yanked=None,
                     metadata_digests=None,
+                    has_metadata=False,
                 ),
                 DistributionPackage(
                     filename="aws-adfs-ebsco-0.3.7-1.tar.gz",
@@ -181,6 +188,7 @@ def test_project_hint_received():
                     has_sig=None,
                     yanked=None,
                     metadata_digests=None,
+                    has_metadata=False,
                 ),
             ],
             last_serial=None,
@@ -238,6 +246,7 @@ def test_redirected_project_page():
                     has_sig=None,
                     yanked=None,
                     metadata_digests=None,
+                    has_metadata=False,
                 ),
             ],
             last_serial=None,
@@ -279,6 +288,7 @@ def test_utf8_declarations(content_type, body_decl):
                     has_sig=None,
                     yanked=None,
                     metadata_digests=None,
+                    has_metadata=False,
                 ),
             ],
             last_serial=None,
@@ -323,6 +333,7 @@ def test_latin2_declarations(content_type, body_decl):
                     has_sig=None,
                     yanked=None,
                     metadata_digests=None,
+                    has_metadata=False,
                 ),
             ],
             last_serial=None,
@@ -446,6 +457,7 @@ def test_json_session(mocker):
                     has_sig=None,
                     yanked=None,
                     metadata_digests=None,
+                    has_metadata=None,
                     digests={
                         "sha256": "107a632c7112faceb9fd6e93658dd461154713db250f7ffde5bd473e17cf1db5"
                     },
@@ -460,6 +472,7 @@ def test_json_session(mocker):
                     has_sig=None,
                     yanked=None,
                     metadata_digests=None,
+                    has_metadata=None,
                     digests={
                         "sha256": "8a41ee4789d37517c259984c11f2aa3639a90dc8fa446ff905ecc5fe6623c12d"
                     },
@@ -501,7 +514,7 @@ def test_unsupported_content_type():
         with pytest.raises(UnsupportedContentTypeError) as excinfo:
             simple.get_project_page("empty")
         assert excinfo.value.url == "https://test.nil/simple/empty/"
-        assert excinfo.value.content_type == "application/json; charset=\"utf-8\""
+        assert excinfo.value.content_type == 'application/json; charset="utf-8"'
         assert (
             str(excinfo.value)
             == "Response from https://test.nil/simple/empty/ has unsupported Content-Type 'application/json; charset=\"utf-8\"'"

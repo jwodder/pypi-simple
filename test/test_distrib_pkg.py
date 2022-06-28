@@ -15,6 +15,7 @@ def test_get_no_digests(fragment):
         has_sig=False,
         yanked=None,
         metadata_digests=None,
+        has_metadata=False,
     )
     assert pkg.get_digests() == {}
 
@@ -30,6 +31,7 @@ def test_get_digests():
         has_sig=False,
         yanked=None,
         metadata_digests=None,
+        has_metadata=None,
     )
     assert pkg.get_digests() == {
         "sha256": "da69d28dcd527c0e372b3fa7b92fc333b327f8470175f035abc4e351b539189f"
@@ -48,6 +50,7 @@ def test_get_sig_url(has_sig):
         has_sig=has_sig,
         yanked=None,
         metadata_digests=None,
+        has_metadata=None,
     )
     assert (
         pkg.sig_url
@@ -74,6 +77,7 @@ def test_get_sig_url(has_sig):
                 package_type="wheel",
                 yanked=None,
                 metadata_digests=None,
+                has_metadata=False,
             ),
         ),
         (
@@ -99,6 +103,7 @@ def test_get_sig_url(has_sig):
                 metadata_digests={
                     "sha256": "ae718719df4708f329d58ca4d5390c1206c4222ef7e62a3aa9844397c63de28b"
                 },
+                has_metadata=True,
             ),
         ),
         (
@@ -120,6 +125,7 @@ def test_get_sig_url(has_sig):
                 package_type="wheel",
                 yanked=None,
                 metadata_digests={},
+                has_metadata=True,
             ),
         ),
     ],
@@ -141,8 +147,8 @@ def test_pep658():
         metadata_digests={
             "sha256": "ae718719df4708f329d58ca4d5390c1206c4222ef7e62a3aa9844397c63de28b"
         },
+        has_metadata=True,
     )
-    assert pkg.has_metadata is True
     assert (
         pkg.metadata_url
         == "https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl.metadata"
@@ -160,25 +166,9 @@ def test_pep658_no_digests():
         package_type="wheel",
         yanked=None,
         metadata_digests={},
+        has_metadata=True,
     )
-    assert pkg.has_metadata is True
     assert (
         pkg.metadata_url
         == "https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl.metadata"
     )
-
-
-def test_pep658_no_metadata():
-    pkg = DistributionPackage(
-        filename="qypi-0.1.0-py3-none-any.whl",
-        url="https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl#sha256=da69d28dcd527c0e372b3fa7b92fc333b327f8470175f035abc4e351b539189f",
-        has_sig=True,
-        requires_python="~= 3.6",
-        project="qypi",
-        version="0.1.0",
-        package_type="wheel",
-        yanked=None,
-        metadata_digests=None,
-    )
-    assert pkg.has_metadata is False
-    assert pkg.metadata_url is None

@@ -61,6 +61,7 @@ def test_session(content_type):
             has_sig=None,
             yanked=None,
             metadata_digests=None,
+            has_metadata=False,
         ),
         DistributionPackage(
             filename="in_place-0.1.1.tar.gz",
@@ -72,6 +73,7 @@ def test_session(content_type):
             has_sig=None,
             yanked=None,
             metadata_digests=None,
+            has_metadata=False,
         ),
         DistributionPackage(
             filename="in_place-0.2.0-py2.py3-none-any.whl",
@@ -83,6 +85,7 @@ def test_session(content_type):
             has_sig=None,
             yanked=None,
             metadata_digests=None,
+            has_metadata=False,
         ),
         DistributionPackage(
             filename="in_place-0.2.0.tar.gz",
@@ -94,6 +97,7 @@ def test_session(content_type):
             has_sig=None,
             yanked=None,
             metadata_digests=None,
+            has_metadata=False,
         ),
         DistributionPackage(
             filename="in_place-0.3.0-py2.py3-none-any.whl",
@@ -105,6 +109,7 @@ def test_session(content_type):
             has_sig=None,
             yanked=None,
             metadata_digests=None,
+            has_metadata=False,
         ),
         DistributionPackage(
             filename="in_place-0.3.0.tar.gz",
@@ -116,6 +121,7 @@ def test_session(content_type):
             has_sig=None,
             yanked=None,
             metadata_digests=None,
+            has_metadata=False,
         ),
     ]
 
@@ -151,6 +157,7 @@ def test_project_hint_received():
             has_sig=None,
             yanked=None,
             metadata_digests=None,
+            has_metadata=False,
         ),
         DistributionPackage(
             filename="aws-adfs-ebsco-0.3.7-1.tar.gz",
@@ -162,6 +169,7 @@ def test_project_hint_received():
             has_sig=None,
             yanked=None,
             metadata_digests=None,
+            has_metadata=False,
         ),
     ]
 
@@ -194,6 +202,7 @@ def test_redirected_project_page():
             has_sig=None,
             yanked=None,
             metadata_digests=None,
+            has_metadata=False,
         ),
     ]
 
@@ -232,6 +241,7 @@ def test_utf8_declarations(content_type, body_decl):
             has_sig=None,
             yanked=None,
             metadata_digests=None,
+            has_metadata=False,
         ),
     ]
 
@@ -273,5 +283,6 @@ def test_latin2_declarations(content_type, body_decl):
             has_sig=None,
             yanked=None,
             metadata_digests=None,
+            has_metadata=False,
         ),
     ]
