@@ -172,3 +172,64 @@ def test_pep658_no_digests():
         pkg.metadata_url
         == "https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl.metadata"
     )
+
+
+def test_from_pep691_details_get_digests():
+    pkg = DistributionPackage.from_pep691_details(
+        {
+            "filename": "argset-0.1.0-py3-none-any.whl",
+            "hashes": {
+                "sha256": "107a632c7112faceb9fd6e93658dd461154713db250f7ffde5bd473e17cf1db5"
+            },
+            "requires-python": "~=3.6",
+            "url": "https://files.pythonhosted.org/packages/b5/2b/7aa284f345e37f955d86e4cd57b1039b573552b0fc29d1a522ec05c1ee41/argset-0.1.0-py3-none-any.whl",
+            "yanked": False,
+        }
+    )
+    assert pkg.get_digests() == {
+        "sha256": "107a632c7112faceb9fd6e93658dd461154713db250f7ffde5bd473e17cf1db5"
+    }
+
+
+def test_from_pep691_details_no_metadata():
+    pkg = DistributionPackage.from_pep691_details(
+        {
+            "filename": "argset-0.1.0-py3-none-any.whl",
+            "hashes": {
+                "sha256": "107a632c7112faceb9fd6e93658dd461154713db250f7ffde5bd473e17cf1db5"
+            },
+            "requires-python": "~=3.6",
+            "url": "https://files.pythonhosted.org/packages/b5/2b/7aa284f345e37f955d86e4cd57b1039b573552b0fc29d1a522ec05c1ee41/argset-0.1.0-py3-none-any.whl",
+            "yanked": False,
+        }
+    )
+    assert pkg.has_metadata is None
+    assert pkg.metadata_digests is None
+
+
+@pytest.mark.parametrize(
+    "dist_info_metadata,has_metadata,metadata_digests",
+    [
+        (False, False, None),
+        (True, True, {}),
+        ({}, True, {}),
+        ({"sha256": "abc123"}, True, {"sha256": "abc123"}),
+    ],
+)
+def test_from_pep691_details_metadata(
+    dist_info_metadata, has_metadata, metadata_digests
+):
+    pkg = DistributionPackage.from_pep691_details(
+        {
+            "filename": "argset-0.1.0-py3-none-any.whl",
+            "hashes": {
+                "sha256": "107a632c7112faceb9fd6e93658dd461154713db250f7ffde5bd473e17cf1db5"
+            },
+            "requires-python": "~=3.6",
+            "url": "https://files.pythonhosted.org/packages/b5/2b/7aa284f345e37f955d86e4cd57b1039b573552b0fc29d1a522ec05c1ee41/argset-0.1.0-py3-none-any.whl",
+            "yanked": False,
+            "dist-info-metadata": dist_info_metadata,
+        }
+    )
+    assert pkg.has_metadata == has_metadata
+    assert pkg.metadata_digests == metadata_digests
