@@ -18,6 +18,7 @@ v0.10.0 (in development)
       parsing HTML responses
 - Warn on encountering a repository version with a greater minor version than
   expected
+- Gave `PyPISimple` a `download_package()` method
 
 v0.9.0 (2021-08-26)
 -------------------

@@ -1,12 +1,16 @@
+import filecmp
 import json
 from pathlib import Path
+from typing import Dict
 import pytest
 from pytest_mock import MockerFixture
 import requests
 import responses
 from pypi_simple import (
+    DigestMismatchError,
     DistributionPackage,
     IndexPage,
+    NoDigestsError,
     ProjectPage,
     PyPISimple,
     UnsupportedContentTypeError,
@@ -547,3 +551,174 @@ def test_unsupported_content_type() -> None:
             str(excinfo.value)
             == "Response from https://test.nil/simple/empty/ has unsupported Content-Type 'application/json; charset=\"utf-8\"'"
         )
+
+
+@responses.activate
+def test_download(tmp_path: Path) -> None:
+    src_file = DATA_DIR / "click_loglevel-0.4.0.post1-py3-none-any.whl"
+    responses.add(
+        method=responses.GET,
+        url="https://test.nil/simple/packages/click_loglevel-0.4.0.post1-py3-none-any.whl",
+        body=src_file.read_bytes(),
+        content_type="application/zip",
+    )
+    with PyPISimple("https://test.nil/simple/") as simple:
+        pkg = DistributionPackage(
+            filename="click_loglevel-0.4.0.post1-py3-none-any.whl",
+            project="click-loglevel",
+            version="0.4.0.post1",
+            package_type="wheel",
+            url="https://test.nil/simple/packages/click_loglevel-0.4.0.post1-py3-none-any.whl",
+            digests={
+                "sha256": "f3449b5d28d6cba5bfbeed371ad59950aba035730d5cc28a32b4e7632e17ed6c"
+            },
+            requires_python=None,
+            has_sig=None,
+            yanked=None,
+            metadata_digests=None,
+            has_metadata=False,
+        )
+        dest = tmp_path / str(pkg.project) / pkg.filename
+        simple.download_package(pkg, dest)
+        assert dest.exists()
+        assert filecmp.cmp(src_file, dest, shallow=False)
+
+
+@responses.activate
+def test_download_no_digests(tmp_path: Path) -> None:
+    src_file = DATA_DIR / "click_loglevel-0.4.0.post1-py3-none-any.whl"
+    responses.add(
+        method=responses.GET,
+        url="https://test.nil/simple/packages/click_loglevel-0.4.0.post1-py3-none-any.whl",
+        body=src_file.read_bytes(),
+        content_type="application/zip",
+    )
+    with PyPISimple("https://test.nil/simple/") as simple:
+        pkg = DistributionPackage(
+            filename="click_loglevel-0.4.0.post1-py3-none-any.whl",
+            project="click-loglevel",
+            version="0.4.0.post1",
+            package_type="wheel",
+            url="https://test.nil/simple/packages/click_loglevel-0.4.0.post1-py3-none-any.whl",
+            digests={},
+            requires_python=None,
+            has_sig=None,
+            yanked=None,
+            metadata_digests=None,
+            has_metadata=False,
+        )
+        dest = tmp_path / str(pkg.project) / pkg.filename
+        with pytest.raises(NoDigestsError) as excinfo:
+            simple.download_package(pkg, dest)
+        assert str(excinfo.value) == "No digests with known algorithms available"
+        assert not dest.exists()
+
+
+@responses.activate
+def test_download_bad_digests(tmp_path: Path) -> None:
+    responses.add(
+        method=responses.GET,
+        url="https://test.nil/simple/packages/click_loglevel-0.4.0.post1-py3-none-any.whl",
+        body=b"\0\1\2\3\4\5",
+        content_type="application/octet-stream",
+    )
+    with PyPISimple("https://test.nil/simple/") as simple:
+        pkg = DistributionPackage(
+            filename="click_loglevel-0.4.0.post1-py3-none-any.whl",
+            project="click-loglevel",
+            version="0.4.0.post1",
+            package_type="wheel",
+            url="https://test.nil/simple/packages/click_loglevel-0.4.0.post1-py3-none-any.whl",
+            digests={
+                "sha256": "f3449b5d28d6cba5bfbeed371ad59950aba035730d5cc28a32b4e7632e17ed6c"
+            },
+            requires_python=None,
+            has_sig=None,
+            yanked=None,
+            metadata_digests=None,
+            has_metadata=False,
+        )
+        dest = tmp_path / str(pkg.project) / pkg.filename
+        with pytest.raises(DigestMismatchError) as excinfo:
+            simple.download_package(pkg, dest)
+        assert str(excinfo.value) == (
+            "sha256 digest of downloaded file is"
+            " '17e88db187afd62c16e5debf3e6527cd006bc012bc90b51a810cd80c2d511f43'"
+            " instead of expected"
+            " 'f3449b5d28d6cba5bfbeed371ad59950aba035730d5cc28a32b4e7632e17ed6c'"
+        )
+        assert not dest.exists()
+
+
+@responses.activate
+def test_download_bad_digests_keep(tmp_path: Path) -> None:
+    responses.add(
+        method=responses.GET,
+        url="https://test.nil/simple/packages/click_loglevel-0.4.0.post1-py3-none-any.whl",
+        body=b"\0\1\2\3\4\5",
+        content_type="application/octet-stream",
+    )
+    with PyPISimple("https://test.nil/simple/") as simple:
+        pkg = DistributionPackage(
+            filename="click_loglevel-0.4.0.post1-py3-none-any.whl",
+            project="click-loglevel",
+            version="0.4.0.post1",
+            package_type="wheel",
+            url="https://test.nil/simple/packages/click_loglevel-0.4.0.post1-py3-none-any.whl",
+            digests={
+                "sha256": "f3449b5d28d6cba5bfbeed371ad59950aba035730d5cc28a32b4e7632e17ed6c"
+            },
+            requires_python=None,
+            has_sig=None,
+            yanked=None,
+            metadata_digests=None,
+            has_metadata=False,
+        )
+        dest = tmp_path / str(pkg.project) / pkg.filename
+        with pytest.raises(DigestMismatchError) as excinfo:
+            simple.download_package(pkg, dest, keep_on_error=True)
+        assert str(excinfo.value) == (
+            "sha256 digest of downloaded file is"
+            " '17e88db187afd62c16e5debf3e6527cd006bc012bc90b51a810cd80c2d511f43'"
+            " instead of expected"
+            " 'f3449b5d28d6cba5bfbeed371ad59950aba035730d5cc28a32b4e7632e17ed6c'"
+        )
+        assert dest.exists()
+        assert dest.read_bytes() == b"\0\1\2\3\4\5"
+
+
+@pytest.mark.parametrize(
+    "digests",
+    [
+        {},
+        {"sha256": "f3449b5d28d6cba5bfbeed371ad59950aba035730d5cc28a32b4e7632e17ed6c"},
+    ],
+)
+@responses.activate
+def test_download_bad_digests_no_verify(
+    tmp_path: Path, digests: Dict[str, str]
+) -> None:
+    responses.add(
+        method=responses.GET,
+        url="https://test.nil/simple/packages/click_loglevel-0.4.0.post1-py3-none-any.whl",
+        body=b"\0\1\2\3\4\5",
+        content_type="application/octet-stream",
+    )
+    with PyPISimple("https://test.nil/simple/") as simple:
+        pkg = DistributionPackage(
+            filename="click_loglevel-0.4.0.post1-py3-none-any.whl",
+            project="click-loglevel",
+            version="0.4.0.post1",
+            package_type="wheel",
+            url="https://test.nil/simple/packages/click_loglevel-0.4.0.post1-py3-none-any.whl",
+            digests=digests,
+            requires_python=None,
+            has_sig=None,
+            yanked=None,
+            metadata_digests=None,
+            has_metadata=False,
+        )
+        dest = tmp_path / str(pkg.project) / pkg.filename
+        simple.download_package(pkg, dest, verify=False)
+        assert dest.exists()
+        assert dest.read_bytes() == b"\0\1\2\3\4\5"

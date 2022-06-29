@@ -1,4 +1,6 @@
-from typing import Optional
+from abc import ABC, abstractmethod
+import hashlib
+from typing import Any, Dict, Optional
 from urllib.parse import urljoin
 import warnings
 from packaging.version import Version
@@ -86,3 +88,87 @@ def basejoin(base_url: Optional[str], url: str) -> str:
         return url
     else:
         return urljoin(base_url, url)
+
+
+class AbstractDigestChecker(ABC):
+    @abstractmethod
+    def update(self, blob: bytes) -> None:
+        ...
+
+    @abstractmethod
+    def finalize(self) -> None:
+        pass
+
+
+class NullDigestChecker(AbstractDigestChecker):
+    def update(self, blob: bytes) -> None:
+        pass
+
+    def finalize(self) -> None:
+        pass
+
+
+class DigestChecker(AbstractDigestChecker):
+    def __init__(self, digests: Dict[str, str]) -> None:
+        self.digesters: Dict[str, Any] = {}
+        self.expected: Dict[str, str] = {}
+        for alg, value in digests.items():
+            try:
+                d = hashlib.new(alg)
+            except ValueError:
+                pass
+            else:
+                self.digesters[alg] = d
+                self.expected[alg] = value
+        if not self.digesters:
+            raise NoDigestsError("No digests with known algorithms available")
+
+    def update(self, blob: bytes) -> None:
+        for d in self.digesters.values():
+            d.update(blob)
+
+    def finalize(self) -> None:
+        for alg, d in self.digesters.items():
+            actual = d.hexdigest()
+            if actual != self.expected[alg]:
+                raise DigestMismatchError(
+                    algorithm=alg,
+                    expected_digest=self.expected[alg],
+                    actual_digest=actual,
+                )
+
+
+class NoDigestsError(ValueError):
+    """
+    .. versionadded:: 0.10.0
+
+    Raised by `PyPISimple.download_package()` with ``verify=True`` when the
+    given package does not have any digests with known algorithms
+    """
+
+    pass
+
+
+class DigestMismatchError(ValueError):
+    """
+    .. versionadded:: 0.10.0
+
+    Raised by `PyPISimple.download_package()` with ``verify=True`` when the
+    digest of the downloaded file does not match the expected value
+    """
+
+    def __init__(
+        self, algorithm: str, expected_digest: str, actual_digest: str
+    ) -> None:
+        #: The name of the digest algorithm used
+        self.algorithm = algorithm
+        #: The expected digest
+        self.expected_digest = expected_digest
+        #: The digest of the file that was actually received
+        self.actual_digest = actual_digest
+
+    def __str__(self) -> str:
+        return (
+            f"{self.algorithm} digest of downloaded file is"
+            f" {self.actual_digest!r} instead of expected {self.expected_digest!r}"
+        )

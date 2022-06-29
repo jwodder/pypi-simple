@@ -41,15 +41,19 @@ from .parse_repo import (
 )
 from .parse_stream import parse_links_stream, parse_links_stream_response
 from .util import (
+    DigestMismatchError,
+    NoDigestsError,
     UnexpectedRepoVersionWarning,
     UnsupportedContentTypeError,
     UnsupportedRepoVersionError,
 )
 
 __all__ = [
+    "DigestMismatchError",
     "DistributionPackage",
     "IndexPage",
     "Link",
+    "NoDigestsError",
     "PYPI_SIMPLE_ENDPOINT",
     "ProjectPage",
     "PyPISimple",

@@ -28,9 +28,9 @@ specified in :pep:`503` and updated by :pep:`592`, :pep:`629`, :pep:`658`, and
 :pep:`691`.  With it, you can query `the Python Package Index (PyPI)
 <https://pypi.org>`_ and other `pip <https://pip.pypa.io>`_-compatible
 repositories for a list of their available projects and lists of each project's
-available package files.  The library also allows you to query package files
-for their project version, package type, file digests, ``requires_python``
-string, PGP signature URL, and metadata URL.
+available package files.  The library also allows you to download package files
+and query them for their project version, package type, file digests,
+``requires_python`` string, PGP signature URL, and metadata URL.
 
 See `the documentation <https://pypi-simple.readthedocs.io>`_ for more
 information.

@@ -1,5 +1,7 @@
+import os
+from pathlib import Path
 import platform
-from typing import Any, Iterator, List, Optional, Tuple, Union
+from typing import Any, AnyStr, Iterator, List, Optional, Tuple, Union
 from warnings import warn
 from packaging.utils import canonicalize_name as normalize
 import requests
@@ -7,6 +9,7 @@ from . import PYPI_SIMPLE_ENDPOINT, __url__, __version__
 from .classes import DistributionPackage, IndexPage, ProjectPage
 from .parse_repo import parse_repo_index_response, parse_repo_project_response
 from .parse_stream import parse_links_stream_response
+from .util import AbstractDigestChecker, DigestChecker, NullDigestChecker
 
 #: The User-Agent header used for requests; not used when the user provides eir
 #: own session object
@@ -205,6 +208,65 @@ class PyPISimple:
         :rtype: str
         """
         return self.endpoint + normalize(project) + "/"
+
+    def download_package(
+        self,
+        pkg: DistributionPackage,
+        path: Union[AnyStr, "os.PathLike[AnyStr]"],
+        verify: bool = True,
+        keep_on_error: bool = False,
+        timeout: Union[float, Tuple[float, float], None] = None,
+    ) -> None:
+        """
+        .. versionadded:: 0.10.0
+
+        Download the given `DistributionPackage` to the given path.
+
+        If an error occurs while downloading or verifying digests, and
+        ``keep_on_error`` is not true, the downloaded file is not saved.
+
+        :param DistributionPackage pkg: the distribution package to download
+        :param path:
+            the path at which to save the downloaded file; any parent
+            directories of this path will be created as needed
+        :param bool verify:
+            whether to verify the package's digests against the downloaded file
+        :param bool keep_on_error:
+            whether to keep (true) or delete (false) the downloaded file if an
+            error occurs
+        :param timeout: optional timeout to pass to the ``requests`` call
+        :type timeout: Union[float, Tuple[float,float], None]
+        :raises requests.HTTPError: if the repository responds with an HTTP
+            error code
+        :raises NoDigestsError:
+            if ``verify`` is true and the given package does not have any
+            digests with known algorithms
+        :raises DigestMismatchError:
+            if ``verify`` is true and the digest of the downloaded file does
+            not match the expected value
+        """
+        target = Path(os.fsdecode(path))
+        target.parent.mkdir(parents=True, exist_ok=True)
+        digester: AbstractDigestChecker
+        if verify:
+            digester = DigestChecker(pkg.digests)
+        else:
+            digester = NullDigestChecker()
+        with self.s.get(pkg.url, stream=True, timeout=timeout) as r:
+            r.raise_for_status()
+            try:
+                with target.open("wb") as fp:
+                    for chunk in r.iter_content(65535):
+                        fp.write(chunk)
+                        digester.update(chunk)
+                digester.finalize()
+            except Exception:
+                if not keep_on_error:
+                    try:
+                        target.unlink()
+                    except FileNotFoundError:
+                        pass
+                raise
 
     def get_projects(self) -> Iterator[str]:
         """
