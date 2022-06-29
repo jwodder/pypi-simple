@@ -11,3 +11,5 @@ High-Level API
 .. autoexception:: UnsupportedContentTypeError
     :show-inheritance:
 .. autoexception:: UnsupportedRepoVersionError
+.. autoexception:: UnexpectedRepoVersionWarning
+    :show-inheritance:

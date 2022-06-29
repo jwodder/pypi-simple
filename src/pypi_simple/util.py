@@ -1,5 +1,6 @@
 from typing import Optional
 from urllib.parse import urljoin
+import warnings
 from packaging.version import Version
 from . import SUPPORTED_REPOSITORY_VERSION
 
@@ -10,12 +11,20 @@ def check_repo_version(
 ) -> None:
     """
     Raise an `UnsupportedRepoVersionError` if ``declared_version`` has a
-    greater major version component than ``supported_version``
+    greater major version component than ``supported_version``, or emit an
+    `UnexpectedRepoVersionWarning` if ``declared_version`` has a greater minor
+    version component than ``supported_version``
     """
     declared = Version(declared_version)
     supported = Version(supported_version)
     if (declared.epoch, declared.major) > (supported.epoch, supported.major):
         raise UnsupportedRepoVersionError(declared_version, supported_version)
+    elif declared.minor > supported.minor:
+        warnings.warn(
+            f"Repository's version ({declared_version}) has greater minor"
+            f" component than supported version ({supported_version})",
+            UnexpectedRepoVersionWarning,
+        )
 
 
 class UnsupportedRepoVersionError(Exception):
@@ -36,6 +45,21 @@ class UnsupportedRepoVersionError(Exception):
             f"Repository's version ({self.declared_version}) has greater major"
             f" component than supported version ({self.supported_version})"
         )
+
+
+class UnexpectedRepoVersionWarning(UserWarning):
+    """
+    .. versionadded:: 0.10.0
+
+    Emitted upon encountering a simple repository whose repository version
+    (:pep:`629`) has a greater minor version components than the maximum
+    supported repository version (`SUPPORTED_REPOSITORY_VERSION`).
+
+    This warning can be emitted by anything that can raise
+    `UnsupportedRepoVersionError`.
+    """
+
+    pass
 
 
 class UnsupportedContentTypeError(ValueError):

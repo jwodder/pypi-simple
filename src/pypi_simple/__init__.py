@@ -40,7 +40,11 @@ from .parse_repo import (
     parse_repo_project_response,
 )
 from .parse_stream import parse_links_stream, parse_links_stream_response
-from .util import UnsupportedContentTypeError, UnsupportedRepoVersionError
+from .util import (
+    UnexpectedRepoVersionWarning,
+    UnsupportedContentTypeError,
+    UnsupportedRepoVersionError,
+)
 
 __all__ = [
     "DistributionPackage",
@@ -50,6 +54,7 @@ __all__ = [
     "ProjectPage",
     "PyPISimple",
     "SUPPORTED_REPOSITORY_VERSION",
+    "UnexpectedRepoVersionWarning",
     "UnsupportedContentTypeError",
     "UnsupportedRepoVersionError",
     "parse_filename",
