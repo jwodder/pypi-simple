@@ -1,3 +1,4 @@
+from typing import Dict, List, Optional, Tuple
 import pytest
 from pypi_simple import (
     SUPPORTED_REPOSITORY_VERSION,
@@ -493,11 +494,13 @@ from pypi_simple import (
         ),
     ],
 )
-def test_parse_repo_links(html, base_url, links):
+def test_parse_repo_links(
+    html: str, base_url: Optional[str], links: Tuple[Dict[str, str], List[Link]]
+) -> None:
     assert parse_repo_links(html, base_url) == links
 
 
-def test_parse_repo_links_unsupported_version():
+def test_parse_repo_links_unsupported_version() -> None:
     with pytest.raises(UnsupportedRepoVersionError) as excinfo:
         parse_repo_links(
             """

@@ -7,7 +7,7 @@ from pypi_simple import (
 )
 
 
-def test_empty():
+def test_empty() -> None:
     assert parse_repo_index_json(
         {"meta": {"api-version": "1.0"}, "projects": []}
     ) == IndexPage(
@@ -17,7 +17,7 @@ def test_empty():
     )
 
 
-def test_parse_repo_index_json():
+def test_parse_repo_index_json() -> None:
     assert parse_repo_index_json(
         {
             "meta": {"_last-serial": 14267765, "api-version": "1.0"},
@@ -34,7 +34,7 @@ def test_parse_repo_index_json():
     )
 
 
-def test_parse_repo_index_json_unsupported_version():
+def test_parse_repo_index_json_unsupported_version() -> None:
     with pytest.raises(UnsupportedRepoVersionError) as excinfo:
         parse_repo_index_json(
             {

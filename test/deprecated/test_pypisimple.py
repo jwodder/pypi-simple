@@ -13,7 +13,7 @@ from pypi_simple import DistributionPackage, PyPISimple
     ],
 )
 @responses.activate
-def test_session(content_type):
+def test_session(content_type: str) -> None:
     session_dir = join(dirname(__file__), os.pardir, "data", "session01")
     with open(join(session_dir, "simple.html")) as fp:
         responses.add(
@@ -149,7 +149,7 @@ def test_session(content_type):
 
 
 @responses.activate
-def test_project_hint_received():
+def test_project_hint_received() -> None:
     """
     Test that the argument to ``get_project_files()`` is used to disambiguate
     filenames
@@ -199,7 +199,7 @@ def test_project_hint_received():
 
 
 @responses.activate
-def test_redirected_project_page():
+def test_redirected_project_page() -> None:
     responses.add(
         method=responses.GET,
         url="https://nil.test/simple/project/",
@@ -244,7 +244,7 @@ def test_redirected_project_page():
     ],
 )
 @responses.activate
-def test_utf8_declarations(content_type, body_decl):
+def test_utf8_declarations(content_type: str, body_decl: bytes) -> None:
     responses.add(
         method=responses.GET,
         url="https://test.nil/simple/project/",
@@ -284,7 +284,7 @@ def test_utf8_declarations(content_type, body_decl):
     ],
 )
 @responses.activate
-def test_latin2_declarations(content_type, body_decl):
+def test_latin2_declarations(content_type: str, body_decl: bytes) -> None:
     # This test is deliberately weird in order to make sure the code is
     # actually paying attention to the encoding declarations and not just
     # assuming UTF-8 because the input happens to be valid UTF-8.

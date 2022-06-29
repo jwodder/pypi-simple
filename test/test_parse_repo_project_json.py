@@ -12,7 +12,7 @@ from pypi_simple import (
 DATA_DIR = Path(__file__).with_name("data")
 
 
-def test_empty():
+def test_empty() -> None:
     assert parse_repo_project_json(
         {"files": [], "name": "-NIL-", "meta": {"api-version": "1.0"}}
     ) == ProjectPage(
@@ -108,13 +108,13 @@ def test_empty():
         ),
     ],
 )
-def test_parse_repo_project_json(filename, page):
+def test_parse_repo_project_json(filename: str, page: ProjectPage) -> None:
     with (DATA_DIR / filename).open() as fp:
         data = json.load(fp)
     assert parse_repo_project_json(data) == page
 
 
-def test_parse_repo_project_json_relative_urls():
+def test_parse_repo_project_json_relative_urls() -> None:
     with (DATA_DIR / "argset-relative.json").open() as fp:
         data = json.load(fp)
     assert parse_repo_project_json(
@@ -158,7 +158,7 @@ def test_parse_repo_project_json_relative_urls():
     )
 
 
-def test_parse_repo_project_json_unsupported_version():
+def test_parse_repo_project_json_unsupported_version() -> None:
     with pytest.raises(UnsupportedRepoVersionError) as excinfo:
         parse_repo_project_json(
             {

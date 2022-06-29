@@ -10,7 +10,7 @@ from pypi_simple import (
 DATA_DIR = Path(__file__).with_name("data")
 
 
-def test_empty():
+def test_empty() -> None:
     assert parse_repo_index_page("") == IndexPage(
         projects=[],
         repository_version=None,
@@ -111,12 +111,12 @@ def test_empty():
         ),
     ],
 )
-def test_parse_repo_index_page(filename, encoding, page):
+def test_parse_repo_index_page(filename: str, encoding: str, page: IndexPage) -> None:
     html = (DATA_DIR / filename).read_bytes()
     assert parse_repo_index_page(html, encoding) == page
 
 
-def test_parse_repo_index_page_unsupported_version():
+def test_parse_repo_index_page_unsupported_version() -> None:
     with pytest.raises(UnsupportedRepoVersionError) as excinfo:
         parse_repo_index_page(
             """

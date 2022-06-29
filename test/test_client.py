@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 import pytest
+from pytest_mock import MockerFixture
 import requests
 import responses
 from pypi_simple import (
@@ -24,7 +25,7 @@ DATA_DIR = Path(__file__).with_name("data")
     ],
 )
 @responses.activate
-def test_session(mocker, content_type):
+def test_session(mocker: MockerFixture, content_type: str) -> None:
     session_dir = DATA_DIR / "session01"
     with (session_dir / "simple.html").open() as fp:
         responses.add(
@@ -168,7 +169,7 @@ def test_session(mocker, content_type):
 
 
 @responses.activate
-def test_project_hint_received():
+def test_project_hint_received() -> None:
     """
     Test that the argument to ``get_project_page()`` is used to disambiguate
     filenames
@@ -235,7 +236,7 @@ def test_project_hint_received():
         "SOME_PROJECT",
     ],
 )
-def test_get_project_url(endpoint, project):
+def test_get_project_url(endpoint: str, project: str) -> None:
     with PyPISimple(endpoint) as simple:
         assert (
             simple.get_project_url(project) == "https://test.nil/simple/some-project/"
@@ -243,7 +244,7 @@ def test_get_project_url(endpoint, project):
 
 
 @responses.activate
-def test_redirected_project_page():
+def test_redirected_project_page() -> None:
     responses.add(
         method=responses.GET,
         url="https://nil.test/simple/project/",
@@ -291,7 +292,7 @@ def test_redirected_project_page():
     ],
 )
 @responses.activate
-def test_utf8_declarations(content_type, body_decl):
+def test_utf8_declarations(content_type: str, body_decl: bytes) -> None:
     responses.add(
         method=responses.GET,
         url="https://test.nil/simple/project/",
@@ -334,7 +335,7 @@ def test_utf8_declarations(content_type, body_decl):
     ],
 )
 @responses.activate
-def test_latin2_declarations(content_type, body_decl):
+def test_latin2_declarations(content_type: str, body_decl: bytes) -> None:
     # This test is deliberately weird in order to make sure the code is
     # actually paying attention to the encoding declarations and not just
     # assuming UTF-8 because the input happens to be valid UTF-8.
@@ -368,19 +369,19 @@ def test_latin2_declarations(content_type, body_decl):
         )
 
 
-def test_auth_new_session():
+def test_auth_new_session() -> None:
     with PyPISimple("https://test.nil/simple/", auth=("user", "password")) as simple:
         assert simple.s.auth == ("user", "password")
 
 
-def test_custom_session():
+def test_custom_session() -> None:
     s = requests.Session()
     with PyPISimple("https://test.nil/simple/", session=s) as simple:
         assert simple.s is s
         assert simple.s.auth is None
 
 
-def test_auth_custom_session():
+def test_auth_custom_session() -> None:
     with PyPISimple(
         "https://test.nil/simple/",
         auth=("user", "password"),
@@ -389,7 +390,7 @@ def test_auth_custom_session():
         assert simple.s.auth == ("user", "password")
 
 
-def test_auth_override_custom_session():
+def test_auth_override_custom_session() -> None:
     s = requests.Session()
     s.auth = ("login", "secret")
     with PyPISimple(
@@ -401,7 +402,7 @@ def test_auth_override_custom_session():
 
 
 @responses.activate
-def test_stream_project_names(mocker):
+def test_stream_project_names(mocker: MockerFixture) -> None:
     session_dir = DATA_DIR / "session01"
     with (session_dir / "simple.html").open() as fp:
         responses.add(
@@ -429,7 +430,7 @@ def test_stream_project_names(mocker):
 
 
 @responses.activate
-def test_json_session(mocker):
+def test_json_session(mocker: MockerFixture) -> None:
     responses.add(
         method=responses.GET,
         url="https://test.nil/simple/",
@@ -514,7 +515,7 @@ def test_json_session(mocker):
 
 
 @responses.activate
-def test_unsupported_content_type():
+def test_unsupported_content_type() -> None:
     responses.add(
         method=responses.GET,
         url="https://test.nil/simple/",

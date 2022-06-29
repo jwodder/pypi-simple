@@ -1,9 +1,10 @@
+from typing import Dict, Optional, Union
 import pytest
 from pypi_simple import DistributionPackage, Link
 
 
 @pytest.mark.parametrize("fragment", ["", "#", "#sha256", "#sha256="])
-def test_from_link_no_digests(fragment):
+def test_from_link_no_digests(fragment: str) -> None:
     pkg = DistributionPackage.from_link(
         Link(
             text="qypi-0.1.0-py3-none-any.whl",
@@ -18,7 +19,7 @@ def test_from_link_no_digests(fragment):
     assert pkg.digests == {}
 
 
-def test_from_link_digests():
+def test_from_link_digests() -> None:
     pkg = DistributionPackage.from_link(
         Link(
             text="qypi-0.1.0-py3-none-any.whl",
@@ -36,7 +37,7 @@ def test_from_link_digests():
 
 
 @pytest.mark.parametrize("has_sig", [True, False])
-def test_get_sig_url(has_sig):
+def test_get_sig_url(has_sig: bool) -> None:
     pkg = DistributionPackage(
         filename="qypi-0.1.0-py3-none-any.whl",
         project="qypi",
@@ -139,11 +140,11 @@ def test_get_sig_url(has_sig):
         ),
     ],
 )
-def test_from_link(link, distpkg):
+def test_from_link(link: Link, distpkg: DistributionPackage) -> None:
     assert DistributionPackage.from_link(link) == distpkg
 
 
-def test_pep658():
+def test_pep658() -> None:
     pkg = DistributionPackage(
         filename="qypi-0.1.0-py3-none-any.whl",
         url="https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl",
@@ -167,7 +168,7 @@ def test_pep658():
     )
 
 
-def test_pep658_no_digests():
+def test_pep658_no_digests() -> None:
     pkg = DistributionPackage(
         filename="qypi-0.1.0-py3-none-any.whl",
         url="https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl",
@@ -189,7 +190,7 @@ def test_pep658_no_digests():
     )
 
 
-def test_from_pep691_details_no_metadata():
+def test_from_pep691_details_no_metadata() -> None:
     pkg = DistributionPackage.from_pep691_details(
         {
             "filename": "argset-0.1.0-py3-none-any.whl",
@@ -215,8 +216,10 @@ def test_from_pep691_details_no_metadata():
     ],
 )
 def test_from_pep691_details_metadata(
-    dist_info_metadata, has_metadata, metadata_digests
-):
+    dist_info_metadata: Union[bool, Dict[str, str]],
+    has_metadata: bool,
+    metadata_digests: Optional[Dict[str, str]],
+) -> None:
     pkg = DistributionPackage.from_pep691_details(
         {
             "filename": "argset-0.1.0-py3-none-any.whl",

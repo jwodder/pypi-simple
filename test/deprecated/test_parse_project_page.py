@@ -6,13 +6,13 @@ from pypi_simple import PYPI_SIMPLE_ENDPOINT, DistributionPackage, parse_project
 DATA_DIR = join(dirname(__file__), os.pardir, "data")
 
 
-def test_empty():
+def test_empty() -> None:
     with pytest.warns(DeprecationWarning):
         files = parse_project_page("", PYPI_SIMPLE_ENDPOINT + "qypi/")
     assert files == []
 
 
-def test_parse_qypi():
+def test_parse_qypi() -> None:
     with open(join(DATA_DIR, "qypi.html"), "rb") as fp:
         with pytest.warns(DeprecationWarning):
             files = parse_project_page(
@@ -204,7 +204,7 @@ def test_parse_qypi():
     ]
 
 
-def test_parse_qypi_base():
+def test_parse_qypi_base() -> None:
     with open(join(DATA_DIR, "qypi_base.html"), "rb") as fp:
         with pytest.warns(DeprecationWarning):
             files = parse_project_page(
@@ -276,7 +276,7 @@ def test_parse_qypi_base():
     ]
 
 
-def test_parse_qypi_mixed():
+def test_parse_qypi_mixed() -> None:
     with open(join(DATA_DIR, "qypi_mixed.html"), "rb") as fp:
         with pytest.warns(DeprecationWarning):
             files = parse_project_page(
@@ -363,7 +363,7 @@ def test_parse_qypi_mixed():
     ]
 
 
-def test_parse_devpi_devpi():
+def test_parse_devpi_devpi() -> None:
     with open(join(DATA_DIR, "devpi_devpi.html"), "rb") as fp:
         with pytest.warns(DeprecationWarning):
             files = parse_project_page(

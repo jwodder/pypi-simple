@@ -2,7 +2,7 @@ import pytest
 from pypi_simple import parse_links
 
 
-def test_basic():
+def test_basic() -> None:
     with pytest.warns(DeprecationWarning):
         links = list(
             parse_links(
@@ -24,7 +24,7 @@ def test_basic():
     ]
 
 
-def test_base_url():
+def test_base_url() -> None:
     with pytest.warns(DeprecationWarning):
         links = list(
             parse_links(
@@ -47,7 +47,7 @@ def test_base_url():
     ]
 
 
-def test_base_tag():
+def test_base_tag() -> None:
     with pytest.warns(DeprecationWarning):
         links = list(
             parse_links(
@@ -72,7 +72,7 @@ def test_base_tag():
     ]
 
 
-def test_target_base_tag():
+def test_target_base_tag() -> None:
     with pytest.warns(DeprecationWarning):
         links = list(
             parse_links(
@@ -97,7 +97,7 @@ def test_target_base_tag():
     ]
 
 
-def test_bare_base_and_href_base_tag():
+def test_bare_base_and_href_base_tag() -> None:
     with pytest.warns(DeprecationWarning):
         links = list(
             parse_links(
@@ -123,7 +123,7 @@ def test_bare_base_and_href_base_tag():
     ]
 
 
-def test_many_base_tags():
+def test_many_base_tags() -> None:
     # I'm not sure if this is how HTML is supposed to work, but it is how pip
     # works: <https://github.com/pypa/pip/blob/18.0/src/pip/_internal/index.py#L878>
     with pytest.warns(DeprecationWarning):
@@ -151,7 +151,7 @@ def test_many_base_tags():
     ]
 
 
-def test_base_url_and_absolute_base_tag():
+def test_base_url_and_absolute_base_tag() -> None:
     with pytest.warns(DeprecationWarning):
         links = list(
             parse_links(
@@ -177,7 +177,7 @@ def test_base_url_and_absolute_base_tag():
     ]
 
 
-def test_base_url_and_relative_base_tag():
+def test_base_url_and_relative_base_tag() -> None:
     with pytest.warns(DeprecationWarning):
         links = list(
             parse_links(
@@ -203,7 +203,7 @@ def test_base_url_and_relative_base_tag():
     ]
 
 
-def test_uppercase():
+def test_uppercase() -> None:
     with pytest.warns(DeprecationWarning):
         links = list(
             parse_links(
@@ -228,7 +228,7 @@ def test_uppercase():
     ]
 
 
-def test_whitespace():
+def test_whitespace() -> None:
     with pytest.warns(DeprecationWarning):
         links = list(
             parse_links(
@@ -253,7 +253,7 @@ def test_whitespace():
     ]
 
 
-def test_a_name():
+def test_a_name() -> None:
     with pytest.warns(DeprecationWarning):
         links = list(
             parse_links(
@@ -273,7 +273,7 @@ def test_a_name():
     assert links == [("link1", "one.html", {"href": "one.html"})]
 
 
-def test_bare():
+def test_bare() -> None:
     with pytest.warns(DeprecationWarning):
         links = list(
             parse_links(
@@ -290,7 +290,7 @@ def test_bare():
     ]
 
 
-def test_escaped_attrib():
+def test_escaped_attrib() -> None:
     with pytest.warns(DeprecationWarning):
         links = list(
             parse_links(
@@ -311,7 +311,7 @@ def test_escaped_attrib():
     ]
 
 
-def test_escaped_text():
+def test_escaped_text() -> None:
     with pytest.warns(DeprecationWarning):
         links = list(
             parse_links(
@@ -331,7 +331,7 @@ def test_escaped_text():
     ]
 
 
-def test_named_escaped_text():
+def test_named_escaped_text() -> None:
     with pytest.warns(DeprecationWarning):
         links = list(
             parse_links(

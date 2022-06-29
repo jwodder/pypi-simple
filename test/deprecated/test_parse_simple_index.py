@@ -6,13 +6,13 @@ from pypi_simple import PYPI_SIMPLE_ENDPOINT, parse_simple_index
 DATA_DIR = join(dirname(__file__), os.pardir, "data")
 
 
-def test_empty():
+def test_empty() -> None:
     with pytest.warns(DeprecationWarning):
         projects = list(parse_simple_index("", PYPI_SIMPLE_ENDPOINT))
     assert projects == []
 
 
-def test_simple01():
+def test_simple01() -> None:
     with open(join(DATA_DIR, "simple01.html"), "rb") as fp:
         with pytest.warns(DeprecationWarning):
             projects = list(
@@ -49,7 +49,7 @@ def test_simple01():
     ]
 
 
-def test_simple_base():
+def test_simple_base() -> None:
     with open(join(DATA_DIR, "simple_base.html"), "rb") as fp:
         with pytest.warns(DeprecationWarning):
             projects = list(
@@ -68,7 +68,7 @@ def test_simple_base():
     ]
 
 
-def test_simple_devpi():
+def test_simple_devpi() -> None:
     with open(join(DATA_DIR, "simple_devpi.html"), "rb") as fp:
         with pytest.warns(DeprecationWarning):
             projects = list(

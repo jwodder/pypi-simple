@@ -1,3 +1,4 @@
+from typing import Optional, Tuple
 import pytest
 from pypi_simple import parse_filename
 
@@ -385,7 +386,9 @@ SIMPLE_FILENAMES = [
     "filename,expected",
     [(filename, expected) for filename, _, expected in SIMPLE_FILENAMES],
 )
-def test_parse_filename_no_hint(filename, expected):
+def test_parse_filename_no_hint(
+    filename: str, expected: Tuple[Optional[str], Optional[str], Optional[str]]
+) -> None:
     assert parse_filename(filename) == expected
 
 
@@ -414,5 +417,7 @@ def test_parse_filename_no_hint(filename, expected):
         ("walt-node-0.4-1.tar.gz", "WALT-._node", ("walt-node", "0.4-1", "sdist")),
     ],
 )
-def test_parse_filename_project_hint(filename, project_hint, expected):
+def test_parse_filename_project_hint(
+    filename: str, project_hint: str, expected: Tuple[str, str, str]
+) -> None:
     assert parse_filename(filename, project_hint=project_hint) == expected
