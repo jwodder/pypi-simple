@@ -146,7 +146,7 @@ def parse_repo_project_response(project: str, r: requests.Response) -> ProjectPa
     :rtype: ProjectPage
     :raises UnsupportedRepoVersionError: if the repository version has a
         greater major component than the supported repository version
-    :raises ValueError: if the response has an unsupported
+    :raises UnsupportedContentTypeError: if the response has an unsupported
         :mailheader:`Content-Type`
     """
     ct = ContentType.parse(r.headers.get("content-type", "text/html"))
@@ -242,7 +242,7 @@ def parse_repo_index_response(r: requests.Response) -> IndexPage:
     :rtype: IndexPage
     :raises UnsupportedRepoVersionError: if the repository version has a
         greater major component than the supported repository version
-    :raises ValueError: if the response has an unsupported
+    :raises UnsupportedContentTypeError: if the response has an unsupported
         :mailheader:`Content-Type`
     """
     ct = ContentType.parse(r.headers.get("content-type", "text/html"))
