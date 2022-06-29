@@ -34,9 +34,18 @@ Installation
 
     python3 -m pip install pypi-simple
 
+``pypi-simple`` can optionally make use of tqdm_.  To install it alongside
+``pypi-simple``, specify the ``tqdm`` extra::
+
+    python3 -m pip install "pypi-simple[tqdm]"
+
+.. _tqdm: https://tqdm.github.io
+
 
 Example
 =======
+
+Get information about a package:
 
 >>> from pypi_simple import PyPISimple
 >>> with PyPISimple() as client:
@@ -54,6 +63,19 @@ Example
 'sdist'
 >>> pkg.digests
 {'sha256': '813202ace4d9301a3c00740c700e012fb9f3f8c73ddcfe02ab558a8df6f175fd'}
+
+Download a package with a tqdm progress bar:
+
+.. code:: python
+
+    from pypi_simple import PyPISimple, tqdm_progress_factory
+
+    with PyPISimple() as client:
+        page = client.get_project_page("pypi-simple")
+        pkg = page.packages[-1]
+        client.download_package(
+            pkg, path=pkg.filename, progress=tqdm_progress_factory(),
+        )
 
 
 Indices and tables

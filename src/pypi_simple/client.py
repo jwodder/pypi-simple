@@ -1,7 +1,8 @@
 import os
 from pathlib import Path
 import platform
-from typing import Any, AnyStr, Iterator, List, Optional, Tuple, Union
+from types import TracebackType
+from typing import Any, AnyStr, Callable, Iterator, List, Optional, Tuple, Type, Union
 from warnings import warn
 from packaging.utils import canonicalize_name as normalize
 import requests
@@ -9,6 +10,7 @@ from . import PYPI_SIMPLE_ENDPOINT, __url__, __version__
 from .classes import DistributionPackage, IndexPage, ProjectPage
 from .parse_repo import parse_repo_index_response, parse_repo_project_response
 from .parse_stream import parse_links_stream_response
+from .progress import ProgressTracker, null_progress_tracker
 from .util import AbstractDigestChecker, DigestChecker, NullDigestChecker
 
 #: The User-Agent header used for requests; not used when the user provides eir
@@ -96,7 +98,12 @@ class PyPISimple:
     def __enter__(self) -> "PyPISimple":
         return self
 
-    def __exit__(self, _exc_type: Any, _exc_value: Any, _exc_tb: Any) -> None:
+    def __exit__(
+        self,
+        _exc_type: Optional[Type[BaseException]],
+        _exc_val: Optional[BaseException],
+        _exc_tb: Optional[TracebackType],
+    ) -> None:
         self.s.close()
 
     def get_index_page(
@@ -215,6 +222,7 @@ class PyPISimple:
         path: Union[AnyStr, "os.PathLike[AnyStr]"],
         verify: bool = True,
         keep_on_error: bool = False,
+        progress: Optional[Callable[[Optional[int]], ProgressTracker]] = None,
         timeout: Union[float, Tuple[float, float], None] = None,
     ) -> None:
         """
@@ -225,6 +233,13 @@ class PyPISimple:
         If an error occurs while downloading or verifying digests, and
         ``keep_on_error`` is not true, the downloaded file is not saved.
 
+        Download progress can be tracked (e.g., for display by a progress bar)
+        by passing an appropriate callable as the ``progress`` argument.  This
+        callable will be passed the length of the downloaded file, if known,
+        and it must return a `ProgressTracker` — a context manager with an
+        ``update(increment: int)`` method that will be passed the size of each
+        downloaded chunk as each chunk is received.
+
         :param DistributionPackage pkg: the distribution package to download
         :param path:
             the path at which to save the downloaded file; any parent
@@ -234,6 +249,7 @@ class PyPISimple:
         :param bool keep_on_error:
             whether to keep (true) or delete (false) the downloaded file if an
             error occurs
+        :param progress: a callable for contructing a progress tracker
         :param timeout: optional timeout to pass to the ``requests`` call
         :type timeout: Union[float, Tuple[float,float], None]
         :raises requests.HTTPError: if the repository responds with an HTTP
@@ -255,10 +271,18 @@ class PyPISimple:
         with self.s.get(pkg.url, stream=True, timeout=timeout) as r:
             r.raise_for_status()
             try:
-                with target.open("wb") as fp:
-                    for chunk in r.iter_content(65535):
-                        fp.write(chunk)
-                        digester.update(chunk)
+                content_length = int(r.headers["Content-Length"])
+            except (ValueError, KeyError):
+                content_length = None
+            if progress is None:
+                progress = null_progress_tracker()
+            try:
+                with progress(content_length) as p:
+                    with target.open("wb") as fp:
+                        for chunk in r.iter_content(65535):
+                            fp.write(chunk)
+                            digester.update(chunk)
+                            p.update(len(chunk))
                 digester.finalize()
             except Exception:
                 if not keep_on_error:

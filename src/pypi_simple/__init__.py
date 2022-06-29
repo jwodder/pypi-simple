@@ -40,6 +40,7 @@ from .parse_repo import (
     parse_repo_project_response,
 )
 from .parse_stream import parse_links_stream, parse_links_stream_response
+from .progress import ProgressTracker, tqdm_progress_factory
 from .util import (
     DigestMismatchError,
     NoDigestsError,
@@ -55,6 +56,7 @@ __all__ = [
     "Link",
     "NoDigestsError",
     "PYPI_SIMPLE_ENDPOINT",
+    "ProgressTracker",
     "ProjectPage",
     "PyPISimple",
     "SUPPORTED_REPOSITORY_VERSION",
@@ -74,4 +76,5 @@ __all__ = [
     "parse_repo_project_page",
     "parse_repo_project_response",
     "parse_simple_index",
+    "tqdm_progress_factory",
 ]

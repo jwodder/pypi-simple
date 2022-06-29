@@ -19,7 +19,7 @@ autodoc_member_order = "bysource"
 
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
-    "requests": ("https://requests.readthedocs.io/en/master/", None),
+    "requests": ("https://requests.readthedocs.io/en/latest/", None),
 }
 
 exclude_patterns = ["_build"]

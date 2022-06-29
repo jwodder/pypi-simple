@@ -1,7 +1,8 @@
 import filecmp
 import json
 from pathlib import Path
-from typing import Dict
+from types import TracebackType
+from typing import Dict, List, Optional, Type
 import pytest
 from pytest_mock import MockerFixture
 import requests
@@ -11,6 +12,7 @@ from pypi_simple import (
     DistributionPackage,
     IndexPage,
     NoDigestsError,
+    ProgressTracker,
     ProjectPage,
     PyPISimple,
     UnsupportedContentTypeError,
@@ -722,3 +724,66 @@ def test_download_bad_digests_no_verify(
         simple.download_package(pkg, dest, verify=False)
         assert dest.exists()
         assert dest.read_bytes() == b"\0\1\2\3\4\5"
+
+
+class SpyingProgressTracker:
+    def __init__(self) -> None:
+        self.content_length: Optional[int] = None
+        self.enter_called = False
+        self.exit_called = False
+        self.updates: List[int] = []
+
+    def __enter__(self) -> "SpyingProgressTracker":
+        self.enter_called = True
+        return self
+
+    def __exit__(
+        self,
+        _exc_type: Optional[Type[BaseException]],
+        _exc_val: Optional[BaseException],
+        _exc_tb: Optional[TracebackType],
+    ) -> None:
+        self.exit_called = True
+
+    def update(self, increment: int) -> None:
+        self.updates.append(increment)
+
+
+@responses.activate
+def test_download_progress(tmp_path: Path) -> None:
+    size = 1 << 20
+    responses.add(
+        method=responses.GET,
+        url="https://test.nil/simple/packages/click_loglevel-0.4.0.post1-py3-none-any.whl",
+        body=b"\0" * size,
+        content_type="application/octet-stream",
+        auto_calculate_content_length=True,
+    )
+    with PyPISimple("https://test.nil/simple/") as simple:
+        pkg = DistributionPackage(
+            filename="click_loglevel-0.4.0.post1-py3-none-any.whl",
+            project="click-loglevel",
+            version="0.4.0.post1",
+            package_type="wheel",
+            url="https://test.nil/simple/packages/click_loglevel-0.4.0.post1-py3-none-any.whl",
+            digests={
+                "sha256": "30e14955ebf1352266dc2ff8067e68104607e750abb9d3b36582b8af909fcb58"
+            },
+            requires_python=None,
+            has_sig=None,
+            yanked=None,
+            metadata_digests=None,
+            has_metadata=False,
+        )
+        dest = tmp_path / str(pkg.project) / pkg.filename
+        spy = SpyingProgressTracker()
+
+        def progress_cb(content_length: Optional[int]) -> ProgressTracker:
+            spy.content_length = content_length
+            return spy
+
+        simple.download_package(pkg, dest, progress=progress_cb)
+        assert spy.content_length == size
+        assert spy.enter_called
+        assert spy.exit_called
+        assert spy.updates == [65535] * (size // 65535) + [size % 65535]

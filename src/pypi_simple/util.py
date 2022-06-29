@@ -97,7 +97,7 @@ class AbstractDigestChecker(ABC):
 
     @abstractmethod
     def finalize(self) -> None:
-        pass
+        ...
 
 
 class NullDigestChecker(AbstractDigestChecker):
