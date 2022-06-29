@@ -3,37 +3,34 @@ from pypi_simple import DistributionPackage, Link
 
 
 @pytest.mark.parametrize("fragment", ["", "#", "#sha256", "#sha256="])
-def test_get_no_digests(fragment):
-    pkg = DistributionPackage(
-        filename="qypi-0.1.0-py3-none-any.whl",
-        project="qypi",
-        version="0.1.0",
-        package_type="wheel",
-        url="https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl"
-        + fragment,
-        requires_python=None,
-        has_sig=False,
-        yanked=None,
-        metadata_digests=None,
-        has_metadata=False,
+def test_from_link_no_digests(fragment):
+    pkg = DistributionPackage.from_link(
+        Link(
+            text="qypi-0.1.0-py3-none-any.whl",
+            url=f"https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl{fragment}",
+            attrs={},
+        )
     )
-    assert pkg.get_digests() == {}
+    assert (
+        pkg.url
+        == "https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl"
+    )
+    assert pkg.digests == {}
 
 
-def test_get_digests():
-    pkg = DistributionPackage(
-        filename="qypi-0.1.0-py3-none-any.whl",
-        project="qypi",
-        version="0.1.0",
-        package_type="wheel",
-        url="https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl#sha256=da69d28dcd527c0e372b3fa7b92fc333b327f8470175f035abc4e351b539189f",
-        requires_python=None,
-        has_sig=False,
-        yanked=None,
-        metadata_digests=None,
-        has_metadata=None,
+def test_from_link_digests():
+    pkg = DistributionPackage.from_link(
+        Link(
+            text="qypi-0.1.0-py3-none-any.whl",
+            url="https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl#sha256=da69d28dcd527c0e372b3fa7b92fc333b327f8470175f035abc4e351b539189f",
+            attrs={},
+        )
     )
-    assert pkg.get_digests() == {
+    assert (
+        pkg.url
+        == "https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl"
+    )
+    assert pkg.digests == {
         "sha256": "da69d28dcd527c0e372b3fa7b92fc333b327f8470175f035abc4e351b539189f"
     }
 
@@ -45,7 +42,10 @@ def test_get_sig_url(has_sig):
         project="qypi",
         version="0.1.0",
         package_type="wheel",
-        url="https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl#sha256=da69d28dcd527c0e372b3fa7b92fc333b327f8470175f035abc4e351b539189f",
+        url="https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl",
+        digests={
+            "sha256": "da69d28dcd527c0e372b3fa7b92fc333b327f8470175f035abc4e351b539189f"
+        },
         requires_python=None,
         has_sig=has_sig,
         yanked=None,
@@ -69,7 +69,10 @@ def test_get_sig_url(has_sig):
             ),
             DistributionPackage(
                 filename="qypi-0.1.0-py3-none-any.whl",
-                url="https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl#sha256=da69d28dcd527c0e372b3fa7b92fc333b327f8470175f035abc4e351b539189f",
+                url="https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl",
+                digests={
+                    "sha256": "da69d28dcd527c0e372b3fa7b92fc333b327f8470175f035abc4e351b539189f"
+                },
                 has_sig=None,
                 requires_python=None,
                 project="qypi",
@@ -93,7 +96,10 @@ def test_get_sig_url(has_sig):
             ),
             DistributionPackage(
                 filename="qypi-0.1.0-py3-none-any.whl",
-                url="https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl#sha256=da69d28dcd527c0e372b3fa7b92fc333b327f8470175f035abc4e351b539189f",
+                url="https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl",
+                digests={
+                    "sha256": "da69d28dcd527c0e372b3fa7b92fc333b327f8470175f035abc4e351b539189f"
+                },
                 has_sig=True,
                 requires_python="~= 3.6",
                 project="qypi",
@@ -117,7 +123,10 @@ def test_get_sig_url(has_sig):
             ),
             DistributionPackage(
                 filename="qypi-0.1.0-py3-none-any.whl",
-                url="https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl#sha256=da69d28dcd527c0e372b3fa7b92fc333b327f8470175f035abc4e351b539189f",
+                url="https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl",
+                digests={
+                    "sha256": "da69d28dcd527c0e372b3fa7b92fc333b327f8470175f035abc4e351b539189f"
+                },
                 has_sig=False,
                 requires_python=None,
                 project="qypi",
@@ -137,7 +146,10 @@ def test_from_link(link, distpkg):
 def test_pep658():
     pkg = DistributionPackage(
         filename="qypi-0.1.0-py3-none-any.whl",
-        url="https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl#sha256=da69d28dcd527c0e372b3fa7b92fc333b327f8470175f035abc4e351b539189f",
+        url="https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl",
+        digests={
+            "sha256": "da69d28dcd527c0e372b3fa7b92fc333b327f8470175f035abc4e351b539189f"
+        },
         has_sig=True,
         requires_python="~= 3.6",
         project="qypi",
@@ -158,7 +170,10 @@ def test_pep658():
 def test_pep658_no_digests():
     pkg = DistributionPackage(
         filename="qypi-0.1.0-py3-none-any.whl",
-        url="https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl#sha256=da69d28dcd527c0e372b3fa7b92fc333b327f8470175f035abc4e351b539189f",
+        url="https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl",
+        digests={
+            "sha256": "da69d28dcd527c0e372b3fa7b92fc333b327f8470175f035abc4e351b539189f"
+        },
         has_sig=True,
         requires_python="~= 3.6",
         project="qypi",
@@ -172,23 +187,6 @@ def test_pep658_no_digests():
         pkg.metadata_url
         == "https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl.metadata"
     )
-
-
-def test_from_pep691_details_get_digests():
-    pkg = DistributionPackage.from_pep691_details(
-        {
-            "filename": "argset-0.1.0-py3-none-any.whl",
-            "hashes": {
-                "sha256": "107a632c7112faceb9fd6e93658dd461154713db250f7ffde5bd473e17cf1db5"
-            },
-            "requires-python": "~=3.6",
-            "url": "https://files.pythonhosted.org/packages/b5/2b/7aa284f345e37f955d86e4cd57b1039b573552b0fc29d1a522ec05c1ee41/argset-0.1.0-py3-none-any.whl",
-            "yanked": False,
-        }
-    )
-    assert pkg.get_digests() == {
-        "sha256": "107a632c7112faceb9fd6e93658dd461154713db250f7ffde5bd473e17cf1db5"
-    }
 
 
 def test_from_pep691_details_no_metadata():

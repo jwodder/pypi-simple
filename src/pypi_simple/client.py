@@ -21,7 +21,7 @@ USER_AGENT: str = "pypi-simple/{} ({}) requests/{} {}/{}".format(
 ACCEPT = ", ".join(
     [
         "application/vnd.pypi.simple.v1+json",
-        "application/vnd.pypi.simple.v1+html;q=0.2",
+        "application/vnd.pypi.simple.v1+html",
         "text/html;q=0.01",
     ]
 )

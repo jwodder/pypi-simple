@@ -47,7 +47,11 @@ class DistributionPackage(NamedTuple):
     #: The basename of the package file
     filename: str
 
-    #: The URL from which the package file can be downloaded
+    #: The URL from which the package file can be downloaded, with any hash
+    #: digest fragment removed
+    #:
+    #: .. versionchanged:: 0.10.0
+    #:     Hash digest fragments are now stripped from the URL
     url: str
 
     #: The name of the project (as extracted from the filename), or `None` if
@@ -88,6 +92,10 @@ class DistributionPackage(NamedTuple):
     #: yanked; otherwise, it is `None`.
     yanked: Optional[str]
 
+    #: A collection of hash digests for the file as a `dict` mapping hash
+    #: algorithm names to hex-encoded digest strings
+    digests: Dict[str, str]
+
     #: Whether the package file is accompanied by a Core Metadata file.  This
     #: is `None` if the package repository does not report such information.
     #:
@@ -100,11 +108,6 @@ class DistributionPackage(NamedTuple):
     #: mapping from hash algorithm names to hex-encoded digest strings;
     #: otherwise, it is `None`
     metadata_digests: Optional[Dict[str, str]] = None
-
-    #: A collection of hash digests for the file, if provided separately from
-    #: the URL, as a `dict` mapping hash algorithm names to hex-encoded digest
-    #: strings
-    digests: Optional[Dict[str, str]] = None
 
     @property
     def sig_url(self) -> str:
@@ -134,15 +137,14 @@ class DistributionPackage(NamedTuple):
 
     def get_digests(self) -> Dict[str, str]:
         """
-        Fetches the hash digests for the file — either from `digests` or by
-        parsing `url` — and returns a `dict` mapping hash algorithm names to
-        hex-encoded digest strings
+        Returns the hash digests for the file as a `dict` mapping hash
+        algorithm names to hex-encoded digest strings
+
+        .. deprecated:: 0.10.0
+
+            Use `digests` instead
         """
-        if self.digests is not None:
-            return self.digests
-        else:
-            name, sep, value = urlparse(self.url).fragment.partition("=")
-            return {name: value} if value else {}
+        return self.digests
 
     @classmethod
     def from_link(
@@ -167,6 +169,10 @@ class DistributionPackage(NamedTuple):
             return value
 
         project, version, pkg_type = parse_filename(link.text, project_hint)
+        urlbits = urlparse(link.url)
+        dgst_name, _, dgst_value = urlbits.fragment.partition("=")
+        digests = {dgst_name: dgst_value} if dgst_value else {}
+        url = urlunparse(urlbits._replace(fragment=""))
         has_sig: Optional[bool]
         gpg_sig = get_str_attrib("data-gpg-sig")
         if gpg_sig is not None:
@@ -184,13 +190,14 @@ class DistributionPackage(NamedTuple):
             metadata_digests = None
         return cls(
             filename=link.text,
-            url=link.url,
+            url=url,
             has_sig=has_sig,
             requires_python=get_str_attrib("data-requires-python"),
             project=project,
             version=version,
             package_type=pkg_type,
             yanked=get_str_attrib("data-yanked"),
+            digests=digests,
             metadata_digests=metadata_digests,
             has_metadata=metadata_digests is not None,
         )

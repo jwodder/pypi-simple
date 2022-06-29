@@ -2,17 +2,20 @@ v0.10.0 (in development)
 ------------------------
 - Support Python 3.10
 - Support PEP 691
-    - Requests now include "Accept" headers that prefer the new JSON format
-      over the old HTML format
+    - Send "Accept" headers in requests (except for `stream_project_names()`)
+      listing both the new JSON format and the old HTML format
     - `parse_repo_project_response()` and `parse_repo_index_response()` now
       support both the JSON and HTML formats
     - Add `parse_repo_index_json()` and `parse_repo_project_json()` functions
-    - Gave `DistributionPackage` a `digests` attribute for storing the contents
-      of the `"hashes"` field in JSON project details
     - Gave `DistributionPackage` a `from_pep691_details()` classmethod
     - `DistributionPackage.has_metadata` will now be `None` if not specified by
       a JSON response
     - `DistributionPackage.metadata_url` is now always non-`None`
+- Gave `DistributionPackage` a `digests` attribute
+    - The `get_digests()` method of `DistributionPackage` is now deprecated;
+      use `digests` instead
+    - Digest fragments are now removed from `DistributionPackage.url` when
+      parsing HTML responses
 
 v0.9.0 (2021-08-26)
 -------------------

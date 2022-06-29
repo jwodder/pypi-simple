@@ -52,7 +52,7 @@ Example
 '0.2.0'
 >>> pkg.package_type
 'sdist'
->>> pkg.get_digests()
+>>> pkg.digests
 {'sha256': '813202ace4d9301a3c00740c700e012fb9f3f8c73ddcfe02ab558a8df6f175fd'}
 
 
