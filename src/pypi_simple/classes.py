@@ -222,7 +222,7 @@ class DistributionPackage(NamedTuple):
         :param Optional[str] base_url: an optional URL to join to the front of
             a relative file URL (usually the URL of the page being parsed)
         :rtype: DistributionPackage
-        :raises TypeError: if `data` is not a `dict`
+        :raises TypeError: if ``data`` is not a `dict`
         """
         if not isinstance(data, dict):
             raise TypeError(
