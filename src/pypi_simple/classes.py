@@ -1,12 +1,14 @@
 from __future__ import annotations
+from dataclasses import dataclass
 import re
-from typing import Any, NamedTuple, Optional
+from typing import Any, Optional
 from urllib.parse import urlparse, urlunparse
 from .filenames import parse_filename
 from .util import basejoin
 
 
-class Link(NamedTuple):
+@dataclass
+class Link:
     """
     .. versionadded:: 0.7.0
 
@@ -30,7 +32,8 @@ class Link(NamedTuple):
     attrs: dict[str, str | list[str]]
 
 
-class DistributionPackage(NamedTuple):
+@dataclass
+class DistributionPackage:
     """
     Information about a versioned archive file from which a Python project
     release can be installed
@@ -258,7 +261,8 @@ class DistributionPackage(NamedTuple):
         )
 
 
-class ProjectPage(NamedTuple):
+@dataclass
+class ProjectPage:
     """
     .. versionadded:: 0.7.0
 
@@ -280,7 +284,8 @@ class ProjectPage(NamedTuple):
     last_serial: Optional[str]
 
 
-class IndexPage(NamedTuple):
+@dataclass
+class IndexPage:
     """
     .. versionadded:: 0.7.0
 

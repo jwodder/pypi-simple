@@ -171,7 +171,7 @@ def parse_repo_project_response(project: str, r: requests.Response) -> ProjectPa
     else:
         raise UnsupportedContentTypeError(r.url, str(ct))
     if page.last_serial is None:
-        page = page._replace(last_serial=r.headers.get("X-PyPI-Last-Serial"))
+        page.last_serial = r.headers.get("X-PyPI-Last-Serial")
     return page
 
 
@@ -261,5 +261,5 @@ def parse_repo_index_response(r: requests.Response) -> IndexPage:
     else:
         raise UnsupportedContentTypeError(r.url, str(ct))
     if page.last_serial is None:
-        page = page._replace(last_serial=r.headers.get("X-PyPI-Last-Serial"))
+        page.last_serial = r.headers.get("X-PyPI-Last-Serial")
     return page

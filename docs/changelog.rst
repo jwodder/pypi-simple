@@ -15,6 +15,8 @@ v1.0.0 (in development)
   - ``parse_links()``
 
 - Drop support for Python 3.6
+- `IndexPage`, `ProjectPage`, `DistributionPackage`, and `Link` have been
+  changed from NamedTuples to dataclasses
 
 
 v0.10.0 (2022-06-30)
