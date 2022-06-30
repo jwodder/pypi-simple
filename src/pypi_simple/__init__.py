@@ -28,17 +28,18 @@ SUPPORTED_REPOSITORY_VERSION: str = "1.0"
 
 from .classes import DistributionPackage, IndexPage, ProjectPage
 from .client import NoSuchProjectError, PyPISimple
-from .filenames import UnparsableFilenameError, parse_filename
-from .html import Link, RepositoryPage
-from .html_stream import parse_links_stream, parse_links_stream_response
-from .progress import ProgressTracker, tqdm_progress_factory
-from .util import (
+from .errors import (
     DigestMismatchError,
     NoDigestsError,
     UnexpectedRepoVersionWarning,
+    UnparsableFilenameError,
     UnsupportedContentTypeError,
     UnsupportedRepoVersionError,
 )
+from .filenames import parse_filename
+from .html import Link, RepositoryPage
+from .html_stream import parse_links_stream, parse_links_stream_response
+from .progress import ProgressTracker, tqdm_progress_factory
 
 __all__ = [
     "DigestMismatchError",

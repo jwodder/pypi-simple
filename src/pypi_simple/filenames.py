@@ -1,6 +1,7 @@
 from __future__ import annotations
 import re
 from typing import Optional
+from .errors import UnparsableFilenameError
 
 PROJECT_NAME = r"[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?"
 PROJECT_NAME_NODASH = r"[A-Za-z0-9](?:[A-Za-z0-9._]*[A-Za-z0-9])?"
@@ -142,18 +143,3 @@ def parse_filename(
         if m:
             return (m.group("project"), m.group("version"), pkg_type)
     raise UnparsableFilenameError(filename)
-
-
-class UnparsableFilenameError(ValueError):
-    """
-    .. versionadded:: 1.0.0
-
-    Raised when `parse_filename()` is passed an unparsable filename
-    """
-
-    def __init__(self, filename: str) -> None:
-        #: The unparsable filename
-        self.filename = filename
-
-    def __str__(self) -> str:
-        return f"Cannot parse package filename: {self.filename!r}"

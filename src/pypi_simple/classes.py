@@ -5,9 +5,10 @@ from typing import Any, Optional
 from urllib.parse import urlparse, urlunparse
 from mailbits import ContentType
 import requests
-from .filenames import UnparsableFilenameError, parse_filename
+from .errors import UnparsableFilenameError, UnsupportedContentTypeError
+from .filenames import parse_filename
 from .html import Link, RepositoryPage
-from .util import UnsupportedContentTypeError, basejoin, check_repo_version
+from .util import basejoin, check_repo_version
 
 
 @dataclass
