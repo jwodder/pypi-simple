@@ -2,7 +2,7 @@ from pypi_simple import __version__
 
 project = "pypi-simple"
 author = "John T. Wodder II"
-copyright = "2018-2021 John T. Wodder II"
+copyright = "2018-2022 John T. Wodder II"
 
 extensions = [
     "sphinx.ext.autodoc",

@@ -3,8 +3,8 @@
 Changelog
 =========
 
-v0.10.0 (in development)
-------------------------
+v0.10.0 (2022-06-30)
+--------------------
 - Support Python 3.10
 - Support :pep:`691`
 

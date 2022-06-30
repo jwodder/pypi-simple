@@ -1,5 +1,5 @@
-v0.10.0 (in development)
-------------------------
+v0.10.0 (2022-06-30)
+--------------------
 - Support Python 3.10
 - Support PEP 691
     - Send "Accept" headers in requests (except for `stream_project_names()`)
