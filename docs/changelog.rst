@@ -3,6 +3,18 @@
 Changelog
 =========
 
+v1.0.0 (in development)
+-----------------------
+- Removed deprecated functionality:
+
+  - ``DistributionPackage.get_digests()``
+  - ``PyPISimple.get_projects()``
+  - ``PyPISimple.get_project_files()``
+  - ``parse_simple_index()`
+  - ``parse_project_page()``
+  - ``parse_links()``
+
+
 v0.10.0 (2022-06-30)
 --------------------
 - Support Python 3.10
@@ -22,8 +34,8 @@ v0.10.0 (2022-06-30)
 
 - Gave `DistributionPackage` a `~DistributionPackage.digests` attribute
 
-  - The `~DistributionPackage.get_digests()` method of `DistributionPackage` is
-    now deprecated; use `~DistributionPackage.digests` instead
+  - The ``get_digests()`` method of `DistributionPackage` is now deprecated;
+    use `~DistributionPackage.digests` instead
   - Digest fragments are now removed from `DistributionPackage.url` when
     parsing HTML responses
 
@@ -84,11 +96,11 @@ v0.7.0 (2020-10-15)
 - The following functions & methods are now deprecated and will be removed in a
   future version:
 
-  - `PyPISimple.get_projects()`
-  - `PyPISimple.get_project_files()`
-  - `parse_simple_index()`
-  - `parse_project_page()`
-  - `parse_links()`
+  - ``PyPISimple.get_projects()``
+  - ``PyPISimple.get_project_files()``
+  - ``parse_simple_index()``
+  - ``parse_project_page()``
+  - ``parse_links()``
 
 - Support Warehouse's :mailheader:`X-PyPI-Last-Serial` header by attaching the
   value to the objects returned by `~PyPISimple.get_index_page()` and

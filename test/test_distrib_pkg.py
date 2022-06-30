@@ -34,8 +34,6 @@ def test_from_link_digests() -> None:
     assert pkg.digests == {
         "sha256": "da69d28dcd527c0e372b3fa7b92fc333b327f8470175f035abc4e351b539189f"
     }
-    with pytest.deprecated_call():
-        assert pkg.get_digests() is pkg.digests
 
 
 @pytest.mark.parametrize("has_sig", [True, False])

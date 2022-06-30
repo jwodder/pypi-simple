@@ -19,12 +19,6 @@ Streaming Parsers
 .. autofunction:: parse_links_stream
 .. autofunction:: parse_links_stream_response
 
-Deprecated Functions
-^^^^^^^^^^^^^^^^^^^^
-.. autofunction:: parse_simple_index
-.. autofunction:: parse_project_page
-.. autofunction:: parse_links
-
 Parsing Filenames
 -----------------
 .. autofunction:: parse_filename

@@ -1,3 +1,13 @@
+v1.0.0 (in development)
+-----------------------
+- Removed deprecated functionality:
+    - `DistributionPackage.get_digests()`
+    - `PyPISimple.get_projects()`
+    - `PyPISimple.get_project_files()`
+    - `parse_simple_index()`
+    - `parse_project_page()`
+    - `parse_links()`
+
 v0.10.0 (2022-06-30)
 --------------------
 - Support Python 3.10

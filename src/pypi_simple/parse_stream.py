@@ -143,8 +143,8 @@ def parse_links_stream(
 
     This function consumes the elements of ``htmlseq`` one at a time and yields
     the links found in each segment before moving on to the next one.  It is
-    intended to be faster than both `parse_links()` and `parse_repo_links()`,
-    especially when the complete document is very large.
+    intended to be faster than `parse_repo_links()`, especially when the
+    complete document is very large.
 
     .. warning::
 

@@ -1,7 +1,6 @@
 import re
 from typing import Any, Dict, List, NamedTuple, Optional, Union
 from urllib.parse import urlparse, urlunparse
-from warnings import warn
 from .filenames import parse_filename
 from .util import basejoin
 
@@ -135,22 +134,6 @@ class DistributionPackage(NamedTuple):
         """
         u = urlparse(self.url)
         return urlunparse((u[0], u[1], u[2] + ".metadata", "", "", ""))
-
-    def get_digests(self) -> Dict[str, str]:
-        """
-        Returns the hash digests for the file as a `dict` mapping hash
-        algorithm names to hex-encoded digest strings
-
-        .. deprecated:: 0.10.0
-
-            Use `digests` instead
-        """
-        warn(
-            "The get_digests() method is deprecated.  Use the `digests`"
-            " attribute instead.",
-            DeprecationWarning,
-        )
-        return self.digests
 
     @classmethod
     def from_link(

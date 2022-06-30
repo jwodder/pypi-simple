@@ -2,8 +2,7 @@ import os
 from pathlib import Path
 import platform
 from types import TracebackType
-from typing import Any, AnyStr, Callable, Iterator, List, Optional, Tuple, Type, Union
-from warnings import warn
+from typing import Any, AnyStr, Callable, Iterator, Optional, Tuple, Type, Union
 from packaging.utils import canonicalize_name as normalize
 import requests
 from . import PYPI_SIMPLE_ENDPOINT, __url__, __version__
@@ -146,10 +145,10 @@ class PyPISimple:
         Returns a generator of names of projects available in the repository.
         The names are not normalized.
 
-        Unlike `get_index_page()` and `get_projects()`, this function makes a
-        streaming request to the server and parses the document in chunks.  It
-        is intended to be faster than the other methods, especially when the
-        complete document is very large.
+        Unlike `get_index_page()`, this function makes a streaming request to
+        the server and parses the document in chunks.  It is intended to be
+        faster than the other methods, especially when the complete document is
+        very large.
 
         .. warning::
 
@@ -291,65 +290,3 @@ class PyPISimple:
                     except FileNotFoundError:
                         pass
                 raise
-
-    def get_projects(self) -> Iterator[str]:
-        """
-        Returns a generator of names of projects available in the repository.
-        The names are not normalized.
-
-        .. warning::
-
-            PyPI's project index file is very large and takes several seconds
-            to parse.  Use this method sparingly.
-
-        .. deprecated:: 0.7.0
-            Use `get_index_page()` or `stream_project_names()` instead
-
-        :rtype: Iterator[str]
-        :raises requests.HTTPError: if the repository responds with an HTTP
-            error code
-        :raises UnsupportedContentTypeError: if the repository responds with an
-            unsupported :mailheader:`Content-Type`
-        :raises UnsupportedRepoVersionError: if the repository version has a
-            greater major component than the supported repository version
-        """
-        warn(
-            "The get_projects() method is deprecated.  Use get_index_page() or"
-            " stream_project_names() instead.",
-            DeprecationWarning,
-        )
-        page = self.get_index_page()
-        return iter(page.projects)
-
-    def get_project_files(self, project: str) -> List[DistributionPackage]:
-        """
-        Returns a list of `DistributionPackage` objects representing all of the
-        package files available in the repository for the given project.
-
-        When fetching the project's information from the repository, a 404
-        response is treated the same as an empty page, resulting in an empty
-        list.  All other HTTP errors cause a `requests.HTTPError` to be raised.
-
-        .. deprecated:: 0.7.0
-            Use `get_project_page()` instead
-
-        :param str project: The name of the project to fetch information on.
-            The name does not need to be normalized.
-        :rtype: List[DistributionPackage]
-        :raises requests.HTTPError: if the repository responds with an HTTP
-            error code other than 404
-        :raises UnsupportedContentTypeError: if the repository responds with an
-            unsupported :mailheader:`Content-Type`
-        :raises UnsupportedRepoVersionError: if the repository version has a
-            greater major component than the supported repository version
-        """
-        warn(
-            "The get_project_files() method is deprecated."
-            "  Use get_project_page() instead.",
-            DeprecationWarning,
-        )
-        page = self.get_project_page(project)
-        if page is None:
-            return []
-        else:
-            return page.packages

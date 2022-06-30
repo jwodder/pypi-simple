@@ -14,7 +14,7 @@ Visit <https://github.com/jwodder/pypi-simple> or <https://pypi-simple.rtfd.io>
 for more information.
 """
 
-__version__ = "0.10.0"
+__version__ = "1.0.0.dev1"
 __author__ = "John Thorvald Wodder II"
 __author_email__ = "pypi-simple@varonathe.org"
 __license__ = "MIT"
@@ -29,7 +29,6 @@ SUPPORTED_REPOSITORY_VERSION: str = "1.0"
 from .classes import DistributionPackage, IndexPage, Link, ProjectPage
 from .client import PyPISimple
 from .filenames import parse_filename
-from .parse_old import parse_links, parse_project_page, parse_simple_index
 from .parse_repo import (
     parse_repo_index_json,
     parse_repo_index_page,
@@ -64,10 +63,8 @@ __all__ = [
     "UnsupportedContentTypeError",
     "UnsupportedRepoVersionError",
     "parse_filename",
-    "parse_links",
     "parse_links_stream",
     "parse_links_stream_response",
-    "parse_project_page",
     "parse_repo_index_json",
     "parse_repo_index_page",
     "parse_repo_index_response",
@@ -75,6 +72,5 @@ __all__ = [
     "parse_repo_project_json",
     "parse_repo_project_page",
     "parse_repo_project_response",
-    "parse_simple_index",
     "tqdm_progress_factory",
 ]
