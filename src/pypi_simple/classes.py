@@ -1,6 +1,7 @@
 import re
 from typing import Any, Dict, List, NamedTuple, Optional, Union
 from urllib.parse import urlparse, urlunparse
+from warnings import warn
 from .filenames import parse_filename
 from .util import basejoin
 
@@ -144,6 +145,11 @@ class DistributionPackage(NamedTuple):
 
             Use `digests` instead
         """
+        warn(
+            "The get_digests() method is deprecated.  Use the `digests`"
+            " attribute instead.",
+            DeprecationWarning,
+        )
         return self.digests
 
     @classmethod
