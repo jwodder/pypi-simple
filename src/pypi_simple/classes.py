@@ -62,6 +62,10 @@ class DistributionPackage:
     #: - ``'wininst'``
     package_type: Optional[str]
 
+    #: A collection of hash digests for the file as a `dict` mapping hash
+    #: algorithm names to hex-encoded digest strings
+    digests: dict[str, str]
+
     #: An optional version specifier string declaring the Python version(s) in
     #: which the package can be installed
     requires_python: Optional[str]
@@ -70,15 +74,14 @@ class DistributionPackage:
     #: is `None` if the package repository does not report such information.
     has_sig: Optional[bool]
 
-    #: If the package file has been "yanked" from the package repository
+    #: Whether the package file has been "yanked" from the package repository
     #: (meaning that it should only be installed when that specific version is
-    #: requested), this attribute will be a string giving the reason why it was
-    #: yanked; otherwise, it is `None`.
-    yanked: Optional[str]
+    #: requested)
+    is_yanked: bool = False
 
-    #: A collection of hash digests for the file as a `dict` mapping hash
-    #: algorithm names to hex-encoded digest strings
-    digests: dict[str, str]
+    #: If the package file has been "yanked" and a reason is given, this
+    #: attribute will contain that (possibly empty) reason
+    yanked_reason: Optional[str] = None
 
     #: Whether the package file is accompanied by a Core Metadata file.  This
     #: is `None` if the package repository does not report such information.
@@ -148,6 +151,7 @@ class DistributionPackage:
                 metadata_digests[m[1]] = m[2]
         else:
             metadata_digests = None
+        yanked_reason = get_str_attrib("data-yanked")
         return cls(
             filename=link.text,
             url=url,
@@ -156,7 +160,8 @@ class DistributionPackage:
             project=project,
             version=version,
             package_type=pkg_type,
-            yanked=get_str_attrib("data-yanked"),
+            is_yanked=yanked_reason is not None,
+            yanked_reason=yanked_reason,
             digests=digests,
             metadata_digests=metadata_digests,
             has_metadata=metadata_digests is not None,
@@ -187,16 +192,14 @@ class DistributionPackage:
                 f"JSON file details object is {type(data)} instead of a dict"
             )
         project, version, pkg_type = parse_filename(data["filename"], project_hint)
-        yankfield = data.get("yanked", False)
-        yanked: Optional[str]
-        if yankfield is True:
-            yanked = ""
-        elif yankfield is False:
-            yanked = None
+        yanked = data.get("yanked", False)
+        yanked_reason: Optional[str]
+        if isinstance(yanked, str):
+            is_yanked = True
+            yanked_reason = yanked
         else:
-            if not isinstance(yankfield, str):
-                raise TypeError(f'"yanked" field is not a str: {yankfield!r}')
-            yanked = yankfield
+            is_yanked = bool(yanked)
+            yanked_reason = None
         mddigest = data.get("dist-info-metadata")
         metadata_digests: Optional[dict[str, str]]
         if mddigest is None:
@@ -219,7 +222,8 @@ class DistributionPackage:
             project=project,
             version=version,
             package_type=pkg_type,
-            yanked=yanked,
+            is_yanked=is_yanked,
+            yanked_reason=yanked_reason,
             digests=data["hashes"],
             metadata_digests=metadata_digests,
             has_metadata=has_metadata,

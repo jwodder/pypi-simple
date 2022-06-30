@@ -50,7 +50,8 @@ def test_get_sig_url(has_sig: bool) -> None:
         },
         requires_python=None,
         has_sig=has_sig,
-        yanked=None,
+        is_yanked=False,
+        yanked_reason=None,
         metadata_digests=None,
         has_metadata=None,
     )
@@ -80,7 +81,8 @@ def test_get_sig_url(has_sig: bool) -> None:
                 project="qypi",
                 version="0.1.0",
                 package_type="wheel",
-                yanked=None,
+                is_yanked=False,
+                yanked_reason=None,
                 metadata_digests=None,
                 has_metadata=False,
             ),
@@ -107,7 +109,8 @@ def test_get_sig_url(has_sig: bool) -> None:
                 project="qypi",
                 version="0.1.0",
                 package_type="wheel",
-                yanked="Oopsy.",
+                is_yanked=True,
+                yanked_reason="Oopsy.",
                 metadata_digests={
                     "sha256": "ae718719df4708f329d58ca4d5390c1206c4222ef7e62a3aa9844397c63de28b"
                 },
@@ -134,7 +137,8 @@ def test_get_sig_url(has_sig: bool) -> None:
                 project="qypi",
                 version="0.1.0",
                 package_type="wheel",
-                yanked=None,
+                is_yanked=False,
+                yanked_reason=None,
                 metadata_digests={},
                 has_metadata=True,
             ),
@@ -157,7 +161,8 @@ def test_pep658() -> None:
         project="qypi",
         version="0.1.0",
         package_type="wheel",
-        yanked=None,
+        is_yanked=False,
+        yanked_reason=None,
         metadata_digests={
             "sha256": "ae718719df4708f329d58ca4d5390c1206c4222ef7e62a3aa9844397c63de28b"
         },
@@ -181,7 +186,8 @@ def test_pep658_no_digests() -> None:
         project="qypi",
         version="0.1.0",
         package_type="wheel",
-        yanked=None,
+        is_yanked=False,
+        yanked_reason=None,
         metadata_digests={},
         has_metadata=True,
     )

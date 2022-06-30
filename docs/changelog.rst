@@ -17,6 +17,9 @@ v1.0.0 (in development)
 - Drop support for Python 3.6
 - `IndexPage`, `ProjectPage`, `DistributionPackage`, and `Link` have been
   changed from NamedTuples to dataclasses
+- Replaced `DistributionPackage.yanked` with separate
+  `~DistributionPackage.is_yanked` and `~DistributionPackage.yanked_reason`
+  attributes
 
 
 v0.10.0 (2022-06-30)
@@ -128,8 +131,7 @@ v0.5.0 (2019-05-12)
 - The `PyPISimple` constructor now takes an optional ``session`` argument which
   can be used to specify a `requests.Session` object with more complicated
   configuration than just authentication
-- Support for PEP 592; `DistributionPackage` now has a
-  `~DistributionPackage.yanked` attribute
+- Support for PEP 592; `DistributionPackage` now has a ``yanked`` attribute
 
 
 v0.4.0 (2018-09-06)

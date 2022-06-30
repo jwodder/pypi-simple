@@ -39,7 +39,8 @@ def test_empty() -> None:
                         url="https://files.pythonhosted.org/packages/b5/2b/7aa284f345e37f955d86e4cd57b1039b573552b0fc29d1a522ec05c1ee41/argset-0.1.0-py3-none-any.whl",
                         requires_python="~=3.6",
                         has_sig=None,
-                        yanked=None,
+                        is_yanked=False,
+                        yanked_reason=None,
                         metadata_digests=None,
                         has_metadata=None,
                         digests={
@@ -54,7 +55,8 @@ def test_empty() -> None:
                         url="https://files.pythonhosted.org/packages/d0/ee/1c25e68d029e8daaf3228dababbf3261fa5d9569f6f705867b2ad4df9b6d/argset-0.1.0.tar.gz",
                         requires_python="~=3.6",
                         has_sig=None,
-                        yanked=None,
+                        is_yanked=False,
+                        yanked_reason=None,
                         metadata_digests=None,
                         has_metadata=None,
                         digests={
@@ -79,7 +81,8 @@ def test_empty() -> None:
                         url="https://files.pythonhosted.org/packages/9b/af/67c4c6b7f98f2789e4073a0b589f71ad865b3bb8d3e508c51d5f70962fb1/yanked-0.0.0-py3-none-any.whl",
                         requires_python="",
                         has_sig=None,
-                        yanked="",
+                        is_yanked=True,
+                        yanked_reason=None,
                         metadata_digests=None,
                         has_metadata=None,
                         digests={
@@ -94,7 +97,8 @@ def test_empty() -> None:
                         url="https://files.pythonhosted.org/packages/2c/9b/23d7985793a487f53fdfbc78e6180cb74b293d200da94895a8a932a4ccc6/yanked-0.0.0.tar.gz",
                         requires_python="",
                         has_sig=None,
-                        yanked="not good",
+                        is_yanked=True,
+                        yanked_reason="not good",
                         metadata_digests=None,
                         has_metadata=None,
                         digests={
@@ -130,7 +134,8 @@ def test_parse_repo_project_json_relative_urls() -> None:
                 url="https://test.nil/simple/argset/packages/argset-0.1.0-py3-none-any.whl",
                 requires_python="~=3.6",
                 has_sig=None,
-                yanked=None,
+                is_yanked=False,
+                yanked_reason=None,
                 metadata_digests=None,
                 has_metadata=None,
                 digests={
@@ -145,7 +150,8 @@ def test_parse_repo_project_json_relative_urls() -> None:
                 url="https://test.nil/simple/argset/packages/argset-0.1.0.tar.gz",
                 requires_python="~=3.6",
                 has_sig=None,
-                yanked=None,
+                is_yanked=False,
+                yanked_reason=None,
                 metadata_digests=None,
                 has_metadata=None,
                 digests={
