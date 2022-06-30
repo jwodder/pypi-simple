@@ -1,5 +1,6 @@
+from __future__ import annotations
 import re
-from typing import Optional, Tuple, Union
+from typing import Optional
 
 PROJECT_NAME = r"[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?"
 PROJECT_NAME_NODASH = r"[A-Za-z0-9](?:[A-Za-z0-9._]*[A-Za-z0-9])?"
@@ -79,7 +80,7 @@ BAD_PACKAGE_RGXN = [
 
 def parse_filename(
     filename: str, project_hint: Optional[str] = None
-) -> Union[Tuple[str, str, str], Tuple[None, None, None]]:
+) -> tuple[str, str, str] | tuple[None, None, None]:
     """
     Given the filename of a distribution package, returns a triple of the
     project name, project version, and package type.  The name and version are
@@ -111,7 +112,7 @@ def parse_filename(
     :param Optional[str] project_hint: Optionally, the expected value for the
         project name (usually the name of the project page on which the
         filename was found).  The name does not need to be normalized.
-    :rtype: Union[Tuple[str, str, str], Tuple[None, None, None]]
+    :rtype: tuple[str, str, str] | tuple[None, None, None]
     """
     for pkg_type, rgx in GOOD_PACKAGE_RGXN:
         m = rgx.match(filename)

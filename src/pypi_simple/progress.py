@@ -1,6 +1,8 @@
+from __future__ import annotations
+from collections.abc import Callable
 import sys
 from types import TracebackType
-from typing import Any, Callable, Optional, Type, TypeVar, cast
+from typing import Any, Optional, TypeVar, cast
 
 if sys.version_info[:2] >= (3, 8):
     from typing import Protocol, runtime_checkable
@@ -26,7 +28,7 @@ class ProgressTracker(Protocol):
 
     def __exit__(
         self,
-        exc_type: Optional[Type[BaseException]],
+        exc_type: Optional[type[BaseException]],
         exc_val: Optional[BaseException],
         exc_tb: Optional[TracebackType],
     ) -> Optional[bool]:
@@ -42,7 +44,7 @@ class NullProgressTracker:
 
     def __exit__(
         self,
-        exc_type: Optional[Type[BaseException]],
+        exc_type: Optional[type[BaseException]],
         exc_val: Optional[BaseException],
         exc_tb: Optional[TracebackType],
     ) -> None:

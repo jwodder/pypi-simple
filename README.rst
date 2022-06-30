@@ -38,7 +38,7 @@ information.
 
 Installation
 ============
-``pypi-simple`` requires Python 3.6 or higher.  Just use `pip
+``pypi-simple`` requires Python 3.7 or higher.  Just use `pip
 <https://pip.pypa.io>`_ for Python 3 (You have pip, right?) to install
 ``pypi-simple`` and its dependencies::
 

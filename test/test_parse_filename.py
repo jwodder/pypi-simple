@@ -1,4 +1,5 @@
-from typing import Optional, Tuple
+from __future__ import annotations
+from typing import Optional
 import pytest
 from pypi_simple import parse_filename
 
@@ -387,7 +388,7 @@ SIMPLE_FILENAMES = [
     [(filename, expected) for filename, _, expected in SIMPLE_FILENAMES],
 )
 def test_parse_filename_no_hint(
-    filename: str, expected: Tuple[Optional[str], Optional[str], Optional[str]]
+    filename: str, expected: tuple[Optional[str], Optional[str], Optional[str]]
 ) -> None:
     assert parse_filename(filename) == expected
 
@@ -418,6 +419,6 @@ def test_parse_filename_no_hint(
     ],
 )
 def test_parse_filename_project_hint(
-    filename: str, project_hint: str, expected: Tuple[str, str, str]
+    filename: str, project_hint: str, expected: tuple[str, str, str]
 ) -> None:
     assert parse_filename(filename, project_hint=project_hint) == expected

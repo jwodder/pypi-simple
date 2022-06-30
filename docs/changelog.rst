@@ -10,9 +10,11 @@ v1.0.0 (in development)
   - ``DistributionPackage.get_digests()``
   - ``PyPISimple.get_projects()``
   - ``PyPISimple.get_project_files()``
-  - ``parse_simple_index()`
+  - ``parse_simple_index()``
   - ``parse_project_page()``
   - ``parse_links()``
+
+- Drop support for Python 3.6
 
 
 v0.10.0 (2022-06-30)

@@ -7,6 +7,7 @@ v1.0.0 (in development)
     - `parse_simple_index()`
     - `parse_project_page()`
     - `parse_links()`
+- Drop support for Python 3.6
 
 v0.10.0 (2022-06-30)
 --------------------

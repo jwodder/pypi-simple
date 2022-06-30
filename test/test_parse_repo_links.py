@@ -1,4 +1,5 @@
-from typing import Dict, List, Optional, Tuple
+from __future__ import annotations
+from typing import Optional
 import pytest
 from pypi_simple import (
     SUPPORTED_REPOSITORY_VERSION,
@@ -495,7 +496,7 @@ from pypi_simple import (
     ],
 )
 def test_parse_repo_links(
-    html: str, base_url: Optional[str], links: Tuple[Dict[str, str], List[Link]]
+    html: str, base_url: Optional[str], links: tuple[dict[str, str], list[Link]]
 ) -> None:
     assert parse_repo_links(html, base_url) == links
 

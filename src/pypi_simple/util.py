@@ -1,6 +1,7 @@
+from __future__ import annotations
 from abc import ABC, abstractmethod
 import hashlib
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 from urllib.parse import urljoin
 import warnings
 from packaging.version import Version
@@ -109,9 +110,9 @@ class NullDigestChecker(AbstractDigestChecker):
 
 
 class DigestChecker(AbstractDigestChecker):
-    def __init__(self, digests: Dict[str, str]) -> None:
-        self.digesters: Dict[str, Any] = {}
-        self.expected: Dict[str, str] = {}
+    def __init__(self, digests: dict[str, str]) -> None:
+        self.digesters: dict[str, Any] = {}
+        self.expected: dict[str, str] = {}
         for alg, value in digests.items():
             try:
                 d = hashlib.new(alg)

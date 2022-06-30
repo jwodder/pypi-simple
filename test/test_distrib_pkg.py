@@ -1,4 +1,5 @@
-from typing import Dict, Optional, Union
+from __future__ import annotations
+from typing import Optional
 import pytest
 from pypi_simple import DistributionPackage, Link
 
@@ -216,9 +217,9 @@ def test_from_pep691_details_no_metadata() -> None:
     ],
 )
 def test_from_pep691_details_metadata(
-    dist_info_metadata: Union[bool, Dict[str, str]],
+    dist_info_metadata: bool | dict[str, str],
     has_metadata: bool,
-    metadata_digests: Optional[Dict[str, str]],
+    metadata_digests: Optional[dict[str, str]],
 ) -> None:
     pkg = DistributionPackage.from_pep691_details(
         {

@@ -1,8 +1,9 @@
+from __future__ import annotations
 import filecmp
 import json
 from pathlib import Path
 from types import TracebackType
-from typing import Dict, List, Optional, Type
+from typing import Optional
 import pytest
 from pytest_mock import MockerFixture
 import requests
@@ -698,7 +699,7 @@ def test_download_bad_digests_keep(tmp_path: Path) -> None:
 )
 @responses.activate
 def test_download_bad_digests_no_verify(
-    tmp_path: Path, digests: Dict[str, str]
+    tmp_path: Path, digests: dict[str, str]
 ) -> None:
     responses.add(
         method=responses.GET,
@@ -731,7 +732,7 @@ class SpyingProgressTracker:
         self.content_length: Optional[int] = None
         self.enter_called = False
         self.exit_called = False
-        self.updates: List[int] = []
+        self.updates: list[int] = []
 
     def __enter__(self) -> "SpyingProgressTracker":
         self.enter_called = True
@@ -739,7 +740,7 @@ class SpyingProgressTracker:
 
     def __exit__(
         self,
-        _exc_type: Optional[Type[BaseException]],
+        _exc_type: Optional[type[BaseException]],
         _exc_val: Optional[BaseException],
         _exc_tb: Optional[TracebackType],
     ) -> None:

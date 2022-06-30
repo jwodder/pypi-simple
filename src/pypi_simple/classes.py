@@ -1,5 +1,6 @@
+from __future__ import annotations
 import re
-from typing import Any, Dict, List, NamedTuple, Optional, Union
+from typing import Any, NamedTuple, Optional
 from urllib.parse import urlparse, urlunparse
 from .filenames import parse_filename
 from .util import basejoin
@@ -24,9 +25,9 @@ class Link(NamedTuple):
     #: A dictionary of attributes set on the link tag (including the unmodified
     #: ``href`` attribute).  Keys are converted to lowercase.  Most attributes
     #: have `str` values, but some (referred to as "CDATA list attributes" by
-    #: the HTML spec; e.g., ``"class"``) have values of type ``List[str]``
+    #: the HTML spec; e.g., ``"class"``) have values of type ``list[str]``
     #: instead.
-    attrs: Dict[str, Union[str, List[str]]]
+    attrs: dict[str, str | list[str]]
 
 
 class DistributionPackage(NamedTuple):
@@ -94,7 +95,7 @@ class DistributionPackage(NamedTuple):
 
     #: A collection of hash digests for the file as a `dict` mapping hash
     #: algorithm names to hex-encoded digest strings
-    digests: Dict[str, str]
+    digests: dict[str, str]
 
     #: Whether the package file is accompanied by a Core Metadata file.  This
     #: is `None` if the package repository does not report such information.
@@ -107,7 +108,7 @@ class DistributionPackage(NamedTuple):
     #: this is a (possibly empty) `dict` of digests of the file, given as a
     #: mapping from hash algorithm names to hex-encoded digest strings;
     #: otherwise, it is `None`
-    metadata_digests: Optional[Dict[str, str]] = None
+    metadata_digests: Optional[dict[str, str]] = None
 
     @property
     def sig_url(self) -> str:
@@ -169,7 +170,7 @@ class DistributionPackage(NamedTuple):
         else:
             has_sig = None
         mddigest = get_str_attrib("data-dist-info-metadata")
-        metadata_digests: Optional[Dict[str, str]]
+        metadata_digests: Optional[dict[str, str]]
         if mddigest is not None:
             metadata_digests = {}
             m = re.fullmatch(r"(\w+)=([0-9A-Fa-f]+)", mddigest)
@@ -229,7 +230,7 @@ class DistributionPackage(NamedTuple):
                 raise TypeError(f'"yanked" field is not a str: {yankfield!r}')
             yanked = yankfield
         mddigest = data.get("dist-info-metadata")
-        metadata_digests: Optional[Dict[str, str]]
+        metadata_digests: Optional[dict[str, str]]
         if mddigest is None:
             has_metadata = None
             metadata_digests = None
@@ -269,7 +270,7 @@ class ProjectPage(NamedTuple):
 
     #: A list of packages (as `DistributionPackage` objects) listed on the
     #: project page
-    packages: List[DistributionPackage]
+    packages: list[DistributionPackage]
 
     #: The repository version reported by the page, or `None` if not specified
     repository_version: Optional[str]
@@ -287,7 +288,7 @@ class IndexPage(NamedTuple):
     """
 
     #: The project names listed in the index.  The names are not normalized.
-    projects: List[str]
+    projects: list[str]
 
     #: The repository version reported by the page, or `None` if not specified
     repository_version: Optional[str]

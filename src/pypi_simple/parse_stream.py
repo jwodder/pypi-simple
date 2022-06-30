@@ -1,7 +1,9 @@
+from __future__ import annotations
 from codecs import getincrementaldecoder
+from collections.abc import Iterable, Iterator
 from html.parser import HTMLParser
 from itertools import chain
-from typing import AnyStr, Dict, Iterable, Iterator, List, Optional, Tuple, Union, cast
+from typing import AnyStr, Optional, cast
 from urllib.parse import urljoin
 from bs4.dammit import EncodingDetector
 import requests
@@ -42,16 +44,16 @@ class LinkParser(HTMLParser):
         super().__init__(convert_charrefs=True)
         self.base_url: Optional[str] = base_url
         self.base_seen = False
-        self.tag_stack: List[str] = []
-        self.finished_links: List[Link] = []
-        self.link_tag_stack: List[Dict[str, str]] = []
+        self.tag_stack: list[str] = []
+        self.finished_links: list[Link] = []
+        self.link_tag_stack: list[dict[str, str]] = []
 
-    def fetch_links(self) -> List[Link]:
+    def fetch_links(self) -> list[Link]:
         links = self.finished_links
         self.finished_links = []
         return links
 
-    def handle_starttag(self, tag: str, attrs: List[Tuple[str, Optional[str]]]) -> None:
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, Optional[str]]]) -> None:
         if tag not in EMPTY_TAGS:
             self.tag_stack.append(tag)
         attrdict = {k: v or "" for k, v in attrs}
@@ -92,7 +94,7 @@ class LinkParser(HTMLParser):
                 Link(
                     text=text.strip(),
                     url=url,
-                    attrs=cast(Dict[str, Union[str, List[str]]], attrs),
+                    attrs=cast("dict[str, str | list[str]]", attrs),
                 )
             )
 
@@ -233,7 +235,7 @@ def iterhtmldecode(
     try:
         initblob = next(iterator)
     except StopIteration:
-        return iter(cast(List[str], []))
+        return iter(cast("list[str]", []))
     if isinstance(initblob, str):
         return chain([initblob], iterator)
     while len(initblob) < scan_window:

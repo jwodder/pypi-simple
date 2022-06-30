@@ -1,8 +1,10 @@
+from __future__ import annotations
+from collections.abc import Callable, Iterator
 import os
 from pathlib import Path
 import platform
 from types import TracebackType
-from typing import Any, AnyStr, Callable, Iterator, Optional, Tuple, Type, Union
+from typing import Any, AnyStr, Optional
 from packaging.utils import canonicalize_name as normalize
 import requests
 from . import PYPI_SIMPLE_ENDPOINT, __url__, __version__
@@ -99,7 +101,7 @@ class PyPISimple:
 
     def __exit__(
         self,
-        _exc_type: Optional[Type[BaseException]],
+        _exc_type: Optional[type[BaseException]],
         _exc_val: Optional[BaseException],
         _exc_tb: Optional[TracebackType],
     ) -> None:
@@ -107,7 +109,7 @@ class PyPISimple:
 
     def get_index_page(
         self,
-        timeout: Union[float, Tuple[float, float], None] = None,
+        timeout: float | tuple[float, float] | None = None,
     ) -> IndexPage:
         """
         .. versionadded:: 0.7.0
@@ -121,7 +123,7 @@ class PyPISimple:
             to parse.  Use this method sparingly.
 
         :param timeout: optional timeout to pass to the ``requests`` call
-        :type timeout: Union[float, Tuple[float,float], None]
+        :type timeout: float | tuple[float,float] | None
         :rtype: IndexPage
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code
@@ -137,7 +139,7 @@ class PyPISimple:
     def stream_project_names(
         self,
         chunk_size: int = 65535,
-        timeout: Union[float, Tuple[float, float], None] = None,
+        timeout: float | tuple[float, float] | None = None,
     ) -> Iterator[str]:
         """
         .. versionadded:: 0.7.0
@@ -159,7 +161,7 @@ class PyPISimple:
         :param int chunk_size: how many bytes to read from the response at a
             time
         :param timeout: optional timeout to pass to the ``requests`` call
-        :type timeout: Union[float, Tuple[float,float], None]
+        :type timeout: float | tuple[float,float] | None
         :rtype: Iterator[str]
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code
@@ -176,7 +178,7 @@ class PyPISimple:
     def get_project_page(
         self,
         project: str,
-        timeout: Union[float, Tuple[float, float], None] = None,
+        timeout: float | tuple[float, float] | None = None,
     ) -> Optional[ProjectPage]:
         """
         .. versionadded:: 0.7.0
@@ -189,7 +191,7 @@ class PyPISimple:
         :param str project: The name of the project to fetch information on.
             The name does not need to be normalized.
         :param timeout: optional timeout to pass to the ``requests`` call
-        :type timeout: Union[float, Tuple[float,float], None]
+        :type timeout: float | tuple[float,float] | None
         :rtype: Optional[ProjectPage]
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code other than 404
@@ -218,11 +220,11 @@ class PyPISimple:
     def download_package(
         self,
         pkg: DistributionPackage,
-        path: Union[AnyStr, "os.PathLike[AnyStr]"],
+        path: AnyStr | os.PathLike[AnyStr],
         verify: bool = True,
         keep_on_error: bool = False,
         progress: Optional[Callable[[Optional[int]], ProgressTracker]] = None,
-        timeout: Union[float, Tuple[float, float], None] = None,
+        timeout: float | tuple[float, float] | None = None,
     ) -> None:
         """
         .. versionadded:: 0.10.0
@@ -250,7 +252,7 @@ class PyPISimple:
             error occurs
         :param progress: a callable for contructing a progress tracker
         :param timeout: optional timeout to pass to the ``requests`` call
-        :type timeout: Union[float, Tuple[float,float], None]
+        :type timeout: float | tuple[float,float] | None
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code
         :raises NoDigestsError:

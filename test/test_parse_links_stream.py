@@ -1,5 +1,6 @@
+from __future__ import annotations
 from io import StringIO
-from typing import List, Optional
+from typing import Optional
 import pytest
 from pypi_simple import (
     SUPPORTED_REPOSITORY_VERSION,
@@ -432,7 +433,7 @@ from pypi_simple import (
     ],
 )
 def test_parse_links_stream(
-    html: str, base_url: Optional[str], links: List[Link]
+    html: str, base_url: Optional[str], links: list[Link]
 ) -> None:
     assert list(parse_links_stream(StringIO(html), base_url)) == links
 
@@ -631,7 +632,7 @@ def test_parse_links_stream(
     ],
 )
 def test_parse_links_stream_iterable_bytes(
-    htmlseq: List[bytes], charset: Optional[str], links: List[Link]
+    htmlseq: list[bytes], charset: Optional[str], links: list[Link]
 ) -> None:
     assert list(parse_links_stream(htmlseq, http_charset=charset)) == links
 

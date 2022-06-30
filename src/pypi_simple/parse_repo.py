@@ -1,4 +1,5 @@
-from typing import Any, Dict, List, Optional, Tuple, Union
+from __future__ import annotations
+from typing import Any, Optional
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 from mailbits import ContentType
@@ -8,17 +9,17 @@ from .util import UnsupportedContentTypeError, basejoin, check_repo_version
 
 
 def parse_repo_links(
-    html: Union[str, bytes],
+    html: str | bytes,
     base_url: Optional[str] = None,
     from_encoding: Optional[str] = None,
-) -> Tuple[Dict[str, str], List[Link]]:
+) -> tuple[dict[str, str], list[Link]]:
     """
     .. versionadded:: 0.7.0
 
     Parse an HTML page from a simple repository and return a ``(metadata,
     links)`` pair.
 
-    The ``metadata`` element is a ``Dict[str, str]``.  Currently, the only key
+    The ``metadata`` element is a ``dict[str, str]``.  Currently, the only key
     that may appear in it is ``"repository_version"``, which maps to the
     repository version reported by the HTML page in accordance with :pep:`629`.
     If the HTML page does not contain a repository version, this key is absent
@@ -34,7 +35,7 @@ def parse_repo_links(
     :param Optional[str] from_encoding: an optional hint to Beautiful Soup as
         to the encoding of ``html`` when it is `bytes` (usually the ``charset``
         parameter of the response's :mailheader:`Content-Type` header)
-    :rtype: Tuple[Dict[str, str], List[Link]]
+    :rtype: tuple[dict[str, str], list[Link]]
     :raises UnsupportedRepoVersionError: if the repository version has a
         greater major component than the supported repository version
     """
@@ -67,7 +68,7 @@ def parse_repo_links(
 
 def parse_repo_project_page(
     project: str,
-    html: Union[str, bytes],
+    html: str | bytes,
     base_url: Optional[str] = None,
     from_encoding: Optional[str] = None,
 ) -> ProjectPage:
@@ -175,8 +176,7 @@ def parse_repo_project_response(project: str, r: requests.Response) -> ProjectPa
 
 
 def parse_repo_index_page(
-    html: Union[str, bytes],
-    from_encoding: Optional[str] = None,
+    html: str | bytes, from_encoding: Optional[str] = None
 ) -> IndexPage:
     """
     .. versionadded:: 0.7.0
