@@ -13,8 +13,7 @@ pypi-simple — PyPI Simple Repository API client library
 .. toctree::
     :hidden:
 
-    high-level-api
-    low-level-api
+    api
     changelog
 
 ``pypi-simple`` is a client library for the Python Simple Repository API as
