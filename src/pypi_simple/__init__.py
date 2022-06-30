@@ -28,7 +28,7 @@ SUPPORTED_REPOSITORY_VERSION: str = "1.0"
 
 from .classes import DistributionPackage, IndexPage, Link, ProjectPage
 from .client import PyPISimple
-from .filenames import parse_filename
+from .filenames import UnparsableFilenameError, parse_filename
 from .parse_repo import (
     parse_repo_index_json,
     parse_repo_index_page,
@@ -60,6 +60,7 @@ __all__ = [
     "PyPISimple",
     "SUPPORTED_REPOSITORY_VERSION",
     "UnexpectedRepoVersionWarning",
+    "UnparsableFilenameError",
     "UnsupportedContentTypeError",
     "UnsupportedRepoVersionError",
     "parse_filename",

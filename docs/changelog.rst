@@ -20,6 +20,8 @@ v1.0.0 (in development)
 - Replaced `DistributionPackage.yanked` with separate
   `~DistributionPackage.is_yanked` and `~DistributionPackage.yanked_reason`
   attributes
+- `parse_filename()` now raises an `UnparsableFilenameError` on unparsable
+  filenames instead of returning a triple of `None`\s
 
 
 v0.10.0 (2022-06-30)

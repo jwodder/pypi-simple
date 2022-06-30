@@ -3,7 +3,7 @@ from dataclasses import dataclass
 import re
 from typing import Any, Optional
 from urllib.parse import urlparse, urlunparse
-from .filenames import parse_filename
+from .filenames import UnparsableFilenameError, parse_filename
 from .util import basejoin
 
 
@@ -131,7 +131,12 @@ class DistributionPackage:
                 assert isinstance(value, str)
             return value
 
-        project, version, pkg_type = parse_filename(link.text, project_hint)
+        try:
+            project, version, pkg_type = parse_filename(link.text, project_hint)
+        except UnparsableFilenameError:
+            project = None
+            version = None
+            pkg_type = None
         urlbits = urlparse(link.url)
         dgst_name, _, dgst_value = urlbits.fragment.partition("=")
         digests = {dgst_name: dgst_value} if dgst_value else {}
@@ -191,7 +196,12 @@ class DistributionPackage:
             raise TypeError(
                 f"JSON file details object is {type(data)} instead of a dict"
             )
-        project, version, pkg_type = parse_filename(data["filename"], project_hint)
+        try:
+            project, version, pkg_type = parse_filename(data["filename"], project_hint)
+        except UnparsableFilenameError:
+            project = None
+            version = None
+            pkg_type = None
         yanked = data.get("yanked", False)
         yanked_reason: Optional[str]
         if isinstance(yanked, str):

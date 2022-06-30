@@ -1,7 +1,6 @@
 from __future__ import annotations
-from typing import Optional
 import pytest
-from pypi_simple import parse_filename
+from pypi_simple import UnparsableFilenameError, parse_filename
 
 #: Filenames that can be parsed correctly with or without a ``project_hint``
 SIMPLE_FILENAMES = [
@@ -316,70 +315,63 @@ SIMPLE_FILENAMES = [
         "winappdbg",
         ("winappdbg", "1.4", "wininst"),
     ),
-    # Invalid:
+]
+
+INVALID_FILENAMES = [
     # Invalid package name:
-    ("aa utility package-0.1.tar.gz", "aa-utility-package", (None, None, None)),
-    ("jvc-projector tools-0.1.tar.gz", "jvc-projector-tools", (None, None, None)),
-    ("Pomodoro+-1.0.tar.gz", "Pomodoro", (None, None, None)),
-    ("pypol_-0.2.linux-i686.exe", "pypol2", (None, None, None)),
-    ("pypol_-0.3.win32.exe", "pypol2", (None, None, None)),
-    ("pypol_-0.4.tar.gz", "pypol2", (None, None, None)),
-    ("pypol_-0.5-1.noarch.rpm", "pypol2", (None, None, None)),
-    ("pypol_-0.5-py2.6.egg", "pypol2", (None, None, None)),
-    ("qcodes_-0.1.0-py3-none-any.whl", "qcodes", (None, None, None)),
+    ("aa utility package-0.1.tar.gz", "aa-utility-package"),
+    ("jvc-projector tools-0.1.tar.gz", "jvc-projector-tools"),
+    ("Pomodoro+-1.0.tar.gz", "Pomodoro"),
+    ("pypol_-0.2.linux-i686.exe", "pypol2"),
+    ("pypol_-0.3.win32.exe", "pypol2"),
+    ("pypol_-0.4.tar.gz", "pypol2"),
+    ("pypol_-0.5-1.noarch.rpm", "pypol2"),
+    ("pypol_-0.5-py2.6.egg", "pypol2"),
+    ("qcodes_-0.1.0-py3-none-any.whl", "qcodes"),
     # Invalid version:
-    (
-        "AppValidationAutomation-0[1][1].1.tar.gz",
-        "AppValidationAutomation",
-        (None, None, None),
-    ),
-    ("caosz-1,0,0.tar.gz", "caosz", (None, None, None)),
-    ("CROC-1.0.60:61.tar.gz", "CROC", (None, None, None)),
-    ("Geraldo-0.2-alpha(5).tar.gz", "Geraldo", (None, None, None)),
-    ("limnoria-2013-01-21T20:33:09+0100.tar.gz", "limnoria", (None, None, None)),
-    ("Pegl-0.1a3~1.4.tar.gz", "Pegl", (None, None, None)),
-    ("pyjamas-0.8.1~+alpha1.tar.bz2", "pyjamas", (None, None, None)),
-    ("thrivext-0.0.3    .tar.gz", "thrivext", (None, None, None)),
+    ("AppValidationAutomation-0[1][1].1.tar.gz", "AppValidationAutomation"),
+    ("caosz-1,0,0.tar.gz", "caosz"),
+    ("CROC-1.0.60:61.tar.gz", "CROC"),
+    ("Geraldo-0.2-alpha(5).tar.gz", "Geraldo"),
+    ("limnoria-2013-01-21T20:33:09+0100.tar.gz", "limnoria"),
+    ("Pegl-0.1a3~1.4.tar.gz", "Pegl"),
+    ("pyjamas-0.8.1~+alpha1.tar.bz2", "pyjamas"),
+    ("thrivext-0.0.3    .tar.gz", "thrivext"),
     # No version:
-    ("500.tar.bz2", "appwsgi", (None, None, None)),
-    ("alexander.tar.gz", "alexander", (None, None, None)),
+    ("500.tar.bz2", "appwsgi"),
+    ("alexander.tar.gz", "alexander"),
     # Sdist with invalid name-version separator:
-    ("appwsgi 667.tar.bz2", "appwsgi", (None, None, None)),
+    ("appwsgi 667.tar.bz2", "appwsgi"),
     # Wheel without ABI tag:
     (
         "azure_iothub_service_client-1.1.0.0-py2-win32.whl",
         "azure-iothub-service-client",
-        (None, None, None),
     ),
     # rpm with invalid release-architecture separator:
-    ("btk-0.3.0-1_i686.rpm", "btk", (None, None, None)),
-    ("btk-0.3.0-1_x86_64.rpm", "btk", (None, None, None)),
+    ("btk-0.3.0-1_i686.rpm", "btk"),
+    ("btk-0.3.0-1_x86_64.rpm", "btk"),
     # Egg with invalid pyver-platform separator:
-    ("btk-0.3.0-py2.7_macosx-10.7-intel.egg", "btk", (None, None, None)),
+    ("btk-0.3.0-py2.7_macosx-10.7-intel.egg", "btk"),
     # Wininst with invalid version-platform separator:
-    ("btk-0.3.0_win32.exe", "btk", (None, None, None)),
-    ("l5x-1.2-win32.exe", "l5x", (None, None, None)),
+    ("btk-0.3.0_win32.exe", "btk"),
+    ("l5x-1.2-win32.exe", "l5x"),
     # Invalid extension:
-    ("pip-18.0.tar.gz.txt", "pip", (None, None, None)),
-    ("pip-18.0.txt", "pip", (None, None, None)),
+    ("pip-18.0.tar.gz.txt", "pip"),
+    ("pip-18.0.txt", "pip"),
     # MSI without a platform:
-    ("psifas-0.3.msi", "psifas", (None, None, None)),
+    ("psifas-0.3.msi", "psifas"),
     # MSI with invalid version-platform separator:
-    ("pyftpsync-1.1.0-win32.msi", "pyftpsync", (None, None, None)),
+    ("pyftpsync-1.1.0-win32.msi", "pyftpsync"),
     # Egg with hyphen in project name:
-    ("pypi-simple-0.1.0.dev1-py3.5.egg", "pypi-simple", (None, None, None)),
+    ("pypi-simple-0.1.0.dev1-py3.5.egg", "pypi-simple"),
     # rpm without a release or architecture:
-    ("streamtuner2-2.1.9_beta1.rpm", "streamtuner2", (None, None, None)),
-    ("streamtuner2-2.2.0.rpm", "streamtuner2", (None, None, None)),
+    ("streamtuner2-2.1.9_beta1.rpm", "streamtuner2"),
+    ("streamtuner2-2.2.0.rpm", "streamtuner2"),
     # Sdist with invalid name-version separator:
-    ("testmanager.1.1.1.tar.gz", "TestManager", (None, None, None)),
-    ("TestManager_1.2.0.tar.gz", "TestManager", (None, None, None)),
+    ("testmanager.1.1.1.tar.gz", "TestManager"),
+    ("TestManager_1.2.0.tar.gz", "TestManager"),
     # Egg with too many components in pyver string:
-    (
-        "xrayutilities-1.4.0-py2.7.10-win-amd64.egg",
-        "xrayutilities",
-        (None, None, None),
-    ),
+    ("xrayutilities-1.4.0-py2.7.10-win-amd64.egg", "xrayutilities"),
 ]
 
 
@@ -387,9 +379,7 @@ SIMPLE_FILENAMES = [
     "filename,expected",
     [(filename, expected) for filename, _, expected in SIMPLE_FILENAMES],
 )
-def test_parse_filename_no_hint(
-    filename: str, expected: tuple[Optional[str], Optional[str], Optional[str]]
-) -> None:
+def test_parse_filename_no_hint(filename: str, expected: tuple[str, str, str]) -> None:
     assert parse_filename(filename) == expected
 
 
@@ -422,3 +412,19 @@ def test_parse_filename_project_hint(
     filename: str, project_hint: str, expected: tuple[str, str, str]
 ) -> None:
     assert parse_filename(filename, project_hint=project_hint) == expected
+
+
+@pytest.mark.parametrize("filename", [filename for filename, _ in INVALID_FILENAMES])
+def test_unparsable_filename_no_hint(filename: str) -> None:
+    with pytest.raises(UnparsableFilenameError) as excinfo:
+        parse_filename(filename)
+    assert excinfo.value.filename == filename
+    assert str(excinfo.value) == f"Cannot parse package filename: {filename!r}"
+
+
+@pytest.mark.parametrize("filename,project_hint", INVALID_FILENAMES)
+def test_unparsable_filename_project_hint(filename: str, project_hint: str) -> None:
+    with pytest.raises(UnparsableFilenameError) as excinfo:
+        parse_filename(filename, project_hint=project_hint)
+    assert excinfo.value.filename == filename
+    assert str(excinfo.value) == f"Cannot parse package filename: {filename!r}"

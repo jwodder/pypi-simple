@@ -233,7 +233,7 @@ class PyPISimple:
         :param bool keep_on_error:
             whether to keep (true) or delete (false) the downloaded file if an
             error occurs
-        :param progress: a callable for contructing a progress tracker
+        :param progress: a callable for constructing a progress tracker
         :param timeout: optional timeout to pass to the ``requests`` call
         :type timeout: float | tuple[float,float] | None
         :raises requests.HTTPError: if the repository responds with an HTTP

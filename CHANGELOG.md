@@ -12,6 +12,8 @@ v1.0.0 (in development)
   changed from NamedTuples to dataclasses
 - Replaced `DistributionPackage.yanked` with separate `is_yanked` and
   `yanked_reason` attributes
+- `parse_filename()` now raises an `UnparsableFilenameError` on unparsable
+  filenames instead of returning a triple of `None`s
 
 v0.10.0 (2022-06-30)
 --------------------

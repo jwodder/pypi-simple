@@ -80,7 +80,7 @@ BAD_PACKAGE_RGXN = [
 
 def parse_filename(
     filename: str, project_hint: Optional[str] = None
-) -> tuple[str, str, str] | tuple[None, None, None]:
+) -> tuple[str, str, str]:
     """
     Given the filename of a distribution package, returns a triple of the
     project name, project version, and package type.  The name and version are
@@ -97,8 +97,6 @@ def parse_filename(
     - ``'wheel'``
     - ``'wininst'``
 
-    If the filename cannot be parsed, ``(None, None, None)`` is returned.
-
     Note that some filenames (e.g., :file:`1-2-3.tar.gz`) may be ambiguous as
     to which part is the project name and which is the version.  In order to
     resolve the ambiguity, the expected value for the project name (*modulo*
@@ -112,7 +110,8 @@ def parse_filename(
     :param Optional[str] project_hint: Optionally, the expected value for the
         project name (usually the name of the project page on which the
         filename was found).  The name does not need to be normalized.
-    :rtype: tuple[str, str, str] | tuple[None, None, None]
+    :rtype: tuple[str, str, str]
+    :raises UnparsableFilenameError: if the filename cannot be parsed
     """
     for pkg_type, rgx in GOOD_PACKAGE_RGXN:
         m = rgx.match(filename)
@@ -137,4 +136,13 @@ def parse_filename(
         m = rgx.match(filename)
         if m:
             return (m.group("project"), m.group("version"), pkg_type)
-    return (None, None, None)
+    raise UnparsableFilenameError(filename)
+
+
+class UnparsableFilenameError(ValueError):
+    def __init__(self, filename: str) -> None:
+        #: The unparsable filename
+        self.filename = filename
+
+    def __str__(self) -> str:
+        return f"Cannot parse package filename: {self.filename!r}"
