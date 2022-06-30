@@ -6,7 +6,7 @@ from urllib.parse import urlparse, urlunparse
 from mailbits import ContentType
 import requests
 from .filenames import UnparsableFilenameError, parse_filename
-from .html import Link, parse_repo_links
+from .html import Link, RepositoryPage
 from .util import UnsupportedContentTypeError, basejoin, check_repo_version
 
 
@@ -110,13 +110,6 @@ class DistributionPackage:
             link was found).  The name does not need to be normalized.
         :rtype: DistributionPackage
         """
-
-        def get_str_attrib(attrib: str) -> Optional[str]:
-            value = link.attrs.get(attrib)
-            if value is not None:
-                assert isinstance(value, str)
-            return value
-
         try:
             project, version, pkg_type = parse_filename(link.text, project_hint)
         except UnparsableFilenameError:
@@ -128,12 +121,12 @@ class DistributionPackage:
         digests = {dgst_name: dgst_value} if dgst_value else {}
         url = urlunparse(urlbits._replace(fragment=""))
         has_sig: Optional[bool]
-        gpg_sig = get_str_attrib("data-gpg-sig")
+        gpg_sig = link.get_str_attrib("data-gpg-sig")
         if gpg_sig is not None:
             has_sig = gpg_sig.lower() == "true"
         else:
             has_sig = None
-        mddigest = get_str_attrib("data-dist-info-metadata")
+        mddigest = link.get_str_attrib("data-dist-info-metadata")
         metadata_digests: Optional[dict[str, str]]
         if mddigest is not None:
             metadata_digests = {}
@@ -142,12 +135,12 @@ class DistributionPackage:
                 metadata_digests[m[1]] = m[2]
         else:
             metadata_digests = None
-        yanked_reason = get_str_attrib("data-yanked")
+        yanked_reason = link.get_str_attrib("data-yanked")
         return cls(
             filename=link.text,
             url=url,
             has_sig=has_sig,
-            requires_python=get_str_attrib("data-requires-python"),
+            requires_python=link.get_str_attrib("data-requires-python"),
             project=project,
             version=version,
             package_type=pkg_type,
@@ -273,11 +266,13 @@ class ProjectPage:
             if the repository version has a greater major component than the
             supported repository version
         """
-        metadata, links = parse_repo_links(html, base_url, from_encoding)
+        page = RepositoryPage.from_html(html, base_url, from_encoding)
         return cls(
             project=project,
-            packages=[DistributionPackage.from_link(link, project) for link in links],
-            repository_version=metadata.get("repository_version"),
+            packages=[
+                DistributionPackage.from_link(link, project) for link in page.links
+            ],
+            repository_version=page.repository_version,
             last_serial=None,
         )
 
@@ -394,10 +389,10 @@ class IndexPage:
             if the repository version has a greater major component than the
             supported repository version
         """
-        metadata, links = parse_repo_links(html, from_encoding=from_encoding)
+        page = RepositoryPage.from_html(html, from_encoding=from_encoding)
         return cls(
-            projects=[link.text for link in links],
-            repository_version=metadata.get("repository_version"),
+            projects=[link.text for link in page.links],
+            repository_version=page.repository_version,
             last_serial=None,
         )
 

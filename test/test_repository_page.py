@@ -4,13 +4,13 @@ import pytest
 from pypi_simple import (
     SUPPORTED_REPOSITORY_VERSION,
     Link,
+    RepositoryPage,
     UnsupportedRepoVersionError,
-    parse_repo_links,
 )
 
 
 @pytest.mark.parametrize(
-    "html,base_url,links",
+    "html,base_url,page",
     [
         (
             """
@@ -24,9 +24,9 @@ from pypi_simple import (
             </html>
         """,
             None,
-            (
-                {},
-                [
+            RepositoryPage(
+                repository_version=None,
+                links=[
                     Link("link1", "one.html", {"href": "one.html"}),
                     Link("link-two", "two.html", {"href": "two.html"}),
                 ],
@@ -44,9 +44,9 @@ from pypi_simple import (
             </html>
         """,
             "https://test.nil/base/",
-            (
-                {},
-                [
+            RepositoryPage(
+                repository_version=None,
+                links=[
                     Link(
                         "link1",
                         "https://test.nil/base/one.html",
@@ -75,9 +75,9 @@ from pypi_simple import (
             </html>
         """,
             None,
-            (
-                {},
-                [
+            RepositoryPage(
+                repository_version=None,
+                links=[
                     Link(
                         "link1",
                         "https://nil.test/path/one.html",
@@ -106,9 +106,9 @@ from pypi_simple import (
             </html>
         """,
             None,
-            (
-                {},
-                [
+            RepositoryPage(
+                repository_version=None,
+                links=[
                     Link("link1", "one.html", {"href": "one.html"}),
                     Link("link-two", "two.html", {"href": "two.html"}),
                 ],
@@ -130,9 +130,9 @@ from pypi_simple import (
             </html>
         """,
             None,
-            (
-                {},
-                [
+            RepositoryPage(
+                repository_version=None,
+                links=[
                     Link(
                         "link1",
                         "https://nil.test/path/one.html",
@@ -164,9 +164,9 @@ from pypi_simple import (
             </html>
         """,
             None,
-            (
-                {},
-                [
+            RepositoryPage(
+                repository_version=None,
+                links=[
                     Link(
                         "link1",
                         "https://nil.test/path/one.html",
@@ -195,9 +195,9 @@ from pypi_simple import (
             </html>
         """,
             "https://test.nil/base/",
-            (
-                {},
-                [
+            RepositoryPage(
+                repository_version=None,
+                links=[
                     Link(
                         "link1",
                         "https://nil.test/path/one.html",
@@ -226,9 +226,9 @@ from pypi_simple import (
             </html>
         """,
             "https://test.nil/base/",
-            (
-                {},
-                [
+            RepositoryPage(
+                repository_version=None,
+                links=[
                     Link(
                         "link1",
                         "https://test.nil/base/subdir/one.html",
@@ -257,9 +257,9 @@ from pypi_simple import (
             </html>
         """,
             None,
-            (
-                {},
-                [
+            RepositoryPage(
+                repository_version=None,
+                links=[
                     Link(
                         "link1",
                         "https://nil.test/path/one.html",
@@ -287,9 +287,9 @@ from pypi_simple import (
             </html>
         """,
             None,
-            (
-                {},
-                [
+            RepositoryPage(
+                repository_version=None,
+                links=[
                     Link("whitespaced", "one.html", {"href": "one.html"}),
                     Link("multiple words", "two.html", {"href": "two.html"}),
                     Link(
@@ -313,9 +313,9 @@ from pypi_simple import (
             </html>
         """,
             None,
-            (
-                {},
-                [Link("link1", "one.html", {"href": "one.html"})],
+            RepositoryPage(
+                repository_version=None,
+                links=[Link("link1", "one.html", {"href": "one.html"})],
             ),
         ),
         (
@@ -325,9 +325,9 @@ from pypi_simple import (
             <span href="zero.html">not-a-link</span>
         """,
             None,
-            (
-                {},
-                [
+            RepositoryPage(
+                repository_version=None,
+                links=[
                     Link("link1", "one.html", {"href": "one.html"}),
                     Link("link-two", "two.html", {"href": "two.html"}),
                 ],
@@ -341,9 +341,9 @@ from pypi_simple import (
             ' data-requires-python="&gt;=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*,'
             ' &lt;4">txtble-0.1.0-py2.py3-none-any.whl</a><br/>',
             None,
-            (
-                {},
-                [
+            RepositoryPage(
+                repository_version=None,
+                links=[
                     Link(
                         "txtble-0.1.0-py2.py3-none-any.whl",
                         "https://files.pythonhosted.org/packages/05/35/aa8dc452b75"
@@ -366,9 +366,9 @@ from pypi_simple import (
             '<a href="https://test.nil/simple/files/project-0.1.0-p&#xFF;42-none'
             '-any.whl">project-0.1.0-p&#xFF;42-none-any.whl</a>',
             None,
-            (
-                {},
-                [
+            RepositoryPage(
+                repository_version=None,
+                links=[
                     Link(
                         "project-0.1.0-p\xFF42-none-any.whl",
                         "https://test.nil/simple/files/project-0.1.0-p\xFF42-none"
@@ -385,9 +385,9 @@ from pypi_simple import (
             '<a href="https://test.nil/simple/files/project-0.1.0-p&yuml;42-none'
             '-any.whl">project-0.1.0-p&yuml;42-none-any.whl</a>',
             None,
-            (
-                {},
-                [
+            RepositoryPage(
+                repository_version=None,
+                links=[
                     Link(
                         "project-0.1.0-p\xFF42-none-any.whl",
                         "https://test.nil/simple/files/project-0.1.0-p\xFF42-none"
@@ -415,9 +415,9 @@ from pypi_simple import (
             </html>
         """,
             None,
-            (
-                {"repository_version": "1.0"},
-                [
+            RepositoryPage(
+                repository_version="1.0",
+                links=[
                     Link("link1", "one.html", {"href": "one.html"}),
                     Link("link-two", "two.html", {"href": "two.html"}),
                 ],
@@ -438,9 +438,9 @@ from pypi_simple import (
             </html>
         """,
             None,
-            (
-                {},
-                [
+            RepositoryPage(
+                repository_version=None,
+                links=[
                     Link("link1", "one.html", {"href": "one.html"}),
                     Link("link-two", "two.html", {"href": "two.html"}),
                 ],
@@ -461,9 +461,9 @@ from pypi_simple import (
             </html>
         """,
             None,
-            (
-                {},
-                [
+            RepositoryPage(
+                repository_version=None,
+                links=[
                     Link("link1", "one.html", {"href": "one.html"}),
                     Link("link-two", "two.html", {"href": "two.html"}),
                 ],
@@ -485,9 +485,9 @@ from pypi_simple import (
             </html>
         """,
             None,
-            (
-                {"repository_version": "1.0"},
-                [
+            RepositoryPage(
+                repository_version="1.0",
+                links=[
                     Link("link1", "one.html", {"href": "one.html"}),
                     Link("link-two", "two.html", {"href": "two.html"}),
                 ],
@@ -495,15 +495,13 @@ from pypi_simple import (
         ),
     ],
 )
-def test_parse_repo_links(
-    html: str, base_url: Optional[str], links: tuple[dict[str, str], list[Link]]
-) -> None:
-    assert parse_repo_links(html, base_url) == links
+def test_from_html(html: str, base_url: Optional[str], page: RepositoryPage) -> None:
+    assert RepositoryPage.from_html(html, base_url) == page
 
 
-def test_parse_repo_links_unsupported_version() -> None:
+def test_from_html_unsupported_version() -> None:
     with pytest.raises(UnsupportedRepoVersionError) as excinfo:
-        parse_repo_links(
+        RepositoryPage.from_html(
             """
             <html>
             <head>

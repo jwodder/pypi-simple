@@ -656,8 +656,8 @@ def test_parse_links_stream_iterable_bytes(
         """,
             "42.0",
         ),
-        ### TODO: This one's behavior differs from parse_repo_links; should
-        ### they be aligned?
+        ### TODO: This one's behavior differs from RepositoryPage.from_html();
+        ### should they be aligned?
         (
             """
             <html>

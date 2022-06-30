@@ -29,7 +29,7 @@ SUPPORTED_REPOSITORY_VERSION: str = "1.0"
 from .classes import DistributionPackage, IndexPage, ProjectPage
 from .client import NoSuchProjectError, PyPISimple
 from .filenames import UnparsableFilenameError, parse_filename
-from .html import Link, parse_repo_links
+from .html import Link, RepositoryPage
 from .html_stream import parse_links_stream, parse_links_stream_response
 from .progress import ProgressTracker, tqdm_progress_factory
 from .util import (
@@ -51,6 +51,7 @@ __all__ = [
     "ProgressTracker",
     "ProjectPage",
     "PyPISimple",
+    "RepositoryPage",
     "SUPPORTED_REPOSITORY_VERSION",
     "UnexpectedRepoVersionWarning",
     "UnparsableFilenameError",
@@ -59,6 +60,5 @@ __all__ = [
     "parse_filename",
     "parse_links_stream",
     "parse_links_stream_response",
-    "parse_repo_links",
     "tqdm_progress_factory",
 ]

@@ -5,7 +5,7 @@ Low-Level Utilities
 
 Parsing Simple Repository Pages
 -------------------------------
-.. autofunction:: parse_repo_links
+.. autoclass:: RepositoryPage()
 .. autoclass:: Link()
 
 Streaming Parsers

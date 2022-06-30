@@ -31,10 +31,13 @@ v1.0.0 (in development)
   - ``parse_repo_index_page()`` → `IndexPage.from_html()`
   - ``parse_repo_index_json()`` → `IndexPage.from_pep691_data()`
   - ``parse_repo_index_response()`` → `IndexPage.from_response()`
+  - ``parse_repo_links()`` → `RepositoryPage.from_html()`
   - ``parse_repo_project_page()`` → `ProjectPage.from_html()`
   - ``parse_repo_project_json()`` → `ProjectPage.from_pep691_data()`
   - ``parse_repo_project_response()`` → `ProjectPage.from_response()`
 
+- Add a `RepositoryPage` class for representing the return value of
+  ``parse_repo_links()`` (now called `RepositoryPage.from_html()`)
 
 v0.10.0 (2022-06-30)
 --------------------
@@ -99,8 +102,8 @@ v0.7.0 (2020-10-15)
 
 - New utility functions:
 
-  - `parse_repo_links()` — Parses an HTML page and returns a pair of repository
-    metadata and a list of `Link` objects
+  - ``parse_repo_links()`` — Parses an HTML page and returns a pair of
+    repository metadata and a list of `Link` objects
   - ``parse_repo_project_page()`` — Parses a project page and returns a
     `ProjectPage` instance
   - ``parse_repo_project_response()`` — Parses a `requests.Response` object
