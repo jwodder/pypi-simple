@@ -14,8 +14,6 @@ def parse_repo_links(
     from_encoding: Optional[str] = None,
 ) -> tuple[dict[str, str], list[Link]]:
     """
-    .. versionadded:: 0.7.0
-
     Parse an HTML page from a simple repository and return a ``(metadata,
     links)`` pair.
 
@@ -73,8 +71,6 @@ def parse_repo_project_page(
     from_encoding: Optional[str] = None,
 ) -> ProjectPage:
     """
-    .. versionadded:: 0.7.0
-
     Parse a project page from a simple repository into a `ProjectPage`.  Note
     that the `~ProjectPage.last_serial` attribute will be `None`.
 
@@ -101,8 +97,6 @@ def parse_repo_project_page(
 
 def parse_repo_project_json(data: Any, base_url: Optional[str] = None) -> ProjectPage:
     """
-    .. versionadded:: 0.10.0
-
     Parse a project page from an object decoded from an
     :mimetype:`application/vnd.pypi.simple.v1+json` response (See :pep:`691`).
     The `~ProjectPage.last_serial` attribute will be set to the value of the
@@ -137,8 +131,6 @@ def parse_repo_project_json(data: Any, base_url: Optional[str] = None) -> Projec
 
 def parse_repo_project_response(project: str, r: requests.Response) -> ProjectPage:
     """
-    .. versionadded:: 0.7.0
-
     Parse a project page from a `requests.Response` returned from a
     (non-streaming) request to a simple repository, and return a `ProjectPage`.
 
@@ -179,8 +171,6 @@ def parse_repo_index_page(
     html: str | bytes, from_encoding: Optional[str] = None
 ) -> IndexPage:
     """
-    .. versionadded:: 0.7.0
-
     Parse an index/root page from a simple repository into an `IndexPage`.
     Note that the `~IndexPage.last_serial` attribute will be `None`.
 
@@ -203,8 +193,6 @@ def parse_repo_index_page(
 
 def parse_repo_index_json(data: Any) -> IndexPage:
     """
-    .. versionadded:: 0.10.0
-
     Parse an index/root page from an object decoded from an
     :mimetype:`application/vnd.pypi.simple.v1+json` response (See :pep:`691`).
     The `~IndexPage.last_serial` attribute will be set to the value of the
@@ -233,8 +221,6 @@ def parse_repo_index_json(data: Any) -> IndexPage:
 
 def parse_repo_index_response(r: requests.Response) -> IndexPage:
     """
-    .. versionadded:: 0.7.0
-
     Parse an index page from a `requests.Response` returned from a
     (non-streaming) request to a simple repository, and return an `IndexPage`.
 

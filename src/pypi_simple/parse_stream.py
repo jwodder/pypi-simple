@@ -112,8 +112,6 @@ def parse_links_stream_response(
     r: requests.Response, chunk_size: int = 65535
 ) -> Iterator[Link]:
     """
-    .. versionadded:: 0.7.0
-
     Parse an HTML page from a streaming `requests.Response` object and yield
     each hyperlink encountered in the document as a `Link` object.
 
@@ -138,8 +136,6 @@ def parse_links_stream(
     http_charset: Optional[str] = None,
 ) -> Iterator[Link]:
     """
-    .. versionadded:: 0.7.0
-
     Parse an HTML page given as an iterable of `bytes` or `str` and yield each
     hyperlink encountered in the document as a `Link` object.
 
@@ -186,8 +182,6 @@ def iterhtmldecode(
     scan_window: int = 1024,
 ) -> Iterator[str]:
     """
-    .. versionadded:: 0.7.0
-
     Given an HTML document in the form of an iterable of `bytes`, try to
     determine the document's encoding while consuming as little of the iterable
     as necessary, and then decode the elements of the iterable one at a time.
@@ -266,8 +260,6 @@ def iterdecode(
     errors: str = "strict",
 ) -> Iterator[str]:
     """
-    .. versionadded:: 0.7.0
-
     Decode an iterable of `bytes` that together form a single document one
     element at a time.
 

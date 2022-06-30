@@ -52,8 +52,6 @@ class UnsupportedRepoVersionError(Exception):
 
 class UnexpectedRepoVersionWarning(UserWarning):
     """
-    .. versionadded:: 0.10.0
-
     Emitted upon encountering a simple repository whose repository version
     (:pep:`629`) has a greater minor version components than the maximum
     supported repository version (`SUPPORTED_REPOSITORY_VERSION`).
@@ -141,8 +139,6 @@ class DigestChecker(AbstractDigestChecker):
 
 class NoDigestsError(ValueError):
     """
-    .. versionadded:: 0.10.0
-
     Raised by `PyPISimple.download_package()` with ``verify=True`` when the
     given package does not have any digests with known algorithms
     """
@@ -152,8 +148,6 @@ class NoDigestsError(ValueError):
 
 class DigestMismatchError(ValueError):
     """
-    .. versionadded:: 0.10.0
-
     Raised by `PyPISimple.download_package()` with ``verify=True`` when the
     digest of the downloaded file does not match the expected value
     """

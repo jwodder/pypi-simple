@@ -59,15 +59,6 @@ class PyPISimple:
     automatically close its session on exit, regardless of where the session
     object came from.
 
-    .. versionchanged:: 0.8.0
-        Now usable as a context manager
-
-    .. versionchanged:: 0.5.0
-        ``session`` argument added
-
-    .. versionchanged:: 0.4.0
-        ``auth`` argument added
-
     :param str endpoint: The base URL of the simple API instance to query;
         defaults to the base URL for PyPI's simple API
 
@@ -112,8 +103,6 @@ class PyPISimple:
         timeout: float | tuple[float, float] | None = None,
     ) -> IndexPage:
         """
-        .. versionadded:: 0.7.0
-
         Fetches the index/root page from the simple repository and returns an
         `IndexPage` instance.
 
@@ -142,8 +131,6 @@ class PyPISimple:
         timeout: float | tuple[float, float] | None = None,
     ) -> Iterator[str]:
         """
-        .. versionadded:: 0.7.0
-
         Returns a generator of names of projects available in the repository.
         The names are not normalized.
 
@@ -181,8 +168,6 @@ class PyPISimple:
         timeout: float | tuple[float, float] | None = None,
     ) -> Optional[ProjectPage]:
         """
-        .. versionadded:: 0.7.0
-
         Fetches the page for the given project from the simple repository and
         returns a `ProjectPage` instance.  Returns `None` if the repository
         responds with a 404.  All other HTTP errors cause a
@@ -227,8 +212,6 @@ class PyPISimple:
         timeout: float | tuple[float, float] | None = None,
     ) -> None:
         """
-        .. versionadded:: 0.10.0
-
         Download the given `DistributionPackage` to the given path.
 
         If an error occurs while downloading or verifying digests, and

@@ -9,11 +9,7 @@ from .util import basejoin
 
 @dataclass
 class Link:
-    """
-    .. versionadded:: 0.7.0
-
-    A hyperlink extracted from an HTML page
-    """
+    """A hyperlink extracted from an HTML page"""
 
     #: The text inside the link tag, with leading & trailing whitespace removed
     #: and with any tags nested inside the link tags ignored
@@ -37,15 +33,6 @@ class DistributionPackage:
     """
     Information about a versioned archive file from which a Python project
     release can be installed
-
-    .. versionchanged:: 0.5.0
-        `yanked` attribute added
-
-    .. versionchanged:: 0.9.0
-        `has_metadata`, `metadata_url`, and `metadata_digests` attributes added
-
-    .. versionchanged:: 0.10.0
-        `digests` attribute added
     """
 
     #: The basename of the package file
@@ -53,9 +40,6 @@ class DistributionPackage:
 
     #: The URL from which the package file can be downloaded, with any hash
     #: digest fragment removed
-    #:
-    #: .. versionchanged:: 0.10.0
-    #:     Hash digest fragments are now stripped from the URL
     url: str
 
     #: The name of the project (as extracted from the filename), or `None` if
@@ -84,10 +68,6 @@ class DistributionPackage:
 
     #: Whether the package file is accompanied by a PGP signature file.  This
     #: is `None` if the package repository does not report such information.
-    #:
-    #: .. versionchanged:: 0.7.0
-    #:     Will now be `None` if not specified by repository; previously would
-    #:     be `False` in such a situation
     has_sig: Optional[bool]
 
     #: If the package file has been "yanked" from the package repository
@@ -102,9 +82,6 @@ class DistributionPackage:
 
     #: Whether the package file is accompanied by a Core Metadata file.  This
     #: is `None` if the package repository does not report such information.
-    #:
-    #: .. versionchanged:: 0.10.0
-    #:     Will now be `None` if not specified by repository
     has_metadata: Optional[bool] = None
 
     #: If the package repository provides a Core Metadata file for the package,
@@ -118,10 +95,6 @@ class DistributionPackage:
         """
         The URL of the package file's PGP signature file, if it exists; cf.
         `has_sig`
-
-        .. versionchanged:: 0.6.0
-            Now always defined; would previously be `None` if `has_sig` was
-            false
         """
         u = urlparse(self.url)
         return urlunparse((u[0], u[1], u[2] + ".asc", "", "", ""))
@@ -131,10 +104,6 @@ class DistributionPackage:
         """
         The URL of the package file's Core Metadata file, if it exists; cf.
         `has_metadata`
-
-        .. versionchanged:: 0.10.0
-            Now always defined; would previously be `None` if `has_metadata`
-            was false
         """
         u = urlparse(self.url)
         return urlunparse((u[0], u[1], u[2] + ".metadata", "", "", ""))
@@ -144,8 +113,6 @@ class DistributionPackage:
         cls, link: Link, project_hint: Optional[str] = None
     ) -> "DistributionPackage":
         """
-        .. versionadded:: 0.7.0
-
         Construct a `DistributionPackage` from a `Link` on a project page.
 
         :param Link link: a link parsed from a project page
@@ -203,8 +170,6 @@ class DistributionPackage:
         base_url: Optional[str] = None,
     ) -> "DistributionPackage":
         """
-        .. versionadded:: 0.10.0
-
         Construct a `DistributionPackage` from an object taken from the
         ``"files"`` field of a :pep:`691` project detail response.
 
@@ -263,11 +228,7 @@ class DistributionPackage:
 
 @dataclass
 class ProjectPage:
-    """
-    .. versionadded:: 0.7.0
-
-    A parsed project page from a simple repository
-    """
+    """A parsed project page from a simple repository"""
 
     #: The name of the project the page is for
     project: str
@@ -286,11 +247,7 @@ class ProjectPage:
 
 @dataclass
 class IndexPage:
-    """
-    .. versionadded:: 0.7.0
-
-    A parsed index/root page from a simple repository
-    """
+    """A parsed index/root page from a simple repository"""
 
     #: The project names listed in the index.  The names are not normalized.
     projects: list[str]
