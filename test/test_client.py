@@ -767,7 +767,7 @@ class SpyingProgressTracker:
         self.exit_called = False
         self.updates: list[int] = []
 
-    def __enter__(self) -> "SpyingProgressTracker":
+    def __enter__(self) -> SpyingProgressTracker:
         self.enter_called = True
         return self
 

@@ -87,7 +87,7 @@ class PyPISimple:
         if auth is not None:
             self.s.auth = auth
 
-    def __enter__(self) -> "PyPISimple":
+    def __enter__(self) -> PyPISimple:
         return self
 
     def __exit__(

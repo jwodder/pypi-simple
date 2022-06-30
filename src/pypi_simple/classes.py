@@ -118,7 +118,7 @@ class DistributionPackage:
     @classmethod
     def from_link(
         cls, link: Link, project_hint: Optional[str] = None
-    ) -> "DistributionPackage":
+    ) -> DistributionPackage:
         """
         Construct a `DistributionPackage` from a `Link` on a project page.
 
@@ -182,7 +182,7 @@ class DistributionPackage:
         data: Any,
         project_hint: Optional[str] = None,
         base_url: Optional[str] = None,
-    ) -> "DistributionPackage":
+    ) -> DistributionPackage:
         """
         Construct a `DistributionPackage` from an object taken from the
         ``"files"`` field of a :pep:`691` project detail response.

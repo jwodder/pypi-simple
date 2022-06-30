@@ -39,7 +39,7 @@ class ProgressTracker(Protocol):
 
 
 class NullProgressTracker:
-    def __enter__(self) -> "NullProgressTracker":
+    def __enter__(self) -> NullProgressTracker:
         return self
 
     def __exit__(
