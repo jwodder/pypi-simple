@@ -16,6 +16,14 @@ v1.0.0 (in development)
   filenames instead of returning a triple of `None`s
 - `PyPISimple.get_project_page()` now raises a `NoSuchProjectError` on 404
   responses intead of returning `None`
+- The functions for parsing data into `IndexPage` and `ProjectPage` instances
+  have been replaced with classmethods:
+    - `parse_repo_index_page()` → `IndexPage.from_html()`
+    - `parse_repo_index_json()` → `IndexPage.from_pep691_data()`
+    - `parse_repo_index_response()` → `IndexPage.from_response()`
+    - `parse_repo_project_page()` → `ProjectPage.from_html()`
+    - `parse_repo_project_json()` → `ProjectPage.from_pep691_data()`
+    - `parse_repo_project_response()` → `ProjectPage.from_response()`
 
 v0.10.0 (2022-06-30)
 --------------------

@@ -3,29 +3,11 @@ from dataclasses import dataclass
 import re
 from typing import Any, Optional
 from urllib.parse import urlparse, urlunparse
+from mailbits import ContentType
+import requests
 from .filenames import UnparsableFilenameError, parse_filename
-from .util import basejoin
-
-
-@dataclass
-class Link:
-    """A hyperlink extracted from an HTML page"""
-
-    #: The text inside the link tag, with leading & trailing whitespace removed
-    #: and with any tags nested inside the link tags ignored
-    text: str
-
-    #: The URL that the link points to, resolved relative to the URL of the
-    #: source HTML page and relative to the page's ``<base>`` href value, if
-    #: any
-    url: str
-
-    #: A dictionary of attributes set on the link tag (including the unmodified
-    #: ``href`` attribute).  Keys are converted to lowercase.  Most attributes
-    #: have `str` values, but some (referred to as "CDATA list attributes" by
-    #: the HTML spec; e.g., ``"class"``) have values of type ``list[str]``
-    #: instead.
-    attrs: dict[str, str | list[str]]
+from .html import Link, parse_repo_links
+from .util import UnsupportedContentTypeError, basejoin, check_repo_version
 
 
 @dataclass
@@ -262,6 +244,120 @@ class ProjectPage:
     #: returned when fetching the page, or `None` if not specified
     last_serial: Optional[str]
 
+    @classmethod
+    def from_html(
+        cls,
+        project: str,
+        html: str | bytes,
+        base_url: Optional[str] = None,
+        from_encoding: Optional[str] = None,
+    ) -> ProjectPage:
+        """
+        .. versionadded:: 1.0.0
+
+        Parse an HTML project page from a simple repository into a
+        `ProjectPage`.  Note that the `last_serial` attribute will be `None`.
+
+        :param str project: The name of the project whose page is being parsed
+        :param html: the HTML to parse
+        :type html: str or bytes
+        :param Optional[str] base_url:
+            an optional URL to join to the front of the packages' URLs (usually
+            the URL of the page being parsed)
+        :param Optional[str] from_encoding:
+            an optional hint to Beautiful Soup as to the encoding of ``html``
+            when it is `bytes` (usually the ``charset`` parameter of the
+            response's :mailheader:`Content-Type` header)
+        :rtype: ProjectPage
+        :raises UnsupportedRepoVersionError:
+            if the repository version has a greater major component than the
+            supported repository version
+        """
+        metadata, links = parse_repo_links(html, base_url, from_encoding)
+        return cls(
+            project=project,
+            packages=[DistributionPackage.from_link(link, project) for link in links],
+            repository_version=metadata.get("repository_version"),
+            last_serial=None,
+        )
+
+    @classmethod
+    def from_pep691_data(cls, data: Any, base_url: Optional[str] = None) -> ProjectPage:
+        """
+        .. versionadded:: 1.0.0
+
+        Parse an object decoded from an
+        :mimetype:`application/vnd.pypi.simple.v1+json` response (See
+        :pep:`691`) into a `ProjectPage`.  The `last_serial` attribute will be
+        set to the value of the ``.meta._last-serial`` field, if any.
+
+        :param data: The decoded body of the JSON response
+        :param Optional[str] base_url:
+            an optional URL to join to the front of any relative file URLs
+            (usually the URL of the page being parsed)
+        :rtype: ProjectPage
+        :raises TypeError: if ``data`` is not a `dict`
+        :raises UnsupportedRepoVersionError:
+            if the repository version has a greater major component than the
+            supported repository version
+        """
+        if not isinstance(data, dict):
+            raise TypeError("JSON project details response is not a dict")
+        repository_version = data["meta"]["api-version"]
+        check_repo_version(repository_version)
+        try:
+            last_serial = str(data["meta"]["_last-serial"])
+        except KeyError:
+            last_serial = None
+        return ProjectPage(
+            project=data["name"],
+            packages=[
+                DistributionPackage.from_pep691_details(
+                    filedata, data["name"], base_url
+                )
+                for filedata in data["files"]
+            ],
+            repository_version=repository_version,
+            last_serial=last_serial,
+        )
+
+    @classmethod
+    def from_response(cls, project: str, r: requests.Response) -> ProjectPage:
+        """
+        .. versionadded:: 1.0.0
+
+        Parse a project page from a `requests.Response` returned from a
+        (non-streaming) request to a simple repository, and return a
+        `ProjectPage`.
+
+        :param str project: The name of the project whose page is being parsed
+        :param requests.Response r: the response object to parse
+        :rtype: ProjectPage
+        :raises UnsupportedRepoVersionError:
+            if the repository version has a greater major component than the
+            supported repository version
+        :raises UnsupportedContentTypeError:
+            if the response has an unsupported :mailheader:`Content-Type`
+        """
+        ct = ContentType.parse(r.headers.get("content-type", "text/html"))
+        if ct.content_type == "application/vnd.pypi.simple.v1+json":
+            page = cls.from_pep691_data(r.json(), r.url)
+        elif (
+            ct.content_type == "application/vnd.pypi.simple.v1+html"
+            or ct.content_type == "text/html"
+        ):
+            page = cls.from_html(
+                project=project,
+                html=r.content,
+                base_url=r.url,
+                from_encoding=ct.params.get("charset"),
+            )
+        else:
+            raise UnsupportedContentTypeError(r.url, str(ct))
+        if page.last_serial is None:
+            page.last_serial = r.headers.get("X-PyPI-Last-Serial")
+        return page
+
 
 @dataclass
 class IndexPage:
@@ -276,3 +372,93 @@ class IndexPage:
     #: The value of the :mailheader:`X-PyPI-Last-Serial` response header
     #: returned when fetching the page, or `None` if not specified
     last_serial: Optional[str]
+
+    @classmethod
+    def from_html(
+        cls, html: str | bytes, from_encoding: Optional[str] = None
+    ) -> IndexPage:
+        """
+        .. versionadded:: 1.0.0
+
+        Parse an HTML index/root page from a simple repository into an
+        `IndexPage`.  Note that the `last_serial` attribute will be `None`.
+
+        :param html: the HTML to parse
+        :type html: str or bytes
+        :param Optional[str] from_encoding:
+            an optional hint to Beautiful Soup as to the encoding of ``html``
+            when it is `bytes` (usually the ``charset`` parameter of the
+            response's :mailheader:`Content-Type` header)
+        :rtype: IndexPage
+        :raises UnsupportedRepoVersionError:
+            if the repository version has a greater major component than the
+            supported repository version
+        """
+        metadata, links = parse_repo_links(html, from_encoding=from_encoding)
+        return cls(
+            projects=[link.text for link in links],
+            repository_version=metadata.get("repository_version"),
+            last_serial=None,
+        )
+
+    @classmethod
+    def from_pep691_data(cls, data: Any) -> IndexPage:
+        """
+        .. versionadded:: 1.0.0
+
+        Parse an object decoded from an
+        :mimetype:`application/vnd.pypi.simple.v1+json` response (See
+        :pep:`691`) into an `IndexPage`.  The `last_serial` attribute will be
+        set to the value of the ``.meta._last-serial`` field, if any.
+
+        :param data: The decoded body of the JSON response
+        :rtype: IndexPage
+        :raises UnsupportedRepoVersionError:
+            if the repository version has a greater major component than the
+            supported repository version
+        :raises TypeError: if ``data`` is not a `dict`
+        """
+        if not isinstance(data, dict):
+            raise TypeError("JSON project list response is not a dict")
+        repository_version = data["meta"]["api-version"]
+        check_repo_version(repository_version)
+        try:
+            last_serial = str(data["meta"]["_last-serial"])
+        except KeyError:
+            last_serial = None
+        return IndexPage(
+            projects=[p["name"] for p in data["projects"]],
+            repository_version=repository_version,
+            last_serial=last_serial,
+        )
+
+    @classmethod
+    def from_response(cls, r: requests.Response) -> IndexPage:
+        """
+        .. versionadded:: 1.0.0
+
+        Parse an index page from a `requests.Response` returned from a
+        (non-streaming) request to a simple repository, and return an
+        `IndexPage`.
+
+        :param requests.Response r: the response object to parse
+        :rtype: IndexPage
+        :raises UnsupportedRepoVersionError:
+            if the repository version has a greater major component than the
+            supported repository version
+        :raises UnsupportedContentTypeError:
+            if the response has an unsupported :mailheader:`Content-Type`
+        """
+        ct = ContentType.parse(r.headers.get("content-type", "text/html"))
+        if ct.content_type == "application/vnd.pypi.simple.v1+json":
+            page = cls.from_pep691_data(r.json())
+        elif (
+            ct.content_type == "application/vnd.pypi.simple.v1+html"
+            or ct.content_type == "text/html"
+        ):
+            page = cls.from_html(html=r.content, from_encoding=ct.params.get("charset"))
+        else:
+            raise UnsupportedContentTypeError(r.url, str(ct))
+        if page.last_serial is None:
+            page.last_serial = r.headers.get("X-PyPI-Last-Serial")
+        return page

@@ -9,8 +9,7 @@ from packaging.utils import canonicalize_name as normalize
 import requests
 from . import PYPI_SIMPLE_ENDPOINT, __url__, __version__
 from .classes import DistributionPackage, IndexPage, ProjectPage
-from .parse_repo import parse_repo_index_response, parse_repo_project_response
-from .parse_stream import parse_links_stream_response
+from .html_stream import parse_links_stream_response
 from .progress import ProgressTracker, null_progress_tracker
 from .util import AbstractDigestChecker, DigestChecker, NullDigestChecker
 
@@ -123,7 +122,7 @@ class PyPISimple:
         """
         r = self.s.get(self.endpoint, timeout=timeout, headers={"Accept": ACCEPT})
         r.raise_for_status()
-        return parse_repo_index_response(r)
+        return IndexPage.from_response(r)
 
     def stream_project_names(
         self,
@@ -197,7 +196,7 @@ class PyPISimple:
         if r.status_code == 404:
             raise NoSuchProjectError(project, url)
         r.raise_for_status()
-        return parse_repo_project_response(project, r)
+        return ProjectPage.from_response(project, r)
 
     def get_project_url(self, project: str) -> str:
         """

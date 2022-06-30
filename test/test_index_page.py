@@ -4,14 +4,13 @@ from pypi_simple import (
     SUPPORTED_REPOSITORY_VERSION,
     IndexPage,
     UnsupportedRepoVersionError,
-    parse_repo_index_page,
 )
 
 DATA_DIR = Path(__file__).with_name("data")
 
 
-def test_empty() -> None:
-    assert parse_repo_index_page("") == IndexPage(
+def test_from_html_empty() -> None:
+    assert IndexPage.from_html("") == IndexPage(
         projects=[],
         repository_version=None,
         last_serial=None,
@@ -111,14 +110,14 @@ def test_empty() -> None:
         ),
     ],
 )
-def test_parse_repo_index_page(filename: str, encoding: str, page: IndexPage) -> None:
+def test_from_html(filename: str, encoding: str, page: IndexPage) -> None:
     html = (DATA_DIR / filename).read_bytes()
-    assert parse_repo_index_page(html, encoding) == page
+    assert IndexPage.from_html(html, encoding) == page
 
 
-def test_parse_repo_index_page_unsupported_version() -> None:
+def test_from_html_unsupported_version() -> None:
     with pytest.raises(UnsupportedRepoVersionError) as excinfo:
-        parse_repo_index_page(
+        IndexPage.from_html(
             """
             <!DOCTYPE html>
             <html>
@@ -135,6 +134,49 @@ def test_parse_repo_index_page_unsupported_version() -> None:
                 </body>
             </html>
         """
+        )
+    assert excinfo.value.declared_version == "42.0"
+    assert excinfo.value.supported_version == SUPPORTED_REPOSITORY_VERSION
+    assert str(excinfo.value) == (
+        "Repository's version (42.0) has greater major component than"
+        f" supported version ({SUPPORTED_REPOSITORY_VERSION})"
+    )
+
+
+def test_from_pep691_data_empty() -> None:
+    assert IndexPage.from_pep691_data(
+        {"meta": {"api-version": "1.0"}, "projects": []}
+    ) == IndexPage(
+        projects=[],
+        repository_version="1.0",
+        last_serial=None,
+    )
+
+
+def test_from_pep691_data() -> None:
+    assert IndexPage.from_pep691_data(
+        {
+            "meta": {"_last-serial": 14267765, "api-version": "1.0"},
+            "projects": [{"name": "apple"}, {"name": "banana"}, {"name": "coconut"}],
+        }
+    ) == IndexPage(
+        projects=[
+            "apple",
+            "banana",
+            "coconut",
+        ],
+        repository_version="1.0",
+        last_serial="14267765",
+    )
+
+
+def test_from_pep691_data_unsupported_version() -> None:
+    with pytest.raises(UnsupportedRepoVersionError) as excinfo:
+        IndexPage.from_pep691_data(
+            {
+                "meta": {"api-version": "42.0"},
+                "projects": [{"name": "xyzzy"}, {"name": "plover"}, {"name": "plugh"}],
+            }
         )
     assert excinfo.value.declared_version == "42.0"
     assert excinfo.value.supported_version == SUPPORTED_REPOSITORY_VERSION

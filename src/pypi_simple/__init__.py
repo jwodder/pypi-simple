@@ -26,19 +26,11 @@ PYPI_SIMPLE_ENDPOINT: str = "https://pypi.org/simple/"
 #: The maximum supported simple repository version (See :pep:`629`)
 SUPPORTED_REPOSITORY_VERSION: str = "1.0"
 
-from .classes import DistributionPackage, IndexPage, Link, ProjectPage
+from .classes import DistributionPackage, IndexPage, ProjectPage
 from .client import NoSuchProjectError, PyPISimple
 from .filenames import UnparsableFilenameError, parse_filename
-from .parse_repo import (
-    parse_repo_index_json,
-    parse_repo_index_page,
-    parse_repo_index_response,
-    parse_repo_links,
-    parse_repo_project_json,
-    parse_repo_project_page,
-    parse_repo_project_response,
-)
-from .parse_stream import parse_links_stream, parse_links_stream_response
+from .html import Link, parse_repo_links
+from .html_stream import parse_links_stream, parse_links_stream_response
 from .progress import ProgressTracker, tqdm_progress_factory
 from .util import (
     DigestMismatchError,
@@ -67,12 +59,6 @@ __all__ = [
     "parse_filename",
     "parse_links_stream",
     "parse_links_stream_response",
-    "parse_repo_index_json",
-    "parse_repo_index_page",
-    "parse_repo_index_response",
     "parse_repo_links",
-    "parse_repo_project_json",
-    "parse_repo_project_page",
-    "parse_repo_project_response",
     "tqdm_progress_factory",
 ]

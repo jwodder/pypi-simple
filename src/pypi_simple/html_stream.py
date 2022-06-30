@@ -7,7 +7,7 @@ from typing import AnyStr, Optional, cast
 from urllib.parse import urljoin
 from bs4.dammit import EncodingDetector
 import requests
-from .classes import Link
+from .html import Link
 from .util import check_repo_version
 
 # List taken from BeautifulSoup4 source

@@ -25,6 +25,16 @@ v1.0.0 (in development)
 - `PyPISimple.get_project_page()` now raises a `NoSuchProjectError` on 404
   responses intead of returning `None`
 
+- The functions for parsing data into `IndexPage` and `ProjectPage` instances
+  have been replaced with classmethods:
+
+  - ``parse_repo_index_page()`` → `IndexPage.from_html()`
+  - ``parse_repo_index_json()`` → `IndexPage.from_pep691_data()`
+  - ``parse_repo_index_response()`` → `IndexPage.from_response()`
+  - ``parse_repo_project_page()`` → `ProjectPage.from_html()`
+  - ``parse_repo_project_json()`` → `ProjectPage.from_pep691_data()`
+  - ``parse_repo_project_response()`` → `ProjectPage.from_response()`
+
 
 v0.10.0 (2022-06-30)
 --------------------
@@ -34,9 +44,9 @@ v0.10.0 (2022-06-30)
   - Send :mailheader:`Accept` headers in requests (except for
     `~PyPISimple.stream_project_names()`) listing both the new JSON format and
     the old HTML format
-  - `parse_repo_project_response()` and `parse_repo_index_response()` now
+  - ``parse_repo_project_response()`` and ``parse_repo_index_response()`` now
     support both the JSON and HTML formats
-  - Add `parse_repo_index_json()` and `parse_repo_project_json()` functions
+  - Add ``parse_repo_index_json()`` and ``parse_repo_project_json()`` functions
   - Gave `DistributionPackage` a `~DistributionPackage.from_pep691_details()`
     classmethod
   - `DistributionPackage.has_metadata` will now be `None` if not specified by a
@@ -91,17 +101,17 @@ v0.7.0 (2020-10-15)
 
   - `parse_repo_links()` — Parses an HTML page and returns a pair of repository
     metadata and a list of `Link` objects
-  - `parse_repo_project_page()` — Parses a project page and returns a
+  - ``parse_repo_project_page()`` — Parses a project page and returns a
     `ProjectPage` instance
-  - `parse_repo_project_response()` — Parses a `requests.Response` object
+  - ``parse_repo_project_response()`` — Parses a `requests.Response` object
     containing a project page and returns a `ProjectPage` instance
   - `parse_links_stream()` — Parses an HTML page as stream of `bytes` or `str`
     and returns a generator of `Link` objects
   - `parse_links_stream_response()` — Parses a streaming `requests.Response`
     object containing an HTML page and returns a generator of `Link` objects
-  - `parse_repo_index_page()` — Parses a simple repository index/root page and
+  - ``parse_repo_index_page()`` — Parses a simple repository index/root page and
     returns an `IndexPage` instance
-  - `parse_repo_index_response()` — Parses a `requests.Response` object
+  - ``parse_repo_index_response()`` — Parses a `requests.Response` object
     containing an index page and returns an `IndexPage` instance
 
 - The following functions & methods are now deprecated and will be removed in a
