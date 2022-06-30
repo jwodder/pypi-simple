@@ -22,5 +22,5 @@ Streaming Parsers
 Parsing Filenames
 -----------------
 .. autofunction:: parse_filename
-.. autoexception:: UnparsableFilenameError
+.. autoexception:: UnparsableFilenameError()
     :show-inheritance:

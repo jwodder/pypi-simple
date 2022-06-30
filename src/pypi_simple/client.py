@@ -166,18 +166,25 @@ class PyPISimple:
         self,
         project: str,
         timeout: float | tuple[float, float] | None = None,
-    ) -> Optional[ProjectPage]:
+    ) -> ProjectPage:
         """
         Fetches the page for the given project from the simple repository and
-        returns a `ProjectPage` instance.  Returns `None` if the repository
-        responds with a 404.  All other HTTP errors cause a
+        returns a `ProjectPage` instance.  Raises `NoSuchProjectError` if the
+        repository responds with a 404.  All other HTTP errors cause a
         `requests.HTTPError` to be raised.
+
+        .. versionchanged:: 1.0.0
+
+            A 404 now causes `NoSuchProjectError` to be raised instead of
+            returning `None`
 
         :param str project: The name of the project to fetch information on.
             The name does not need to be normalized.
         :param timeout: optional timeout to pass to the ``requests`` call
         :type timeout: float | tuple[float,float] | None
-        :rtype: Optional[ProjectPage]
+        :rtype: ProjectPage
+        :raises NoSuchProjectError: if the repository responds with a 404 error
+            code
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code other than 404
         :raises UnsupportedContentTypeError: if the repository responds with an
@@ -188,7 +195,7 @@ class PyPISimple:
         url = self.get_project_url(project)
         r = self.s.get(url, timeout=timeout, headers={"Accept": ACCEPT})
         if r.status_code == 404:
-            return None
+            raise NoSuchProjectError(project, url)
         r.raise_for_status()
         return parse_repo_project_response(project, r)
 
@@ -275,3 +282,19 @@ class PyPISimple:
                     except FileNotFoundError:
                         pass
                 raise
+
+
+class NoSuchProjectError(Exception):
+    """
+    Raised by `PyPISimple.get_project_page()` when a request for a project
+    fails with a 404 error code
+    """
+
+    def __init__(self, project: str, url: str) -> None:
+        #: The name of the project requested
+        self.project = project
+        #: The URL to which the failed request was made
+        self.url = url
+
+    def __str__(self) -> str:
+        return f"No details about project {self.project!r} available at {self.url}"

@@ -24,6 +24,7 @@ Exceptions
     :show-inheritance:
 .. autoexception:: NoDigestsError()
     :show-inheritance:
+.. autoexception:: NoSuchProjectError()
 .. autoexception:: UnsupportedContentTypeError()
     :show-inheritance:
 .. autoexception:: UnsupportedRepoVersionError()

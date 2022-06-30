@@ -13,6 +13,7 @@ from pypi_simple import (
     DistributionPackage,
     IndexPage,
     NoDigestsError,
+    NoSuchProjectError,
     ProgressTracker,
     ProjectPage,
     PyPISimple,
@@ -178,7 +179,14 @@ def test_session(mocker: MockerFixture, content_type: str) -> None:
         )
         (call,) = spy.call_args_list
         assert call[1]["timeout"] == 2.718
-        assert simple.get_project_page("nonexistent") is None
+        with pytest.raises(NoSuchProjectError) as excinfo:
+            simple.get_project_page("nonexistent")
+        assert excinfo.value.project == "nonexistent"
+        assert excinfo.value.url == "https://test.nil/simple/nonexistent/"
+        assert str(excinfo.value) == (
+            "No details about project 'nonexistent' available at"
+            " https://test.nil/simple/nonexistent/"
+        )
 
 
 @responses.activate
@@ -531,7 +539,14 @@ def test_json_session(mocker: MockerFixture) -> None:
         )
         (call,) = spy.call_args_list
         assert call[1]["timeout"] == 2.718
-        assert simple.get_project_page("nonexistent") is None
+        with pytest.raises(NoSuchProjectError) as excinfo:
+            simple.get_project_page("nonexistent")
+        assert excinfo.value.project == "nonexistent"
+        assert excinfo.value.url == "https://test.nil/simple/nonexistent/"
+        assert str(excinfo.value) == (
+            "No details about project 'nonexistent' available at"
+            " https://test.nil/simple/nonexistent/"
+        )
 
 
 @responses.activate

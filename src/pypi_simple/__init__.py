@@ -27,7 +27,7 @@ PYPI_SIMPLE_ENDPOINT: str = "https://pypi.org/simple/"
 SUPPORTED_REPOSITORY_VERSION: str = "1.0"
 
 from .classes import DistributionPackage, IndexPage, Link, ProjectPage
-from .client import PyPISimple
+from .client import NoSuchProjectError, PyPISimple
 from .filenames import UnparsableFilenameError, parse_filename
 from .parse_repo import (
     parse_repo_index_json,
@@ -54,6 +54,7 @@ __all__ = [
     "IndexPage",
     "Link",
     "NoDigestsError",
+    "NoSuchProjectError",
     "PYPI_SIMPLE_ENDPOINT",
     "ProgressTracker",
     "ProjectPage",

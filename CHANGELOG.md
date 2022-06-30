@@ -14,6 +14,8 @@ v1.0.0 (in development)
   `yanked_reason` attributes
 - `parse_filename()` now raises an `UnparsableFilenameError` on unparsable
   filenames instead of returning a triple of `None`s
+- `PyPISimple.get_project_page()` now raises a `NoSuchProjectError` on 404
+  responses intead of returning `None`
 
 v0.10.0 (2022-06-30)
 --------------------
