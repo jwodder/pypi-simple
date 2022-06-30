@@ -12,7 +12,7 @@ Parsing Simple Repository Pages
 .. autofunction:: parse_repo_project_json
 .. autofunction:: parse_repo_project_response
 .. autofunction:: parse_repo_links
-.. autoclass:: Link
+.. autoclass:: Link()
 
 Streaming Parsers
 ^^^^^^^^^^^^^^^^^

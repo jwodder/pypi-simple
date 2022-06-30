@@ -106,6 +106,11 @@ def parse_filename(
     the function will fall back to breaking the project & version apart at an
     unspecified point.
 
+    .. versionchanged:: 1.0.0
+
+        Now raises `UnparsableFilenameError` for unparsable filenames instead
+        of returning all `None`\\s
+
     :param str filename: The package filename to parse
     :param Optional[str] project_hint: Optionally, the expected value for the
         project name (usually the name of the project page on which the
@@ -140,6 +145,12 @@ def parse_filename(
 
 
 class UnparsableFilenameError(ValueError):
+    """
+    .. versionadded:: 1.0.0
+
+    Raised when `parse_filename()` is passed an unparsable filename
+    """
+
     def __init__(self, filename: str) -> None:
         #: The unparsable filename
         self.filename = filename

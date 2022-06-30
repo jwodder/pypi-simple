@@ -33,6 +33,10 @@ class DistributionPackage:
     """
     Information about a versioned archive file from which a Python project
     release can be installed
+
+    .. versionchanged:: 1.0.0
+
+        ``yanked`` field replaced with `is_yanked` and `yanked_reason`
     """
 
     #: The basename of the package file

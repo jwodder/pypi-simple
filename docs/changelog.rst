@@ -17,7 +17,7 @@ v1.0.0 (in development)
 - Drop support for Python 3.6
 - `IndexPage`, `ProjectPage`, `DistributionPackage`, and `Link` have been
   changed from NamedTuples to dataclasses
-- Replaced `DistributionPackage.yanked` with separate
+- Replaced ``DistributionPackage.yanked`` with separate
   `~DistributionPackage.is_yanked` and `~DistributionPackage.yanked_reason`
   attributes
 - `parse_filename()` now raises an `UnparsableFilenameError` on unparsable
