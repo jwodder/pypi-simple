@@ -2,7 +2,7 @@ from __future__ import annotations
 from collections.abc import Callable
 import sys
 from types import TracebackType
-from typing import Any, Optional, TypeVar, cast
+from typing import Any, Optional, TypeVar
 
 if sys.version_info[:2] >= (3, 8):
     from typing import Protocol, runtime_checkable
@@ -90,6 +90,6 @@ def tqdm_progress_factory(**kwargs: Any) -> Callable[[Optional[int]], ProgressTr
     from tqdm import tqdm
 
     def factory(content_length: Optional[int]) -> ProgressTracker:
-        return cast(ProgressTracker, tqdm(total=content_length, **kwargs))
+        return tqdm(total=content_length, **kwargs)
 
     return factory
