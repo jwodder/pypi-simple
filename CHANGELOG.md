@@ -8,6 +8,7 @@ v1.0.0 (in development)
     - `parse_project_page()`
     - `parse_links()`
 - Drop support for Python 3.6
+- Support Python 3.11
 - `IndexPage`, `ProjectPage`, `DistributionPackage`, and `Link` have been
   changed from NamedTuples to dataclasses
 - Replaced `DistributionPackage.yanked` with separate `is_yanked` and
