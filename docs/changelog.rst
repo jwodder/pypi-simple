@@ -24,7 +24,7 @@ v1.0.0 (in development)
 - `parse_filename()` now raises an `UnparsableFilenameError` on unparsable
   filenames instead of returning a triple of `None`\s
 - `PyPISimple.get_project_page()` now raises a `NoSuchProjectError` on 404
-  responses intead of returning `None`
+  responses instead of returning `None`
 
 - The functions for parsing data into `IndexPage` and `ProjectPage` instances
   have been replaced with classmethods:
