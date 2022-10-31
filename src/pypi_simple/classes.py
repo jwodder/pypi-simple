@@ -8,6 +8,7 @@ import requests
 from .errors import UnparsableFilenameError, UnsupportedContentTypeError
 from .filenames import parse_filename
 from .html import Link, RepositoryPage
+from .pep691 import File, Project, ProjectList
 from .util import basejoin, check_repo_version
 
 
@@ -170,53 +171,37 @@ class DistributionPackage:
         :param Optional[str] base_url: an optional URL to join to the front of
             a relative file URL (usually the URL of the page being parsed)
         :rtype: DistributionPackage
-        :raises TypeError: if ``data`` is not a `dict`
+        :raises ValueError: if ``data`` is not a `dict`
         """
-        if not isinstance(data, dict):
-            raise TypeError(
-                f"JSON file details object is {type(data)} instead of a dict"
-            )
+        return cls.from_file(File.parse_obj(data), project_hint, base_url)
+
+    @classmethod
+    def from_file(
+        cls,
+        file: File,
+        project_hint: Optional[str] = None,
+        base_url: Optional[str] = None,
+    ) -> DistributionPackage:
+        """:meta private:"""
         try:
-            project, version, pkg_type = parse_filename(data["filename"], project_hint)
+            project, version, pkg_type = parse_filename(file.filename, project_hint)
         except UnparsableFilenameError:
             project = None
             version = None
             pkg_type = None
-        yanked = data.get("yanked", False)
-        yanked_reason: Optional[str]
-        if isinstance(yanked, str):
-            is_yanked = True
-            yanked_reason = yanked
-        else:
-            is_yanked = bool(yanked)
-            yanked_reason = None
-        mddigest = data.get("dist-info-metadata")
-        metadata_digests: Optional[dict[str, str]]
-        if mddigest is None:
-            has_metadata = None
-            metadata_digests = None
-        elif mddigest is False:
-            has_metadata = False
-            metadata_digests = None
-        elif mddigest is True:
-            has_metadata = True
-            metadata_digests = {}
-        else:
-            has_metadata = True
-            metadata_digests = mddigest
         return cls(
-            filename=data["filename"],
-            url=basejoin(base_url, data["url"]),
-            has_sig=data.get("gpg-sig"),
-            requires_python=data.get("requires-python"),
+            filename=file.filename,
+            url=basejoin(base_url, file.url),
+            has_sig=file.gpg_sig,
+            requires_python=file.requires_python,
             project=project,
             version=version,
             package_type=pkg_type,
-            is_yanked=is_yanked,
-            yanked_reason=yanked_reason,
-            digests=data["hashes"],
-            metadata_digests=metadata_digests,
-            has_metadata=has_metadata,
+            is_yanked=file.is_yanked,
+            yanked_reason=file.yanked_reason,
+            digests=file.hashes,
+            metadata_digests=file.metadata_digests,
+            has_metadata=file.has_metadata,
         )
 
 
@@ -292,27 +277,21 @@ class ProjectPage:
             an optional URL to join to the front of any relative file URLs
             (usually the URL of the page being parsed)
         :rtype: ProjectPage
-        :raises TypeError: if ``data`` is not a `dict`
+        :raises ValueError: if ``data`` is not a `dict`
         :raises UnsupportedRepoVersionError:
             if the repository version has a greater major component than the
             supported repository version
         """
-        if not isinstance(data, dict):
-            raise TypeError("JSON project details response is not a dict")
-        repository_version = data["meta"]["api-version"]
-        check_repo_version(repository_version)
-        try:
-            last_serial = str(data["meta"]["_last-serial"])
-        except KeyError:
-            last_serial = None
+        project = Project.parse_obj(data)
+        check_repo_version(project.meta.api_version)
         return ProjectPage(
-            project=data["name"],
+            project=project.name,
             packages=[
-                DistributionPackage.from_json_data(filedata, data["name"], base_url)
-                for filedata in data["files"]
+                DistributionPackage.from_file(f, project.name, base_url)
+                for f in project.files
             ],
-            repository_version=repository_version,
-            last_serial=last_serial,
+            repository_version=project.meta.api_version,
+            last_serial=project.meta.last_serial,
         )
 
     @classmethod
@@ -410,20 +389,14 @@ class IndexPage:
         :raises UnsupportedRepoVersionError:
             if the repository version has a greater major component than the
             supported repository version
-        :raises TypeError: if ``data`` is not a `dict`
+        :raises ValueError: if ``data`` is not a `dict`
         """
-        if not isinstance(data, dict):
-            raise TypeError("JSON project list response is not a dict")
-        repository_version = data["meta"]["api-version"]
-        check_repo_version(repository_version)
-        try:
-            last_serial = str(data["meta"]["_last-serial"])
-        except KeyError:
-            last_serial = None
+        plist = ProjectList.parse_obj(data)
+        check_repo_version(plist.meta.api_version)
         return IndexPage(
-            projects=[p["name"] for p in data["projects"]],
-            repository_version=repository_version,
-            last_serial=last_serial,
+            projects=[p.name for p in plist.projects],
+            repository_version=plist.meta.api_version,
+            last_serial=plist.meta.last_serial,
         )
 
     @classmethod
