@@ -20,14 +20,15 @@ v1.0.0 (in development)
 - The functions for parsing data into `IndexPage` and `ProjectPage` instances
   have been replaced with classmethods:
     - `parse_repo_index_page()` → `IndexPage.from_html()`
-    - `parse_repo_index_json()` → `IndexPage.from_pep691_data()`
+    - `parse_repo_index_json()` → `IndexPage.from_json_data()`
     - `parse_repo_index_response()` → `IndexPage.from_response()`
     - `parse_repo_links()` → `RepositoryPage.from_html()`
     - `parse_repo_project_page()` → `ProjectPage.from_html()`
-    - `parse_repo_project_json()` → `ProjectPage.from_pep691_data()`
+    - `parse_repo_project_json()` → `ProjectPage.from_json_data()`
     - `parse_repo_project_response()` → `ProjectPage.from_response()`
 - Add a `RepositoryPage` class for representing the return value of
   `parse_repo_links()` (now called `RepositoryPage.from_html()`)
+- Renamed `DistributionPackage.from_pep691_details()` to `from_json_details()`
 
 v0.10.0 (2022-06-30)
 --------------------

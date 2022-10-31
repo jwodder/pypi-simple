@@ -30,15 +30,17 @@ v1.0.0 (in development)
   have been replaced with classmethods:
 
   - ``parse_repo_index_page()`` → `IndexPage.from_html()`
-  - ``parse_repo_index_json()`` → `IndexPage.from_pep691_data()`
+  - ``parse_repo_index_json()`` → `IndexPage.from_json_data()`
   - ``parse_repo_index_response()`` → `IndexPage.from_response()`
   - ``parse_repo_links()`` → `RepositoryPage.from_html()`
   - ``parse_repo_project_page()`` → `ProjectPage.from_html()`
-  - ``parse_repo_project_json()`` → `ProjectPage.from_pep691_data()`
+  - ``parse_repo_project_json()`` → `ProjectPage.from_json_data()`
   - ``parse_repo_project_response()`` → `ProjectPage.from_response()`
 
 - Add a `RepositoryPage` class for representing the return value of
   ``parse_repo_links()`` (now called `RepositoryPage.from_html()`)
+- Renamed ``DistributionPackage.from_pep691_details()`` to
+  `~DistributionPackage.from_json_details()`
 
 v0.10.0 (2022-06-30)
 --------------------
@@ -51,8 +53,7 @@ v0.10.0 (2022-06-30)
   - ``parse_repo_project_response()`` and ``parse_repo_index_response()`` now
     support both the JSON and HTML formats
   - Add ``parse_repo_index_json()`` and ``parse_repo_project_json()`` functions
-  - Gave `DistributionPackage` a `~DistributionPackage.from_pep691_details()`
-    classmethod
+  - Gave `DistributionPackage` a ``from_pep691_details()`` classmethod
   - `DistributionPackage.has_metadata` will now be `None` if not specified by a
     JSON response
   - `DistributionPackage.metadata_url` is now always non-`None`

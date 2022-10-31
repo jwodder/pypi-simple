@@ -153,7 +153,7 @@ class DistributionPackage:
         )
 
     @classmethod
-    def from_pep691_details(
+    def from_json_details(
         cls,
         data: Any,
         project_hint: Optional[str] = None,
@@ -161,7 +161,7 @@ class DistributionPackage:
     ) -> DistributionPackage:
         """
         Construct a `DistributionPackage` from an object taken from the
-        ``"files"`` field of a :pep:`691` project detail response.
+        ``"files"`` field of a :pep:`691` project detail JSON response.
 
         :param data: a file dictionary
         :param Optional[str] project_hint: Optionally, the expected value for
@@ -278,7 +278,7 @@ class ProjectPage:
         )
 
     @classmethod
-    def from_pep691_data(cls, data: Any, base_url: Optional[str] = None) -> ProjectPage:
+    def from_json_data(cls, data: Any, base_url: Optional[str] = None) -> ProjectPage:
         """
         .. versionadded:: 1.0.0
 
@@ -308,9 +308,7 @@ class ProjectPage:
         return ProjectPage(
             project=data["name"],
             packages=[
-                DistributionPackage.from_pep691_details(
-                    filedata, data["name"], base_url
-                )
+                DistributionPackage.from_json_details(filedata, data["name"], base_url)
                 for filedata in data["files"]
             ],
             repository_version=repository_version,
@@ -337,7 +335,7 @@ class ProjectPage:
         """
         ct = ContentType.parse(r.headers.get("content-type", "text/html"))
         if ct.content_type == "application/vnd.pypi.simple.v1+json":
-            page = cls.from_pep691_data(r.json(), r.url)
+            page = cls.from_json_data(r.json(), r.url)
         elif (
             ct.content_type == "application/vnd.pypi.simple.v1+html"
             or ct.content_type == "text/html"
@@ -398,7 +396,7 @@ class IndexPage:
         )
 
     @classmethod
-    def from_pep691_data(cls, data: Any) -> IndexPage:
+    def from_json_data(cls, data: Any) -> IndexPage:
         """
         .. versionadded:: 1.0.0
 
@@ -447,7 +445,7 @@ class IndexPage:
         """
         ct = ContentType.parse(r.headers.get("content-type", "text/html"))
         if ct.content_type == "application/vnd.pypi.simple.v1+json":
-            page = cls.from_pep691_data(r.json())
+            page = cls.from_json_data(r.json())
         elif (
             ct.content_type == "application/vnd.pypi.simple.v1+html"
             or ct.content_type == "text/html"

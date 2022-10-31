@@ -143,8 +143,8 @@ def test_from_html_unsupported_version() -> None:
     )
 
 
-def test_from_pep691_data_empty() -> None:
-    assert IndexPage.from_pep691_data(
+def test_from_json_data_empty() -> None:
+    assert IndexPage.from_json_data(
         {"meta": {"api-version": "1.0"}, "projects": []}
     ) == IndexPage(
         projects=[],
@@ -153,8 +153,8 @@ def test_from_pep691_data_empty() -> None:
     )
 
 
-def test_from_pep691_data() -> None:
-    assert IndexPage.from_pep691_data(
+def test_from_json_data() -> None:
+    assert IndexPage.from_json_data(
         {
             "meta": {"_last-serial": 14267765, "api-version": "1.0"},
             "projects": [{"name": "apple"}, {"name": "banana"}, {"name": "coconut"}],
@@ -170,9 +170,9 @@ def test_from_pep691_data() -> None:
     )
 
 
-def test_from_pep691_data_unsupported_version() -> None:
+def test_from_json_data_unsupported_version() -> None:
     with pytest.raises(UnsupportedRepoVersionError) as excinfo:
-        IndexPage.from_pep691_data(
+        IndexPage.from_json_data(
             {
                 "meta": {"api-version": "42.0"},
                 "projects": [{"name": "xyzzy"}, {"name": "plover"}, {"name": "plugh"}],

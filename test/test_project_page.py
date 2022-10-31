@@ -574,8 +574,8 @@ def test_from_html_unsupported_version() -> None:
     )
 
 
-def test_from_pep691_data_empty() -> None:
-    assert ProjectPage.from_pep691_data(
+def test_from_json_data_empty() -> None:
+    assert ProjectPage.from_json_data(
         {"files": [], "name": "-NIL-", "meta": {"api-version": "1.0"}}
     ) == ProjectPage(
         project="-NIL-",
@@ -674,16 +674,16 @@ def test_from_pep691_data_empty() -> None:
         ),
     ],
 )
-def test_from_pep691_data(filename: str, page: ProjectPage) -> None:
+def test_from_json_data(filename: str, page: ProjectPage) -> None:
     with (DATA_DIR / filename).open() as fp:
         data = json.load(fp)
-    assert ProjectPage.from_pep691_data(data) == page
+    assert ProjectPage.from_json_data(data) == page
 
 
-def test_from_pep691_data_relative_urls() -> None:
+def test_from_json_data_relative_urls() -> None:
     with (DATA_DIR / "argset-relative.json").open() as fp:
         data = json.load(fp)
-    assert ProjectPage.from_pep691_data(
+    assert ProjectPage.from_json_data(
         data, "https://test.nil/simple/argset/"
     ) == ProjectPage(
         project="argset",
@@ -726,9 +726,9 @@ def test_from_pep691_data_relative_urls() -> None:
     )
 
 
-def test_from_pep691_data_unsupported_version() -> None:
+def test_from_json_data_unsupported_version() -> None:
     with pytest.raises(UnsupportedRepoVersionError) as excinfo:
-        ProjectPage.from_pep691_data(
+        ProjectPage.from_json_data(
             {
                 "files": [],
                 "meta": {"api-version": "42.0"},
