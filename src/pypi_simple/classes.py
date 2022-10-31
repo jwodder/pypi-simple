@@ -316,7 +316,7 @@ class ProjectPage:
         )
 
     @classmethod
-    def from_response(cls, project: str, r: requests.Response) -> ProjectPage:
+    def from_response(cls, r: requests.Response, project: str) -> ProjectPage:
         """
         .. versionadded:: 1.0.0
 
@@ -324,8 +324,8 @@ class ProjectPage:
         (non-streaming) request to a simple repository, and return a
         `ProjectPage`.
 
-        :param str project: The name of the project whose page is being parsed
         :param requests.Response r: the response object to parse
+        :param str project: the name of the project whose page is being parsed
         :rtype: ProjectPage
         :raises UnsupportedRepoVersionError:
             if the repository version has a greater major component than the

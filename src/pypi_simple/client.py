@@ -196,7 +196,7 @@ class PyPISimple:
         if r.status_code == 404:
             raise NoSuchProjectError(project, url)
         r.raise_for_status()
-        return ProjectPage.from_response(project, r)
+        return ProjectPage.from_response(r, project)
 
     def get_project_url(self, project: str) -> str:
         """
