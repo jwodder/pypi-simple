@@ -3,8 +3,8 @@
 Changelog
 =========
 
-v1.0.0 (in development)
------------------------
+v1.0.0 (2022-10-31)
+-------------------
 - Removed deprecated functionality:
 
   - ``DistributionPackage.get_digests()``
@@ -45,6 +45,7 @@ v1.0.0 (in development)
 - Use pydantic internally to parse JSON responses
 - Added constants for passing to `PyPISimple` and its methods in order to
   specify the :mailheader:`Accept` header to send
+
 
 v0.10.0 (2022-06-30)
 --------------------

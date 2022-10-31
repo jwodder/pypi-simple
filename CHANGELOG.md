@@ -1,5 +1,5 @@
-v1.0.0 (in development)
------------------------
+v1.0.0 (2022-10-31)
+-------------------
 - Removed deprecated functionality:
     - `DistributionPackage.get_digests()`
     - `PyPISimple.get_projects()`
