@@ -38,6 +38,19 @@ Constants
 .. autodata:: PYPI_SIMPLE_ENDPOINT
 .. autodata:: SUPPORTED_REPOSITORY_VERSION
 
+:mailheader:`Accept` Header Values
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The following constants can be passed as the ``accept`` parameter of
+`PyPISimple` and some of its methods in order to indicate to the server which
+serialization format of the Simple API it should return:
+
+.. autodata:: ACCEPT_ANY
+.. autodata:: ACCEPT_JSON_ONLY
+.. autodata:: ACCEPT_HTML_ONLY
+.. autodata:: ACCEPT_JSON_PREFERRED
+.. autodata:: ACCEPT_HTML_PREFERRED
+
 Exceptions
 ----------
 .. autoexception:: DigestMismatchError()

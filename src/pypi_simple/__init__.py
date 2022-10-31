@@ -26,6 +26,47 @@ PYPI_SIMPLE_ENDPOINT: str = "https://pypi.org/simple/"
 #: The maximum supported simple repository version (See :pep:`629`)
 SUPPORTED_REPOSITORY_VERSION: str = "1.0"
 
+#: :mailheader:`Accept` header value for accepting either the HTML or JSON
+#: serialization without a preference
+ACCEPT_ANY: str = ", ".join(
+    [
+        "application/vnd.pypi.simple.v1+json",
+        "application/vnd.pypi.simple.v1+html",
+        "text/html;q=0.01",
+    ]
+)
+
+#: :mailheader:`Accept` header value for accepting only the JSON serialization
+ACCEPT_JSON_ONLY = "application/vnd.pypi.simple.v1+json"
+
+#: :mailheader:`Accept` header value for accepting only the HTML serialization
+ACCEPT_HTML_ONLY = ", ".join(
+    [
+        "application/vnd.pypi.simple.v1+html",
+        "text/html;q=0.01",
+    ]
+)
+
+#: :mailheader:`Accept` header value for accepting either the HTML or JSON
+#: serialization with a preference for JSON
+ACCEPT_JSON_PREFERRED = ", ".join(
+    [
+        "application/vnd.pypi.simple.v1+json",
+        "application/vnd.pypi.simple.v1+html;q=0.5",
+        "text/html;q=0.01",
+    ]
+)
+
+#: :mailheader:`Accept` header value for accepting either the HTML or JSON
+#: serialization with a preference for HTML
+ACCEPT_HTML_PREFERRED = ", ".join(
+    [
+        "application/vnd.pypi.simple.v1+html",
+        "text/html;q=0.5",
+        "application/vnd.pypi.simple.v1+json;q=0.1",
+    ]
+)
+
 from .classes import DistributionPackage, IndexPage, ProjectPage
 from .client import NoSuchProjectError, PyPISimple
 from .errors import (

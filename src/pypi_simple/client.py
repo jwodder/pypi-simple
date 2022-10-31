@@ -8,7 +8,7 @@ from typing import Any, AnyStr, Optional
 from mailbits import ContentType
 from packaging.utils import canonicalize_name as normalize
 import requests
-from . import PYPI_SIMPLE_ENDPOINT, __url__, __version__
+from . import ACCEPT_ANY, PYPI_SIMPLE_ENDPOINT, __url__, __version__
 from .classes import DistributionPackage, IndexPage, ProjectPage
 from .errors import UnsupportedContentTypeError
 from .html_stream import parse_links_stream_response
@@ -23,14 +23,6 @@ USER_AGENT: str = "pypi-simple/{} ({}) requests/{} {}/{}".format(
     requests.__version__,
     platform.python_implementation(),
     platform.python_version(),
-)
-
-ACCEPT = ", ".join(
-    [
-        "application/vnd.pypi.simple.v1+json",
-        "application/vnd.pypi.simple.v1+html",
-        "text/html;q=0.01",
-    ]
 )
 
 
@@ -53,6 +45,10 @@ class PyPISimple:
     automatically close its session on exit, regardless of where the session
     object came from.
 
+    .. versionchanged:: 1.0.0
+
+        ``accept`` parameter added
+
     :param str endpoint: The base URL of the simple API instance to query;
         defaults to the base URL for PyPI's simple API
 
@@ -63,6 +59,11 @@ class PyPISimple:
 
     :param session: Optional `requests.Session` object to use instead of
         creating a fresh one
+
+    :param str accept:
+        The :mailheader:`Accept` header to send in requests in order to specify
+        what serialization format the server should return; defaults to
+        `ACCEPT_ANY`
     """
 
     def __init__(
@@ -70,6 +71,7 @@ class PyPISimple:
         endpoint: str = PYPI_SIMPLE_ENDPOINT,
         auth: Any = None,
         session: Optional[requests.Session] = None,
+        accept: str = ACCEPT_ANY,
     ) -> None:
         self.endpoint: str = endpoint.rstrip("/") + "/"
         self.s: requests.Session
@@ -80,6 +82,7 @@ class PyPISimple:
             self.s.headers["User-Agent"] = USER_AGENT
         if auth is not None:
             self.s.auth = auth
+        self.accept = accept
 
     def __enter__(self) -> PyPISimple:
         return self
@@ -95,6 +98,7 @@ class PyPISimple:
     def get_index_page(
         self,
         timeout: float | tuple[float, float] | None = None,
+        accept: Optional[str] = None,
     ) -> IndexPage:
         """
         Fetches the index/root page from the simple repository and returns an
@@ -105,8 +109,16 @@ class PyPISimple:
             PyPI's project index file is very large and takes several seconds
             to parse.  Use this method sparingly.
 
+        .. versionchanged:: 1.0.0
+
+            ``accept`` parameter added
+
         :param timeout: optional timeout to pass to the ``requests`` call
         :type timeout: float | tuple[float,float] | None
+        :param Optional[str] accept:
+            The :mailheader:`Accept` header to send in order to
+            specify what serialization format the server should return;
+            defaults to the value supplied on client instantiation
         :rtype: IndexPage
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code
@@ -115,7 +127,9 @@ class PyPISimple:
         :raises UnsupportedRepoVersionError: if the repository version has a
             greater major component than the supported repository version
         """
-        r = self.s.get(self.endpoint, timeout=timeout, headers={"Accept": ACCEPT})
+        r = self.s.get(
+            self.endpoint, timeout=timeout, headers={"Accept": accept or self.accept}
+        )
         r.raise_for_status()
         return IndexPage.from_response(r)
 
@@ -123,6 +137,7 @@ class PyPISimple:
         self,
         chunk_size: int = 65535,
         timeout: float | tuple[float, float] | None = None,
+        accept: Optional[str] = None,
     ) -> Iterator[str]:
         """
         Returns a generator of names of projects available in the repository.
@@ -145,10 +160,18 @@ class PyPISimple:
             rather than an HTML representation, the response body will be
             loaded & parsed in its entirety before yielding anything.
 
+        .. versionchanged:: 1.0.0
+
+            ``accept`` parameter added
+
         :param int chunk_size: how many bytes to read from the response at a
             time
         :param timeout: optional timeout to pass to the ``requests`` call
         :type timeout: float | tuple[float,float] | None
+        :param Optional[str] accept:
+            The :mailheader:`Accept` header to send in order to
+            specify what serialization format the server should return;
+            defaults to the value supplied on client instantiation
         :rtype: Iterator[str]
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code
@@ -157,7 +180,12 @@ class PyPISimple:
         :raises UnsupportedRepoVersionError: if the repository version has a
             greater major component than the supported repository version
         """
-        with self.s.get(self.endpoint, stream=True, timeout=timeout) as r:
+        with self.s.get(
+            self.endpoint,
+            stream=True,
+            timeout=timeout,
+            headers={"Accept": accept or self.accept},
+        ) as r:
             r.raise_for_status()
             ct = ContentType.parse(r.headers.get("content-type", "text/html"))
             if ct.content_type == "application/vnd.pypi.simple.v1+json":
@@ -176,6 +204,7 @@ class PyPISimple:
         self,
         project: str,
         timeout: float | tuple[float, float] | None = None,
+        accept: Optional[str] = None,
     ) -> ProjectPage:
         """
         Fetches the page for the given project from the simple repository and
@@ -185,13 +214,19 @@ class PyPISimple:
 
         .. versionchanged:: 1.0.0
 
-            A 404 now causes `NoSuchProjectError` to be raised instead of
-            returning `None`
+            - A 404 now causes `NoSuchProjectError` to be raised instead of
+              returning `None`
+
+            - ``accept`` parameter added
 
         :param str project: The name of the project to fetch information on.
             The name does not need to be normalized.
         :param timeout: optional timeout to pass to the ``requests`` call
         :type timeout: float | tuple[float,float] | None
+        :param Optional[str] accept:
+            The :mailheader:`Accept` header to send in order to
+            specify what serialization format the server should return;
+            defaults to the value supplied on client instantiation
         :rtype: ProjectPage
         :raises NoSuchProjectError: if the repository responds with a 404 error
             code
@@ -203,7 +238,7 @@ class PyPISimple:
             greater major component than the supported repository version
         """
         url = self.get_project_url(project)
-        r = self.s.get(url, timeout=timeout, headers={"Accept": ACCEPT})
+        r = self.s.get(url, timeout=timeout, headers={"Accept": accept or None})
         if r.status_code == 404:
             raise NoSuchProjectError(project, url)
         r.raise_for_status()
