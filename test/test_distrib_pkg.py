@@ -197,8 +197,8 @@ def test_pep658_no_digests() -> None:
     )
 
 
-def test_from_json_details_no_metadata() -> None:
-    pkg = DistributionPackage.from_json_details(
+def test_from_json_data_no_metadata() -> None:
+    pkg = DistributionPackage.from_json_data(
         {
             "filename": "argset-0.1.0-py3-none-any.whl",
             "hashes": {
@@ -222,12 +222,12 @@ def test_from_json_details_no_metadata() -> None:
         ({"sha256": "abc123"}, True, {"sha256": "abc123"}),
     ],
 )
-def test_from_json_details_metadata(
+def test_from_json_data_metadata(
     dist_info_metadata: bool | dict[str, str],
     has_metadata: bool,
     metadata_digests: Optional[dict[str, str]],
 ) -> None:
-    pkg = DistributionPackage.from_json_details(
+    pkg = DistributionPackage.from_json_data(
         {
             "filename": "argset-0.1.0-py3-none-any.whl",
             "hashes": {

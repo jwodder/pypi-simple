@@ -28,7 +28,7 @@ v1.0.0 (in development)
     - `parse_repo_project_response()` → `ProjectPage.from_response()`
 - Add a `RepositoryPage` class for representing the return value of
   `parse_repo_links()` (now called `RepositoryPage.from_html()`)
-- Renamed `DistributionPackage.from_pep691_details()` to `from_json_details()`
+- Renamed `DistributionPackage.from_pep691_details()` to `from_json_data()`
 
 v0.10.0 (2022-06-30)
 --------------------

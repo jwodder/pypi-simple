@@ -153,7 +153,7 @@ class DistributionPackage:
         )
 
     @classmethod
-    def from_json_details(
+    def from_json_data(
         cls,
         data: Any,
         project_hint: Optional[str] = None,
@@ -308,7 +308,7 @@ class ProjectPage:
         return ProjectPage(
             project=data["name"],
             packages=[
-                DistributionPackage.from_json_details(filedata, data["name"], base_url)
+                DistributionPackage.from_json_data(filedata, data["name"], base_url)
                 for filedata in data["files"]
             ],
             repository_version=repository_version,

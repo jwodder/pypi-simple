@@ -40,7 +40,7 @@ v1.0.0 (in development)
 - Add a `RepositoryPage` class for representing the return value of
   ``parse_repo_links()`` (now called `RepositoryPage.from_html()`)
 - Renamed ``DistributionPackage.from_pep691_details()`` to
-  `~DistributionPackage.from_json_details()`
+  `~DistributionPackage.from_json_data()`
 
 v0.10.0 (2022-06-30)
 --------------------
