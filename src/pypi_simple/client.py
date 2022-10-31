@@ -5,10 +5,12 @@ from pathlib import Path
 import platform
 from types import TracebackType
 from typing import Any, AnyStr, Optional
+from mailbits import ContentType
 from packaging.utils import canonicalize_name as normalize
 import requests
 from . import PYPI_SIMPLE_ENDPOINT, __url__, __version__
 from .classes import DistributionPackage, IndexPage, ProjectPage
+from .errors import UnsupportedContentTypeError
 from .html_stream import parse_links_stream_response
 from .progress import ProgressTracker, null_progress_tracker
 from .util import AbstractDigestChecker, DigestChecker, NullDigestChecker
@@ -26,13 +28,6 @@ USER_AGENT: str = "pypi-simple/{} ({}) requests/{} {}/{}".format(
 ACCEPT = ", ".join(
     [
         "application/vnd.pypi.simple.v1+json",
-        "application/vnd.pypi.simple.v1+html",
-        "text/html;q=0.01",
-    ]
-)
-
-ACCEPT_HTML = ", ".join(
-    [
         "application/vnd.pypi.simple.v1+html",
         "text/html;q=0.01",
     ]
@@ -144,6 +139,12 @@ class PyPISimple:
             support for web encodings, encoding detection, or handling invalid
             HTML.
 
+        .. note::
+
+            If the server responds with a JSON representation of the Simple API
+            rather than an HTML representation, the response body will be
+            loaded & parsed in its entirety before yielding anything.
+
         :param int chunk_size: how many bytes to read from the response at a
             time
         :param timeout: optional timeout to pass to the ``requests`` call
@@ -151,15 +152,25 @@ class PyPISimple:
         :rtype: Iterator[str]
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code
+        :raises UnsupportedContentTypeError: if the repository responds with an
+            unsupported :mailheader:`Content-Type`
         :raises UnsupportedRepoVersionError: if the repository version has a
             greater major component than the supported repository version
         """
-        with self.s.get(
-            self.endpoint, stream=True, timeout=timeout, headers={"Accept": ACCEPT_HTML}
-        ) as r:
+        with self.s.get(self.endpoint, stream=True, timeout=timeout) as r:
             r.raise_for_status()
-            for link in parse_links_stream_response(r, chunk_size):
-                yield link.text
+            ct = ContentType.parse(r.headers.get("content-type", "text/html"))
+            if ct.content_type == "application/vnd.pypi.simple.v1+json":
+                page = IndexPage.from_json_data(r.json())
+                yield from page.projects
+            elif (
+                ct.content_type == "application/vnd.pypi.simple.v1+html"
+                or ct.content_type == "text/html"
+            ):
+                for link in parse_links_stream_response(r, chunk_size):
+                    yield link.text
+            else:
+                raise UnsupportedContentTypeError(r.url, str(ct))
 
     def get_project_page(
         self,

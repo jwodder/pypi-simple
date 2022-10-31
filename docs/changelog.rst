@@ -41,6 +41,7 @@ v1.0.0 (in development)
   ``parse_repo_links()`` (now called `RepositoryPage.from_html()`)
 - Renamed ``DistributionPackage.from_pep691_details()`` to
   `~DistributionPackage.from_json_data()`
+- `PyPISimple.stream_project_names()` now accepts JSON responses
 
 v0.10.0 (2022-06-30)
 --------------------

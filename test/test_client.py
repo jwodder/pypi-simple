@@ -456,6 +456,28 @@ def test_stream_project_names(mocker: MockerFixture) -> None:
 
 
 @responses.activate
+def test_stream_project_names_json() -> None:
+    responses.add(
+        method=responses.GET,
+        url="https://test.nil/simple/",
+        json={
+            "meta": {"_last-serial": 14267765, "api-version": "1.0"},
+            "projects": [{"name": "argset"}, {"name": "banana"}, {"name": "coconut"}],
+        },
+        content_type="application/vnd.pypi.simple.v1+json",
+        headers={"x-pypi-last-serial": "12345"},
+    )
+    responses.add(
+        method=responses.GET,
+        url="https://test.nil/simple/",
+        body="This URL should only be requested once.",
+        status=500,
+    )
+    with PyPISimple("https://test.nil/simple/") as simple:
+        assert list(simple.stream_project_names()) == ["argset", "banana", "coconut"]
+
+
+@responses.activate
 def test_json_session(mocker: MockerFixture) -> None:
     responses.add(
         method=responses.GET,
