@@ -80,6 +80,10 @@ class DistributionPackage:
     #: mapping from hash algorithm names to hex-encoded digest strings;
     #: otherwise, it is `None`
     metadata_digests: Optional[dict[str, str]] = None
+        
+        
+    def __hash__(self):
+        return hash(self.filename) + hash(self.url)
 
     @property
     def sig_url(self) -> str:
