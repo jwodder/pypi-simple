@@ -33,6 +33,7 @@ def check_repo_version(
             f"Repository's version ({declared_version}) has greater minor"
             f" component than supported version ({supported_version})",
             UnexpectedRepoVersionWarning,
+            stacklevel=3,
         )
 
 
