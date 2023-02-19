@@ -1,5 +1,5 @@
-v1.1.0 (in development)
------------------------
+v1.1.0 (2023-02-19)
+-------------------
 - Support PEP 700
     - `versions` field added to `ProjectPage`
     - `size` and `upload_time` fields added to `DistributionPackage`

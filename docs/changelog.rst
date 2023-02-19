@@ -3,8 +3,8 @@
 Changelog
 =========
 
-v1.1.0 (in development)
------------------------
+v1.1.0 (2023-02-19)
+-------------------
 - Support :pep:`700`
 
   - ``versions`` field added to `ProjectPage`
