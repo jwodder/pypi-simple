@@ -1,5 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass
+from datetime import datetime
 import re
 from typing import Any, Optional
 from urllib.parse import urlparse, urlunparse
@@ -80,6 +81,18 @@ class DistributionPackage:
     #: mapping from hash algorithm names to hex-encoded digest strings;
     #: otherwise, it is `None`
     metadata_digests: Optional[dict[str, str]] = None
+
+    #: .. versionadded:: 1.1.0
+    #:
+    #: The size of the package file in bytes, or `None` if not specified
+    #: [#pep700]_.
+    size: Optional[int] = None
+
+    #: .. versionadded:: 1.1.0
+    #:
+    #: The time at which the package file was uploaded to the server, or `None`
+    #: if not specified [#pep700]_.
+    upload_time: Optional[datetime] = None
 
     @property
     def sig_url(self) -> str:
@@ -202,6 +215,8 @@ class DistributionPackage:
             digests=file.hashes,
             metadata_digests=file.metadata_digests,
             has_metadata=file.has_metadata,
+            size=file.size,
+            upload_time=file.upload_time,
         )
 
 
@@ -222,6 +237,11 @@ class ProjectPage:
     #: The value of the :mailheader:`X-PyPI-Last-Serial` response header
     #: returned when fetching the page, or `None` if not specified
     last_serial: Optional[str]
+
+    #: .. versionadded:: 1.1.0
+    #:
+    #: A list of the project's versions, or `None` if not specified [#pep700]_.
+    versions: Optional[list[str]] = None
 
     @classmethod
     def from_html(
@@ -260,6 +280,7 @@ class ProjectPage:
             ],
             repository_version=page.repository_version,
             last_serial=None,
+            versions=None,
         )
 
     @classmethod
@@ -292,6 +313,7 @@ class ProjectPage:
             ],
             repository_version=project.meta.api_version,
             last_serial=project.meta.last_serial,
+            versions=project.versions,
         )
 
     @classmethod

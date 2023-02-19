@@ -1,3 +1,10 @@
+v1.1.0 (in development)
+-----------------------
+- Support PEP 700
+    - `versions` field added to `ProjectPage`
+    - `size` and `upload_time` fields added to `DistributionPackage`
+    - `SUPPORTED_REPOSITORY_VERSION` increased to `"1.1"`
+
 v1.0.0 (2022-10-31)
 -------------------
 - Removed deprecated functionality:

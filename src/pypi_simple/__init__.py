@@ -14,7 +14,7 @@ Visit <https://github.com/jwodder/pypi-simple> or <https://pypi-simple.rtfd.io>
 for more information.
 """
 
-__version__ = "1.0.0"
+__version__ = "1.1.0.dev1"
 __author__ = "John Thorvald Wodder II"
 __author_email__ = "pypi-simple@varonathe.org"
 __license__ = "MIT"
@@ -24,7 +24,7 @@ __url__ = "https://github.com/jwodder/pypi-simple"
 PYPI_SIMPLE_ENDPOINT: str = "https://pypi.org/simple/"
 
 #: The maximum supported simple repository version (See :pep:`629`)
-SUPPORTED_REPOSITORY_VERSION: str = "1.0"
+SUPPORTED_REPOSITORY_VERSION: str = "1.1"
 
 #: :mailheader:`Accept` header value for accepting either the HTML or JSON
 #: serialization without a preference

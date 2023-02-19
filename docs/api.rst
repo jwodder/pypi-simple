@@ -65,3 +65,11 @@ Exceptions
     :show-inheritance:
 .. autoexception:: UnparsableFilenameError()
     :show-inheritance:
+
+Footnotes
+---------
+
+.. [#pep700] The ``versions``, ``size``, and ``upload_time`` fields are only
+   populated if the response was JSON from a server supporting :pep:`700`.  At
+   time of writing, Warehouse does not yet provide these fields; see
+   <https://github.com/pypi/warehouse/pull/12727> for details.

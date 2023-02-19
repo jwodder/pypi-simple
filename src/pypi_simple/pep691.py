@@ -1,4 +1,5 @@
 from __future__ import annotations
+from datetime import datetime
 from typing import Dict, List, Optional, Union
 from pydantic import BaseModel, Field, StrictBool
 
@@ -20,6 +21,8 @@ class File(BaseModel):
     dist_info_metadata: Union[StrictBool, Dict[str, str], None] = None
     gpg_sig: Optional[StrictBool] = None
     yanked: Union[StrictBool, str] = False
+    size: Optional[int] = None
+    upload_time: Optional[datetime] = None
 
     class Config:
         alias_generator = shishkebab
@@ -59,6 +62,7 @@ class Project(BaseModel):
     name: str
     files: List[File]
     meta: Meta
+    versions: Optional[List[str]] = None
 
 
 class ProjectItem(BaseModel):
