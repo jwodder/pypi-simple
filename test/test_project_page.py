@@ -628,7 +628,7 @@ def test_from_json_data_empty() -> None:
                     ),
                 ],
                 repository_version="1.0",
-                last_serial="10562871",
+                last_serial=10562871,
             ),
         ),
         (
@@ -678,7 +678,7 @@ def test_from_json_data_empty() -> None:
                     ),
                 ],
                 repository_version="1.0",
-                last_serial="10562871",
+                last_serial=10562871,
                 versions=["0.1.0"],
             ),
         ),
@@ -774,7 +774,7 @@ def test_from_json_data_relative_urls() -> None:
             ),
         ],
         repository_version="1.0",
-        last_serial="10562871",
+        last_serial=10562871,
     )
 
 

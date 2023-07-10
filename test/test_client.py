@@ -514,7 +514,7 @@ def test_json_session(mocker: MockerFixture) -> None:
         spy = mocker.spy(simple.s, "get")
         assert simple.get_index_page(timeout=3.14) == IndexPage(
             projects=["argset", "banana", "coconut"],
-            last_serial="14267765",
+            last_serial=14267765,
             repository_version="1.0",
         )
         (call,) = spy.call_args_list
@@ -556,7 +556,7 @@ def test_json_session(mocker: MockerFixture) -> None:
                     },
                 ),
             ],
-            last_serial="10562871",
+            last_serial=10562871,
             repository_version="1.0",
         )
         (call,) = spy.call_args_list

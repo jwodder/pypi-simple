@@ -166,7 +166,7 @@ def test_from_json_data() -> None:
             "coconut",
         ],
         repository_version="1.0",
-        last_serial="14267765",
+        last_serial=14267765,
     )
 
 

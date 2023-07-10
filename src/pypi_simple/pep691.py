@@ -1,7 +1,7 @@
 from __future__ import annotations
 from datetime import datetime
 from typing import Dict, List, Optional, Union
-from pydantic import BaseModel, Field, StrictBool
+from pydantic import ConfigDict, BaseModel, Field, StrictBool
 
 
 def shishkebab(s: str) -> str:
@@ -10,7 +10,7 @@ def shishkebab(s: str) -> str:
 
 class Meta(BaseModel):
     api_version: str = Field(alias="api-version")
-    last_serial: Optional[str] = Field(None, alias="_last-serial")
+    last_serial: Optional[Union[str, int]] = Field(None, alias="_last-serial")
 
 
 class File(BaseModel):
@@ -23,9 +23,7 @@ class File(BaseModel):
     yanked: Union[StrictBool, str] = False
     size: Optional[int] = None
     upload_time: Optional[datetime] = None
-
-    class Config:
-        alias_generator = shishkebab
+    model_config = ConfigDict(alias_generator=shishkebab)
 
     @property
     def is_yanked(self) -> bool:
