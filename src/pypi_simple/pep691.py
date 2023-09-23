@@ -1,7 +1,7 @@
 from __future__ import annotations
 from datetime import datetime
-from typing import Dict, List, Optional, Union
-from pydantic import BaseModel, Field, StrictBool
+from typing import Any, Dict, List, Optional, Union
+from pydantic import BaseModel, Field, StrictBool, field_validator
 
 
 def shishkebab(s: str) -> str:
@@ -12,8 +12,16 @@ class Meta(BaseModel):
     api_version: str = Field(alias="api-version")
     last_serial: Optional[str] = Field(None, alias="_last-serial")
 
+    @field_validator("last_serial", mode="before")
+    @classmethod
+    def _strify_serial_int(cls, value: Any) -> Any:
+        if isinstance(value, int):
+            return str(value)
+        else:
+            return value
 
-class File(BaseModel):
+
+class File(BaseModel, alias_generator=shishkebab):
     filename: str
     url: str
     hashes: Dict[str, str]
@@ -23,9 +31,6 @@ class File(BaseModel):
     yanked: Union[StrictBool, str] = False
     size: Optional[int] = None
     upload_time: Optional[datetime] = None
-
-    class Config:
-        alias_generator = shishkebab
 
     @property
     def is_yanked(self) -> bool:

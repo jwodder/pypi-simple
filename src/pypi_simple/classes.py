@@ -186,7 +186,7 @@ class DistributionPackage:
         :rtype: DistributionPackage
         :raises ValueError: if ``data`` is not a `dict`
         """
-        return cls.from_file(File.parse_obj(data), project_hint, base_url)
+        return cls.from_file(File.model_validate(data), project_hint, base_url)
 
     @classmethod
     def from_file(
@@ -303,7 +303,7 @@ class ProjectPage:
             if the repository version has a greater major component than the
             supported repository version
         """
-        project = Project.parse_obj(data)
+        project = Project.model_validate(data)
         check_repo_version(project.meta.api_version)
         return ProjectPage(
             project=project.name,
@@ -413,7 +413,7 @@ class IndexPage:
             supported repository version
         :raises ValueError: if ``data`` is not a `dict`
         """
-        plist = ProjectList.parse_obj(data)
+        plist = ProjectList.model_validate(data)
         check_repo_version(plist.meta.api_version)
         return IndexPage(
             projects=[p.name for p in plist.projects],

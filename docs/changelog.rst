@@ -3,6 +3,11 @@
 Changelog
 =========
 
+v1.2.0 (in development)
+-----------------------
+- Update pydantic to v2.0
+
+
 v1.1.0 (2023-02-19)
 -------------------
 - Support :pep:`700`
