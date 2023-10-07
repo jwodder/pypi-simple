@@ -27,8 +27,13 @@ jobs:
           - '3.12'
           - 'pypy-3.7'
           - 'pypy-3.8'
-          - 'pypy-3.9'
-          - 'pypy-3.10'
+          # Avoid PyPy v7.3.13 due to
+          # <https://foss.heptapod.net/pypy/pypy/-/issues/4010> causing
+          # doctests to fail
+          - 'pypy-3.9-v7.3.12'
+          - 'pypy-3.10-v7.3.12'
+          # TODO: Remove the "-v7.3.12" once a fixed version of PyPy is
+          # released & available on GitHub actions
         toxenv: [py]
         include:
           - python-version: '3.7'
