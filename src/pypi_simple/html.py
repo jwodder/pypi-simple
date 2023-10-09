@@ -2,7 +2,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional
 from urllib.parse import urljoin
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 from .util import basejoin, check_repo_version
 
 
@@ -48,16 +48,22 @@ class RepositoryPage:
         soup = BeautifulSoup(html, "html.parser", from_encoding=from_encoding)
         base_tag = soup.find("base", href=True)
         if base_tag is not None:
+            assert isinstance(base_tag, Tag)
+            href = base_tag["href"]
+            assert isinstance(href, str)
             if base_url is None:
-                base_url = base_tag["href"]
+                base_url = href
             else:
-                base_url = urljoin(base_url, base_tag["href"])
+                base_url = urljoin(base_url, href)
         pep629_meta = soup.find(
             "meta",
             attrs={"name": "pypi:repository-version", "content": True},
         )
         if pep629_meta is not None:
-            repository_version = pep629_meta["content"]
+            assert isinstance(pep629_meta, Tag)
+            content = pep629_meta["content"]
+            assert isinstance(content, str)
+            repository_version = content
             check_repo_version(repository_version)
         else:
             repository_version = None
