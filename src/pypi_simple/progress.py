@@ -2,15 +2,15 @@ from __future__ import annotations
 from collections.abc import Callable
 import sys
 from types import TracebackType
-from typing import Any, Optional, TypeVar
+from typing import TYPE_CHECKING, Any, Optional
 
 if sys.version_info[:2] >= (3, 8):
     from typing import Protocol, runtime_checkable
 else:
     from typing_extensions import Protocol, runtime_checkable
 
-
-T = TypeVar("T", bound="ProgressTracker")
+if TYPE_CHECKING:
+    from typing_extensions import Self
 
 
 @runtime_checkable
@@ -23,7 +23,7 @@ class ProgressTracker(Protocol):
     that will be called with the size of each downloaded file chunk.
     """
 
-    def __enter__(self: T) -> T:
+    def __enter__(self) -> Self:
         ...
 
     def __exit__(
