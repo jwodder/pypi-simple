@@ -3,6 +3,17 @@
 Changelog
 =========
 
+v1.4.0 (in development)
+-----------------------
+- Support :pep:`708`
+
+  - `~ProjectPage.tracks` and `~ProjectPage.alternate_locations` attributes
+    added to `ProjectPage`
+  - `~RepositoryPage.pypi_meta`, `~RepositoryPage.tracks`, and
+    `~RepositoryPage.alternate_locations` attributes added to `RepositoryPage`
+  - `SUPPORTED_REPOSITORY_VERSION` increased to ``"1.2"``
+
+
 v1.3.0 (2023-11-01)
 -------------------
 - Support Python 3.12
@@ -21,7 +32,7 @@ v1.1.0 (2023-02-19)
 - Support :pep:`700`
 
   - ``versions`` field added to `ProjectPage`
-  - ``size` and ``upload_time`` fields added to `DistributionPackage`
+  - ``size`` and ``upload_time`` fields added to `DistributionPackage`
   - `SUPPORTED_REPOSITORY_VERSION` increased to ``"1.1"``
 
 

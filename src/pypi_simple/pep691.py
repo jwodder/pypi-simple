@@ -8,8 +8,8 @@ def shishkebab(s: str) -> str:
     return s.replace("_", "-")
 
 
-class Meta(BaseModel):
-    api_version: str = Field(alias="api-version")
+class Meta(BaseModel, alias_generator=shishkebab):
+    api_version: str
     last_serial: Optional[str] = Field(None, alias="_last-serial")
 
     @field_validator("last_serial", mode="before")
@@ -19,6 +19,11 @@ class Meta(BaseModel):
             return str(value)
         else:
             return value
+
+
+class ProjectMeta(Meta):
+    tracks: List[str] = Field(default_factory=list)
+    alternate_locations: List[str] = Field(default_factory=list)
 
 
 class File(BaseModel, alias_generator=shishkebab):
@@ -66,7 +71,7 @@ class File(BaseModel, alias_generator=shishkebab):
 class Project(BaseModel):
     name: str
     files: List[File]
-    meta: Meta
+    meta: ProjectMeta
     versions: Optional[List[str]] = None
 
 

@@ -1,3 +1,11 @@
+v1.4.0 (in development)
+-----------------------
+- Support PEP 708
+    - `tracks` and `alternate_locations` attributes added to `ProjectPage`
+    - `pypi_meta`, `tracks`, and `alternate_locations` attributes added to
+      `RepositoryPage`
+    - `SUPPORTED_REPOSITORY_VERSION` increased to `"1.2"`
+
 v1.3.0 (2023-11-01)
 -------------------
 - Support Python 3.12

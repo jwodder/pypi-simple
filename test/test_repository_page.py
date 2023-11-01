@@ -30,6 +30,7 @@ from pypi_simple import (
                     Link("link1", "one.html", {"href": "one.html"}),
                     Link("link-two", "two.html", {"href": "two.html"}),
                 ],
+                pypi_meta={},
             ),
         ),
         (
@@ -58,6 +59,7 @@ from pypi_simple import (
                         {"href": "two.html"},
                     ),
                 ],
+                pypi_meta={},
             ),
         ),
         (
@@ -89,6 +91,7 @@ from pypi_simple import (
                         {"href": "two.html"},
                     ),
                 ],
+                pypi_meta={},
             ),
         ),
         (
@@ -112,6 +115,7 @@ from pypi_simple import (
                     Link("link1", "one.html", {"href": "one.html"}),
                     Link("link-two", "two.html", {"href": "two.html"}),
                 ],
+                pypi_meta={},
             ),
         ),
         (
@@ -144,6 +148,7 @@ from pypi_simple import (
                         {"href": "two.html"},
                     ),
                 ],
+                pypi_meta={},
             ),
         ),
         # I'm not sure if this is how HTML is supposed to work, but it is how
@@ -178,6 +183,7 @@ from pypi_simple import (
                         {"href": "two.html"},
                     ),
                 ],
+                pypi_meta={},
             ),
         ),
         (
@@ -209,6 +215,7 @@ from pypi_simple import (
                         {"href": "two.html"},
                     ),
                 ],
+                pypi_meta={},
             ),
         ),
         (
@@ -240,6 +247,7 @@ from pypi_simple import (
                         {"href": "two.html"},
                     ),
                 ],
+                pypi_meta={},
             ),
         ),
         (
@@ -271,6 +279,7 @@ from pypi_simple import (
                         {"href": "two.html"},
                     ),
                 ],
+                pypi_meta={},
             ),
         ),
         (
@@ -298,6 +307,7 @@ from pypi_simple import (
                         {"href": "three.html"},
                     ),
                 ],
+                pypi_meta={},
             ),
         ),
         (
@@ -316,6 +326,7 @@ from pypi_simple import (
             RepositoryPage(
                 repository_version=None,
                 links=[Link("link1", "one.html", {"href": "one.html"})],
+                pypi_meta={},
             ),
         ),
         (
@@ -331,6 +342,7 @@ from pypi_simple import (
                     Link("link1", "one.html", {"href": "one.html"}),
                     Link("link-two", "two.html", {"href": "two.html"}),
                 ],
+                pypi_meta={},
             ),
         ),
         (
@@ -360,6 +372,7 @@ from pypi_simple import (
                         },
                     ),
                 ],
+                pypi_meta={},
             ),
         ),
         (
@@ -379,6 +392,7 @@ from pypi_simple import (
                         },
                     )
                 ],
+                pypi_meta={},
             ),
         ),
         (
@@ -398,6 +412,7 @@ from pypi_simple import (
                         },
                     ),
                 ],
+                pypi_meta={},
             ),
         ),
         (
@@ -421,6 +436,7 @@ from pypi_simple import (
                     Link("link1", "one.html", {"href": "one.html"}),
                     Link("link-two", "two.html", {"href": "two.html"}),
                 ],
+                pypi_meta={"repository-version": ["1.0"]},
             ),
         ),
         (
@@ -444,6 +460,7 @@ from pypi_simple import (
                     Link("link1", "one.html", {"href": "one.html"}),
                     Link("link-two", "two.html", {"href": "two.html"}),
                 ],
+                pypi_meta={},
             ),
         ),
         (
@@ -467,6 +484,7 @@ from pypi_simple import (
                     Link("link1", "one.html", {"href": "one.html"}),
                     Link("link-two", "two.html", {"href": "two.html"}),
                 ],
+                pypi_meta={},
             ),
         ),
         (
@@ -491,6 +509,7 @@ from pypi_simple import (
                     Link("link1", "one.html", {"href": "one.html"}),
                     Link("link-two", "two.html", {"href": "two.html"}),
                 ],
+                pypi_meta={"repository-version": ["1.0", "5.0"]},
             ),
         ),
     ],

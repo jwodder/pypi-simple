@@ -25,8 +25,8 @@
 
 ``pypi-simple`` is a client library for the Python Simple Repository API as
 specified in :pep:`503` and updated by :pep:`592`, :pep:`629`, :pep:`658`,
-:pep:`691`, :pep:`700`, and :pep:`714`.  With it, you can query `the Python
-Package Index (PyPI) <https://pypi.org>`_ and other `pip
+:pep:`691`, :pep:`700`, :pep:`708`, and :pep:`714`.  With it, you can query
+`the Python Package Index (PyPI) <https://pypi.org>`_ and other `pip
 <https://pip.pypa.io>`_-compatible repositories for a list of their available
 projects and lists of each project's available package files.  The library also
 allows you to download package files and query them for their project version,

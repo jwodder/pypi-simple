@@ -1,5 +1,5 @@
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 import re
 from typing import Any, Optional
@@ -243,6 +243,20 @@ class ProjectPage:
     #: A list of the project's versions, or `None` if not specified [#pep700]_.
     versions: Optional[list[str]] = None
 
+    #: .. versionadded:: 1.4.0
+    #:
+    #: Repository "tracks" metadata.  See `PEP 708`__.
+    #:
+    #: __ https://peps.python.org/pep-0708/#repository-tracks-metadata
+    tracks: list[str] = field(default_factory=list)
+
+    #: .. versionadded:: 1.4.0
+    #:
+    #: Repository "alternate locations" metadata.  See `PEP 708`__.
+    #:
+    #: __ https://peps.python.org/pep-0708/#alternate-locations-metadata
+    alternate_locations: list[str] = field(default_factory=list)
+
     @classmethod
     def from_html(
         cls,
@@ -281,6 +295,8 @@ class ProjectPage:
             repository_version=page.repository_version,
             last_serial=None,
             versions=None,
+            tracks=page.tracks,
+            alternate_locations=page.alternate_locations,
         )
 
     @classmethod
@@ -314,6 +330,8 @@ class ProjectPage:
             repository_version=project.meta.api_version,
             last_serial=project.meta.last_serial,
             versions=project.versions,
+            tracks=project.meta.tracks,
+            alternate_locations=project.meta.alternate_locations,
         )
 
     @classmethod

@@ -1,5 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass
+import re
 from typing import Optional
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup, Tag
@@ -20,6 +21,36 @@ class RepositoryPage:
 
     #: A list of hyperlinks found on the page
     links: list[Link]
+
+    #: .. versionadded:: 1.4.0
+    #:
+    #: ``<meta/>`` tags found on the page whose ``name`` attributes start with
+    #: ``pypi:``.  This is a dict in which the keys are ``name`` attributes
+    #: with leading ``"pypi:"`` removed and in which the values are the
+    #: corresponding ``content`` attributes.
+    pypi_meta: dict[str, list[str]]
+
+    @property
+    def tracks(self) -> list[str]:
+        """
+        .. versionadded:: 1.4.0
+
+        Repository "tracks" metadata.  See `PEP 708`__.
+
+        __ https://peps.python.org/pep-0708/#repository-tracks-metadata
+        """
+        return self.pypi_meta.get("tracks", [])
+
+    @property
+    def alternate_locations(self) -> list[str]:
+        """
+        .. versionadded:: 1.4.0
+
+        Repository "alternate locations" metadata.  See `PEP 708`__.
+
+        __ https://peps.python.org/pep-0708/#alternate-locations-metadata
+        """
+        return self.pypi_meta.get("alternate-locations", [])
 
     @classmethod
     def from_html(
@@ -55,18 +86,23 @@ class RepositoryPage:
                 base_url = href
             else:
                 base_url = urljoin(base_url, href)
-        pep629_meta = soup.find(
-            "meta",
-            attrs={"name": "pypi:repository-version", "content": True},
-        )
-        if pep629_meta is not None:
-            assert isinstance(pep629_meta, Tag)
-            content = pep629_meta["content"]
+        meta: dict[str, list[str]] = {}
+        for tag in soup.find_all(
+            "meta", attrs={"name": re.compile(r"^pypi:"), "content": True}
+        ):
+            assert isinstance(tag, Tag)
+            name = tag["name"]
+            assert isinstance(name, str)
+            assert name.startswith("pypi:")
+            content = tag["content"]
             assert isinstance(content, str)
-            repository_version = content
-            check_repo_version(repository_version)
-        else:
+            meta.setdefault(name[5:], []).append(content)
+        try:
+            repository_version = meta["repository-version"][0]
+        except LookupError:
             repository_version = None
+        if repository_version is not None:
+            check_repo_version(repository_version)
         links = []
         for link in soup.find_all("a", href=True):
             links.append(
@@ -76,7 +112,7 @@ class RepositoryPage:
                     attrs=link.attrs,
                 )
             )
-        return cls(repository_version=repository_version, links=links)
+        return cls(repository_version=repository_version, links=links, pypi_meta=meta)
 
 
 @dataclass

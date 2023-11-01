@@ -446,6 +446,59 @@ def test_from_html_empty() -> None:
             ),
         ),
         (
+            "qypi",
+            "qypi-708.html",
+            PYPI_SIMPLE_ENDPOINT + "qypi/",
+            "utf-8",
+            ProjectPage(
+                project="qypi",
+                packages=[
+                    DistributionPackage(
+                        filename="qypi-0.1.0-py3-none-any.whl",
+                        project="qypi",
+                        version="0.1.0",
+                        package_type="wheel",
+                        url="https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl",
+                        digests={
+                            "sha256": "da69d28dcd527c0e372b3fa7b92fc333b327f8470175f035abc4e351b539189f"
+                        },
+                        requires_python="~=3.4",
+                        has_sig=None,
+                        is_yanked=False,
+                        yanked_reason=None,
+                        metadata_digests=None,
+                        has_metadata=False,
+                    ),
+                    DistributionPackage(
+                        filename="qypi-0.1.0.tar.gz",
+                        project="qypi",
+                        version="0.1.0",
+                        package_type="sdist",
+                        url="https://files.pythonhosted.org/packages/e4/fe/3fdb222a2916b94e9ca12d80c92dbbad1f7068c82fca42872d6c1739fead/qypi-0.1.0.tar.gz",
+                        digests={
+                            "sha256": "212093de95b4f5f22e19fa18fe57fa33eccd63adb9b325fe1b673bf71912c551"
+                        },
+                        requires_python="~=3.4",
+                        has_sig=None,
+                        is_yanked=False,
+                        yanked_reason=None,
+                        metadata_digests=None,
+                        has_metadata=False,
+                    ),
+                ],
+                repository_version="1.2",
+                last_serial=None,
+                tracks=[
+                    "https://tracks.package/pypi/qypi/",
+                    "https://test.tracks.package/pypi/qypi/",
+                ],
+                alternate_locations=[
+                    "https://alt.package/pypi/qypi/",
+                    "https://test.alt.package/pypi/qypi/",
+                ],
+            ),
+        ),
+        (
             "devpi",
             "devpi_devpi.html",
             "https://m.devpi.net/fschulze/dev/+simple/devpi",
@@ -680,6 +733,65 @@ def test_from_json_data_empty() -> None:
                 repository_version="1.0",
                 last_serial="10562871",
                 versions=["0.1.0"],
+            ),
+        ),
+        (
+            "argset-708.json",
+            ProjectPage(
+                project="argset",
+                packages=[
+                    DistributionPackage(
+                        filename="argset-0.1.0-py3-none-any.whl",
+                        project="argset",
+                        version="0.1.0",
+                        package_type="wheel",
+                        url="https://files.pythonhosted.org/packages/b5/2b/7aa284f345e37f955d86e4cd57b1039b573552b0fc29d1a522ec05c1ee41/argset-0.1.0-py3-none-any.whl",
+                        requires_python="~=3.6",
+                        has_sig=None,
+                        is_yanked=False,
+                        yanked_reason=None,
+                        metadata_digests=None,
+                        has_metadata=None,
+                        digests={
+                            "sha256": "107a632c7112faceb9fd6e93658dd461154713db250f7ffde5bd473e17cf1db5"
+                        },
+                        size=5219,
+                        upload_time=datetime(
+                            2021, 6, 5, 0, 15, 37, 534150, tzinfo=timezone.utc
+                        ),
+                    ),
+                    DistributionPackage(
+                        filename="argset-0.1.0.tar.gz",
+                        project="argset",
+                        version="0.1.0",
+                        package_type="sdist",
+                        url="https://files.pythonhosted.org/packages/d0/ee/1c25e68d029e8daaf3228dababbf3261fa5d9569f6f705867b2ad4df9b6d/argset-0.1.0.tar.gz",
+                        requires_python="~=3.6",
+                        has_sig=None,
+                        is_yanked=False,
+                        yanked_reason=None,
+                        metadata_digests=None,
+                        has_metadata=None,
+                        digests={
+                            "sha256": "8a41ee4789d37517c259984c11f2aa3639a90dc8fa446ff905ecc5fe6623c12d"
+                        },
+                        size=6565,
+                        upload_time=datetime(
+                            2021, 6, 5, 0, 15, 39, 3726, tzinfo=timezone.utc
+                        ),
+                    ),
+                ],
+                repository_version="1.2",
+                last_serial="10562871",
+                versions=["0.1.0"],
+                tracks=[
+                    "https://tracks.package/pypi/argset/",
+                    "https://test.tracks.package/pypi/argset",
+                ],
+                alternate_locations=[
+                    "https://alt.package/pypi/argset/",
+                    "https://test.alt.package/pypi/argset",
+                ],
             ),
         ),
         (
