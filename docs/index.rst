@@ -14,6 +14,7 @@ pypi-simple — PyPI Simple Repository API client library
     :hidden:
 
     api
+    examples
     changelog
 
 ``pypi-simple`` is a client library for the Python Simple Repository API as

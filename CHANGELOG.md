@@ -3,6 +3,7 @@ v1.3.0 (in development)
 - Support Python 3.12
 - Update for PEP 714
 - Gave `PyPISimple` a `get_package_metadata()` method
+- Added an examples page to the documentation
 
 v1.2.0 (2023-09-23)
 -------------------
