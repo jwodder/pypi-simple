@@ -3,8 +3,8 @@
 Changelog
 =========
 
-v1.3.0 (in development)
------------------------
+v1.3.0 (2023-11-01)
+-------------------
 - Support Python 3.12
 - Update for PEP 714
 - Gave `PyPISimple` a `~PyPISimple.get_package_metadata()` method
