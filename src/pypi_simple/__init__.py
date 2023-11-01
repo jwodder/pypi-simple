@@ -14,7 +14,7 @@ Visit <https://github.com/jwodder/pypi-simple> or <https://pypi-simple.rtfd.io>
 for more information.
 """
 
-__version__ = "1.4.0.dev1"
+__version__ = "1.4.0"
 __author__ = "John Thorvald Wodder II"
 __author_email__ = "pypi-simple@varonathe.org"
 __license__ = "MIT"

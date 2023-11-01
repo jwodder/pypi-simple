@@ -1,5 +1,5 @@
-v1.4.0 (in development)
------------------------
+v1.4.0 (2023-11-01)
+-------------------
 - Support PEP 708
     - `tracks` and `alternate_locations` attributes added to `ProjectPage`
     - `pypi_meta`, `tracks`, and `alternate_locations` attributes added to

@@ -3,8 +3,8 @@
 Changelog
 =========
 
-v1.4.0 (in development)
------------------------
+v1.4.0 (2023-11-01)
+-------------------
 - Support :pep:`708`
 
   - `~ProjectPage.tracks` and `~ProjectPage.alternate_locations` attributes
