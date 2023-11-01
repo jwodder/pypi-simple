@@ -698,7 +698,7 @@ def test_download_bad_digests(tmp_path: Path) -> None:
         with pytest.raises(DigestMismatchError) as excinfo:
             simple.download_package(pkg, dest)
         assert str(excinfo.value) == (
-            "sha256 digest of downloaded file is"
+            "sha256 digest of downloaded data is"
             " '17e88db187afd62c16e5debf3e6527cd006bc012bc90b51a810cd80c2d511f43'"
             " instead of expected"
             " 'f3449b5d28d6cba5bfbeed371ad59950aba035730d5cc28a32b4e7632e17ed6c'"
@@ -735,7 +735,7 @@ def test_download_bad_digests_keep(tmp_path: Path) -> None:
         with pytest.raises(DigestMismatchError) as excinfo:
             simple.download_package(pkg, dest, keep_on_error=True)
         assert str(excinfo.value) == (
-            "sha256 digest of downloaded file is"
+            "sha256 digest of downloaded data is"
             " '17e88db187afd62c16e5debf3e6527cd006bc012bc90b51a810cd80c2d511f43'"
             " instead of expected"
             " 'f3449b5d28d6cba5bfbeed371ad59950aba035730d5cc28a32b4e7632e17ed6c'"

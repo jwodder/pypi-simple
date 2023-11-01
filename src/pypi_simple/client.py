@@ -404,6 +404,8 @@ class NoSuchProjectError(Exception):
 
 class NoMetadataError(Exception):
     """
+    .. versionadded:: 1.3.0
+
     Raised by `PyPISimple.get_package_metadata()` when a request for
     distribution metadata fails with a 404 error code
     """

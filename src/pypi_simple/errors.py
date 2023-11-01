@@ -52,8 +52,9 @@ class UnsupportedContentTypeError(ValueError):
 
 class NoDigestsError(ValueError):
     """
-    Raised by `PyPISimple.download_package()` with ``verify=True`` when the
-    given package does not have any digests with known algorithms
+    Raised by `PyPISimple.download_package()` and
+    `PyPISimple.get_package_metadata()` with ``verify=True`` when the given
+    package or package metadata does not have any digests with known algorithms
     """
 
     pass
@@ -61,8 +62,9 @@ class NoDigestsError(ValueError):
 
 class DigestMismatchError(ValueError):
     """
-    Raised by `PyPISimple.download_package()` with ``verify=True`` when the
-    digest of the downloaded file does not match the expected value
+    Raised by `PyPISimple.download_package()` and
+    `PyPISimple.get_package_metadata()` with ``verify=True`` when the digest of
+    the downloaded data does not match the expected value
     """
 
     def __init__(
@@ -72,12 +74,12 @@ class DigestMismatchError(ValueError):
         self.algorithm = algorithm
         #: The expected digest
         self.expected_digest = expected_digest
-        #: The digest of the file that was actually received
+        #: The digest of the data that was actually received
         self.actual_digest = actual_digest
 
     def __str__(self) -> str:
         return (
-            f"{self.algorithm} digest of downloaded file is"
+            f"{self.algorithm} digest of downloaded data is"
             f" {self.actual_digest!r} instead of expected {self.expected_digest!r}"
         )
 
