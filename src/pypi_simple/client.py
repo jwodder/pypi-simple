@@ -328,6 +328,63 @@ class PyPISimple:
                         pass
                 raise
 
+    def get_package_metadata(
+        self,
+        pkg: DistributionPackage,
+        verify: bool = True,
+        timeout: float | tuple[float, float] | None = None,
+    ) -> str:
+        """
+        .. versionadded:: 1.3.0
+
+        Retrieve the `distribution metadata`_ for the given
+        `DistributionPackage`.  The metadata can then be parsed with, for
+        example, |the packaging package|_.
+
+        Not all packages have distribution metadata available for download; the
+        `DistributionPackage.has_metadata` attribute can be used to check
+        whether the repository reported the availability of the metadata.  This
+        method will always attempt to download metadata regardless of the value
+        of `~DistributionPackage.has_metadata`; if the server replies with a
+        404, a `NoMetadataError` is raised.
+
+        .. _distribution metadata:
+           https://packaging.python.org/en/latest/specifications/core-metadata/
+        .. |the packaging package| replace:: the ``packaging`` package
+        .. _the packaging package:
+           https://packaging.pypa.io/en/stable/metadata.html
+
+        :param DistributionPackage pkg:
+            the distribution package to retrieve the metadata of
+        :param bool verify:
+            whether to verify the metadata's digests against the retrieved data
+        :param timeout: optional timeout to pass to the ``requests`` call
+        :type timeout: float | tuple[float,float] | None
+
+        :raises NoMetadataError:
+            if the repository responds with a 404 error code
+        :raises requests.HTTPError: if the repository responds with an HTTP
+            error code other than 404
+        :raises NoDigestsError:
+            if ``verify`` is true and the given package's metadata does not
+            have any digests with known algorithms
+        :raises DigestMismatchError:
+            if ``verify`` is true and the digest of the downloaded data does
+            not match the expected value
+        """
+        digester: AbstractDigestChecker
+        if verify:
+            digester = DigestChecker(pkg.metadata_digests or {})
+        else:
+            digester = NullDigestChecker()
+        r = self.s.get(pkg.metadata_url, timeout=timeout)
+        if r.status_code == 404:
+            raise NoMetadataError(pkg.filename)
+        r.raise_for_status()
+        digester.update(r.content)
+        digester.finalize()
+        return r.text
+
 
 class NoSuchProjectError(Exception):
     """
@@ -343,3 +400,17 @@ class NoSuchProjectError(Exception):
 
     def __str__(self) -> str:
         return f"No details about project {self.project!r} available at {self.url}"
+
+
+class NoMetadataError(Exception):
+    """
+    Raised by `PyPISimple.get_package_metadata()` when a request for
+    distribution metadata fails with a 404 error code
+    """
+
+    def __init__(self, filename: str) -> None:
+        #: The filename of the package whose metadata was requested
+        self.filename = filename
+
+    def __str__(self) -> str:
+        return f"No distribution metadata found for {self.filename}"

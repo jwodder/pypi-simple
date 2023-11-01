@@ -68,7 +68,7 @@ ACCEPT_HTML_PREFERRED = ", ".join(
 )
 
 from .classes import DistributionPackage, IndexPage, ProjectPage
-from .client import NoSuchProjectError, PyPISimple
+from .client import NoMetadataError, NoSuchProjectError, PyPISimple
 from .errors import (
     DigestMismatchError,
     NoDigestsError,
@@ -88,6 +88,7 @@ __all__ = [
     "IndexPage",
     "Link",
     "NoDigestsError",
+    "NoMetadataError",
     "NoSuchProjectError",
     "PYPI_SIMPLE_ENDPOINT",
     "ProgressTracker",
