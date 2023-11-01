@@ -25,12 +25,13 @@
 
 ``pypi-simple`` is a client library for the Python Simple Repository API as
 specified in :pep:`503` and updated by :pep:`592`, :pep:`629`, :pep:`658`,
-:pep:`691`, and :pep:`700`.  With it, you can query `the Python Package Index
-(PyPI) <https://pypi.org>`_ and other `pip <https://pip.pypa.io>`_-compatible
-repositories for a list of their available projects and lists of each project's
-available package files.  The library also allows you to download package files
-and query them for their project version, package type, file digests,
-``requires_python`` string, PGP signature URL, and metadata URL.
+:pep:`691`, :pep:`700`, and :pep:`714`.  With it, you can query `the Python
+Package Index (PyPI) <https://pypi.org>`_ and other `pip
+<https://pip.pypa.io>`_-compatible repositories for a list of their available
+projects and lists of each project's available package files.  The library also
+allows you to download package files and query them for their project version,
+package type, file digests, ``requires_python`` string, PGP signature URL, and
+metadata URL.
 
 See `the documentation <https://pypi-simple.readthedocs.io>`_ for more
 information.
@@ -39,8 +40,7 @@ information.
 Installation
 ============
 ``pypi-simple`` requires Python 3.7 or higher.  Just use `pip
-<https://pip.pypa.io>`_ for Python 3 (You have pip, right?) to install
-``pypi-simple`` and its dependencies::
+<https://pip.pypa.io>`_ for Python 3 (You have pip, right?) to install it::
 
     python3 -m pip install pypi-simple
 

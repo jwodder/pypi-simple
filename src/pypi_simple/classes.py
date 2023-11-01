@@ -141,7 +141,7 @@ class DistributionPackage:
             has_sig = gpg_sig.lower() == "true"
         else:
             has_sig = None
-        mddigest = link.get_str_attrib("data-dist-info-metadata")
+        mddigest = link.get_str_attrib("data-core-metadata")
         metadata_digests: Optional[dict[str, str]]
         if mddigest is not None:
             metadata_digests = {}

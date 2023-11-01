@@ -26,7 +26,7 @@ class File(BaseModel, alias_generator=shishkebab):
     url: str
     hashes: Dict[str, str]
     requires_python: Optional[str] = None
-    dist_info_metadata: Union[StrictBool, Dict[str, str], None] = None
+    core_metadata: Union[StrictBool, Dict[str, str], None] = None
     gpg_sig: Optional[StrictBool] = None
     yanked: Union[StrictBool, str] = False
     size: Optional[int] = None
@@ -48,16 +48,16 @@ class File(BaseModel, alias_generator=shishkebab):
 
     @property
     def has_metadata(self) -> Optional[bool]:
-        if isinstance(self.dist_info_metadata, dict):
+        if isinstance(self.core_metadata, dict):
             return True
         else:
-            return self.dist_info_metadata
+            return self.core_metadata
 
     @property
     def metadata_digests(self) -> Optional[dict[str, str]]:
-        if isinstance(self.dist_info_metadata, dict):
-            return self.dist_info_metadata
-        elif self.dist_info_metadata is True:
+        if isinstance(self.core_metadata, dict):
+            return self.core_metadata
+        elif self.core_metadata is True:
             return {}
         else:
             return None

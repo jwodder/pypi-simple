@@ -94,7 +94,7 @@ def test_get_sig_url(has_sig: bool) -> None:
                 attrs={
                     "data-requires-python": "~= 3.6",
                     "data-gpg-sig": "true",
-                    "data-dist-info-metadata": "sha256=ae718719df4708f329d58ca4d5390c1206c4222ef7e62a3aa9844397c63de28b",
+                    "data-core-metadata": "sha256=ae718719df4708f329d58ca4d5390c1206c4222ef7e62a3aa9844397c63de28b",
                     "data-yanked": "Oopsy.",
                 },
             ),
@@ -123,7 +123,7 @@ def test_get_sig_url(has_sig: bool) -> None:
                 url="https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl#sha256=da69d28dcd527c0e372b3fa7b92fc333b327f8470175f035abc4e351b539189f",
                 attrs={
                     "data-gpg-sig": "false",
-                    "data-dist-info-metadata": "sha256=true",
+                    "data-core-metadata": "sha256=true",
                 },
             ),
             DistributionPackage(
@@ -214,7 +214,7 @@ def test_from_json_data_no_metadata() -> None:
 
 
 @pytest.mark.parametrize(
-    "dist_info_metadata,has_metadata,metadata_digests",
+    "core_metadata,has_metadata,metadata_digests",
     [
         (False, False, None),
         (True, True, {}),
@@ -223,7 +223,7 @@ def test_from_json_data_no_metadata() -> None:
     ],
 )
 def test_from_json_data_metadata(
-    dist_info_metadata: bool | dict[str, str],
+    core_metadata: bool | dict[str, str],
     has_metadata: bool,
     metadata_digests: Optional[dict[str, str]],
 ) -> None:
@@ -236,7 +236,7 @@ def test_from_json_data_metadata(
             "requires-python": "~=3.6",
             "url": "https://files.pythonhosted.org/packages/b5/2b/7aa284f345e37f955d86e4cd57b1039b573552b0fc29d1a522ec05c1ee41/argset-0.1.0-py3-none-any.whl",
             "yanked": False,
-            "dist-info-metadata": dist_info_metadata,
+            "core-metadata": core_metadata,
         }
     )
     assert pkg.has_metadata == has_metadata

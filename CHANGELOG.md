@@ -1,6 +1,7 @@
 v1.3.0 (in development)
 -----------------------
 - Support Python 3.12
+- Update for PEP 714
 
 v1.2.0 (2023-09-23)
 -------------------
