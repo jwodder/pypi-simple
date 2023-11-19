@@ -1,3 +1,95 @@
 [build-system]
-requires = ["setuptools >= 46.4.0"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pypi-simple"
+dynamic = ["version"]
+description = "PyPI Simple Repository API client library"
+readme = "README.rst"
+requires-python = ">=3.7"
+license = "MIT"
+license-files = { paths = ["LICENSE"] }
+authors = [
+    { name = "John Thorvald Wodder II", email = "pypi-simple@varonathe.org" }
+]
+
+keywords = [
+    "pypi",
+    "pep503",
+    "simple repository api",
+    "packages",
+    "pip",
+]
+
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: System :: Software Distribution",
+    "Topic :: Text Processing :: Markup :: HTML",
+    "Typing :: Typed",
+]
+
+dependencies = [
+    "beautifulsoup4 ~= 4.5",
+    "mailbits ~= 0.2",
+    "packaging >= 20",
+    "pydantic ~= 2.0",
+    "requests ~= 2.20",
+    "typing_extensions; python_version < '3.8'",
+]
+
+[project.optional-dependencies]
+tqdm = ["tqdm"]
+
+[project.urls]
+"Source Code" = "https://github.com/jwodder/pypi-simple"
+"Bug Tracker" = "https://github.com/jwodder/pypi-simple/issues"
+
+[tool.hatch.version]
+path = "src/pypi_simple/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/docs",
+    "/src",
+    "/test",
+    "CHANGELOG.*",
+    "CONTRIBUTORS.*",
+    "tox.ini",
+]
+
+[tool.hatch.envs.default]
+python = "3"
+
+[tool.mypy]
+allow_incomplete_defs = false
+allow_untyped_defs = false
+ignore_missing_imports = false
+# <https://github.com/python/mypy/issues/7773>:
+no_implicit_optional = true
+implicit_reexport = false
+local_partial_types = true
+pretty = true
+show_error_codes = true
+show_traceback = true
+strict_equality = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+plugins = ["pydantic.mypy"]
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+warn_required_dynamic_aliases = true
