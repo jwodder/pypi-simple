@@ -1,5 +1,5 @@
-v1.4.1 (in development)
------------------------
+v1.4.1 (2024-01-30)
+-------------------
 - Migrated from setuptools to hatch
 - **Bugfix**: When no `accept` argument is passed to
   `PyPISimple.get_project_page()`, actually fall back to the value supplied on
