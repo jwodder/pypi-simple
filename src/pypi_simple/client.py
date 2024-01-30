@@ -238,7 +238,7 @@ class PyPISimple:
             greater major component than the supported repository version
         """
         url = self.get_project_url(project)
-        r = self.s.get(url, timeout=timeout, headers={"Accept": accept or None})
+        r = self.s.get(url, timeout=timeout, headers={"Accept": accept or self.accept})
         if r.status_code == 404:
             raise NoSuchProjectError(project, url)
         r.raise_for_status()
