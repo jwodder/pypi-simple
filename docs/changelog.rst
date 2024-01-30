@@ -3,10 +3,13 @@
 Changelog
 =========
 
-v1.5.0 (in development)
+v1.4.1 (in development)
 -----------------------
 - Migrated from setuptools to hatch
-
+- **Bugfix**: When no ``accept`` argument is passed to
+  `PyPISimple.get_project_page()`, actually fall back to the value supplied on
+  client instantiation, as documented (contributed by `@thatch
+  <https://github.com/thatch>`_)
 
 v1.4.0 (2023-11-01)
 -------------------
