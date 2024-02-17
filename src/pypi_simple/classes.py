@@ -149,7 +149,7 @@ class DistributionPackage:
             m = re.fullmatch(r"(\w+)=([0-9A-Fa-f]+)", mddigest)
             if m:
                 metadata_digests[m[1]] = m[2]
-            has_metadata = bool(m) or mddigest == "true"
+            has_metadata = bool(m) or mddigest.lower() == "true"
         else:
             metadata_digests = None
         yanked_reason = link.get_str_attrib("data-yanked")
