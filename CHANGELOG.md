@@ -1,3 +1,12 @@
+v1.5.0 (in development)
+-----------------------
+- **Bugfix**: Fix parsing of "true" `data-core-metadata` attributes and
+  handling of the attribute's absense (contributed by
+  [@thatch](https://github.com/thatch))
+    - `DistributionPackage.has_metadata` will now be `None` if this attribute
+      was absent in the HTML returned by PyPI.  Previously, it would be `False`
+      under this circumstance.
+
 v1.4.1 (2024-01-30)
 -------------------
 - Migrated from setuptools to hatch
