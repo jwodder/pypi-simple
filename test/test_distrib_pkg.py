@@ -84,7 +84,7 @@ def test_get_sig_url(has_sig: bool) -> None:
                 is_yanked=False,
                 yanked_reason=None,
                 metadata_digests=None,
-                has_metadata=False,
+                has_metadata=None,
             ),
         ),
         (
@@ -123,7 +123,7 @@ def test_get_sig_url(has_sig: bool) -> None:
                 url="https://files.pythonhosted.org/packages/82/fc/9e25534641d7f63be93079bc07fa92bab136ddf5d4181059a1308a346f96/qypi-0.1.0-py3-none-any.whl#sha256=da69d28dcd527c0e372b3fa7b92fc333b327f8470175f035abc4e351b539189f",
                 attrs={
                     "data-gpg-sig": "false",
-                    "data-core-metadata": "sha256=true",
+                    "data-core-metadata": "true",
                 },
             ),
             DistributionPackage(

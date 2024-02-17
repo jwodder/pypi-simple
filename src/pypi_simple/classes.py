@@ -143,11 +143,13 @@ class DistributionPackage:
             has_sig = None
         mddigest = link.get_str_attrib("data-core-metadata")
         metadata_digests: Optional[dict[str, str]]
+        has_metadata = None
         if mddigest is not None:
             metadata_digests = {}
             m = re.fullmatch(r"(\w+)=([0-9A-Fa-f]+)", mddigest)
             if m:
                 metadata_digests[m[1]] = m[2]
+            has_metadata = bool(m) or mddigest.lower() == "true"
         else:
             metadata_digests = None
         yanked_reason = link.get_str_attrib("data-yanked")
@@ -163,7 +165,7 @@ class DistributionPackage:
             yanked_reason=yanked_reason,
             digests=digests,
             metadata_digests=metadata_digests,
-            has_metadata=metadata_digests is not None,
+            has_metadata=has_metadata,
         )
 
     @classmethod
