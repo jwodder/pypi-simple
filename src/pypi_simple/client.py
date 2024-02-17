@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 import platform
 from types import TracebackType
-from typing import Any, AnyStr, Optional
+from typing import Any, AnyStr, Dict, Optional
 from mailbits import ContentType
 from packaging.utils import canonicalize_name as normalize
 import requests
@@ -99,6 +99,7 @@ class PyPISimple:
         self,
         timeout: float | tuple[float, float] | None = None,
         accept: Optional[str] = None,
+        headers: Optional[Dict[str, str]] = None,
     ) -> IndexPage:
         """
         Fetches the index/root page from the simple repository and returns an
@@ -113,12 +114,18 @@ class PyPISimple:
 
             ``accept`` parameter added
 
+        .. versionchanged:: 1.4.2
+
+            ``headers`` parameter added
+
         :param timeout: optional timeout to pass to the ``requests`` call
         :type timeout: float | tuple[float,float] | None
         :param Optional[str] accept:
             The :mailheader:`Accept` header to send in order to
             specify what serialization format the server should return;
             defaults to the value supplied on client instantiation
+        :param Optional[Dict[str, str]] headers:
+            Custom headers to provide for the request.
         :rtype: IndexPage
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code
@@ -127,8 +134,11 @@ class PyPISimple:
         :raises UnsupportedRepoVersionError: if the repository version has a
             greater major component than the supported repository version
         """
+        request_headers = {"Accept": accept or self.accept}
+        if headers:
+            request_headers.update(headers)
         r = self.s.get(
-            self.endpoint, timeout=timeout, headers={"Accept": accept or self.accept}
+            self.endpoint, timeout=timeout, headers=request_headers,
         )
         r.raise_for_status()
         return IndexPage.from_response(r)
@@ -205,6 +215,7 @@ class PyPISimple:
         project: str,
         timeout: float | tuple[float, float] | None = None,
         accept: Optional[str] = None,
+        headers: Optional[Dict[str, str]] = None,
     ) -> ProjectPage:
         """
         Fetches the page for the given project from the simple repository and
@@ -219,6 +230,10 @@ class PyPISimple:
 
             - ``accept`` parameter added
 
+        .. versionchanged:: 1.4.2
+
+            ``headers`` parameter added
+
         :param str project: The name of the project to fetch information on.
             The name does not need to be normalized.
         :param timeout: optional timeout to pass to the ``requests`` call
@@ -227,6 +242,8 @@ class PyPISimple:
             The :mailheader:`Accept` header to send in order to
             specify what serialization format the server should return;
             defaults to the value supplied on client instantiation
+        :param Optional[Dict[str, str]] headers:
+            Custom headers to provide for the request.
         :rtype: ProjectPage
         :raises NoSuchProjectError: if the repository responds with a 404 error
             code
@@ -237,8 +254,11 @@ class PyPISimple:
         :raises UnsupportedRepoVersionError: if the repository version has a
             greater major component than the supported repository version
         """
+        request_headers = {"Accept": accept or self.accept}
+        if headers:
+            request_headers.update(headers)
         url = self.get_project_url(project)
-        r = self.s.get(url, timeout=timeout, headers={"Accept": accept or self.accept})
+        r = self.s.get(url, timeout=timeout, headers=request_headers)
         if r.status_code == 404:
             raise NoSuchProjectError(project, url)
         r.raise_for_status()
