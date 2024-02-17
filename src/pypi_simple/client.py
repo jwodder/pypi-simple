@@ -383,7 +383,7 @@ class PyPISimple:
         r.raise_for_status()
         digester.update(r.content)
         digester.finalize()
-        return r.text
+        return r.content.decode("utf-8")
 
 
 class NoSuchProjectError(Exception):
