@@ -91,7 +91,7 @@ def test_session(mocker: MockerFixture, content_type: str) -> None:
                     is_yanked=False,
                     yanked_reason=None,
                     metadata_digests=None,
-                    has_metadata=False,
+                    has_metadata=None,
                 ),
                 DistributionPackage(
                     filename="in_place-0.1.1.tar.gz",
@@ -107,7 +107,7 @@ def test_session(mocker: MockerFixture, content_type: str) -> None:
                     is_yanked=False,
                     yanked_reason=None,
                     metadata_digests=None,
-                    has_metadata=False,
+                    has_metadata=None,
                 ),
                 DistributionPackage(
                     filename="in_place-0.2.0-py2.py3-none-any.whl",
@@ -123,7 +123,7 @@ def test_session(mocker: MockerFixture, content_type: str) -> None:
                     is_yanked=False,
                     yanked_reason=None,
                     metadata_digests=None,
-                    has_metadata=False,
+                    has_metadata=None,
                 ),
                 DistributionPackage(
                     filename="in_place-0.2.0.tar.gz",
@@ -139,7 +139,7 @@ def test_session(mocker: MockerFixture, content_type: str) -> None:
                     is_yanked=False,
                     yanked_reason=None,
                     metadata_digests=None,
-                    has_metadata=False,
+                    has_metadata=None,
                 ),
                 DistributionPackage(
                     filename="in_place-0.3.0-py2.py3-none-any.whl",
@@ -155,7 +155,7 @@ def test_session(mocker: MockerFixture, content_type: str) -> None:
                     is_yanked=False,
                     yanked_reason=None,
                     metadata_digests=None,
-                    has_metadata=False,
+                    has_metadata=None,
                 ),
                 DistributionPackage(
                     filename="in_place-0.3.0.tar.gz",
@@ -171,7 +171,7 @@ def test_session(mocker: MockerFixture, content_type: str) -> None:
                     is_yanked=False,
                     yanked_reason=None,
                     metadata_digests=None,
-                    has_metadata=False,
+                    has_metadata=None,
                 ),
             ],
             last_serial="54321",
@@ -220,7 +220,7 @@ def test_project_hint_received() -> None:
                     is_yanked=False,
                     yanked_reason=None,
                     metadata_digests=None,
-                    has_metadata=False,
+                    has_metadata=None,
                 ),
                 DistributionPackage(
                     filename="aws-adfs-ebsco-0.3.7-1.tar.gz",
@@ -236,7 +236,7 @@ def test_project_hint_received() -> None:
                     is_yanked=False,
                     yanked_reason=None,
                     metadata_digests=None,
-                    has_metadata=False,
+                    has_metadata=None,
                 ),
             ],
             last_serial=None,
@@ -296,7 +296,7 @@ def test_redirected_project_page() -> None:
                     is_yanked=False,
                     yanked_reason=None,
                     metadata_digests=None,
-                    has_metadata=False,
+                    has_metadata=None,
                 ),
             ],
             last_serial=None,
@@ -340,7 +340,7 @@ def test_utf8_declarations(content_type: str, body_decl: bytes) -> None:
                     is_yanked=False,
                     yanked_reason=None,
                     metadata_digests=None,
-                    has_metadata=False,
+                    has_metadata=None,
                 ),
             ],
             last_serial=None,
@@ -387,7 +387,7 @@ def test_latin2_declarations(content_type: str, body_decl: bytes) -> None:
                     is_yanked=False,
                     yanked_reason=None,
                     metadata_digests=None,
-                    has_metadata=False,
+                    has_metadata=None,
                 ),
             ],
             last_serial=None,
@@ -630,7 +630,7 @@ def test_download(tmp_path: Path) -> None:
             is_yanked=False,
             yanked_reason=None,
             metadata_digests=None,
-            has_metadata=False,
+            has_metadata=None,
         )
         dest = tmp_path / str(pkg.project) / pkg.filename
         simple.download_package(pkg, dest)
@@ -660,7 +660,7 @@ def test_download_no_digests(tmp_path: Path) -> None:
             is_yanked=False,
             yanked_reason=None,
             metadata_digests=None,
-            has_metadata=False,
+            has_metadata=None,
         )
         dest = tmp_path / str(pkg.project) / pkg.filename
         with pytest.raises(NoDigestsError) as excinfo:
@@ -692,7 +692,7 @@ def test_download_bad_digests(tmp_path: Path) -> None:
             is_yanked=False,
             yanked_reason=None,
             metadata_digests=None,
-            has_metadata=False,
+            has_metadata=None,
         )
         dest = tmp_path / str(pkg.project) / pkg.filename
         with pytest.raises(DigestMismatchError) as excinfo:
@@ -729,7 +729,7 @@ def test_download_bad_digests_keep(tmp_path: Path) -> None:
             is_yanked=False,
             yanked_reason=None,
             metadata_digests=None,
-            has_metadata=False,
+            has_metadata=None,
         )
         dest = tmp_path / str(pkg.project) / pkg.filename
         with pytest.raises(DigestMismatchError) as excinfo:
@@ -774,7 +774,7 @@ def test_download_bad_digests_no_verify(
             is_yanked=False,
             yanked_reason=None,
             metadata_digests=None,
-            has_metadata=False,
+            has_metadata=None,
         )
         dest = tmp_path / str(pkg.project) / pkg.filename
         simple.download_package(pkg, dest, verify=False)
@@ -830,7 +830,7 @@ def test_download_progress(tmp_path: Path) -> None:
             is_yanked=False,
             yanked_reason=None,
             metadata_digests=None,
-            has_metadata=False,
+            has_metadata=None,
         )
         dest = tmp_path / str(pkg.project) / pkg.filename
         spy = SpyingProgressTracker()

@@ -47,7 +47,7 @@ def test_from_html_empty() -> None:
                         is_yanked=False,
                         yanked_reason=None,
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                     DistributionPackage(
                         filename="qypi-0.1.0.tar.gz",
@@ -63,7 +63,7 @@ def test_from_html_empty() -> None:
                         is_yanked=False,
                         yanked_reason=None,
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                     DistributionPackage(
                         filename="qypi-0.1.0.post1-py3-none-any.whl",
@@ -79,7 +79,7 @@ def test_from_html_empty() -> None:
                         is_yanked=False,
                         yanked_reason=None,
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                     DistributionPackage(
                         filename="qypi-0.1.0.post1.tar.gz",
@@ -95,7 +95,7 @@ def test_from_html_empty() -> None:
                         is_yanked=False,
                         yanked_reason=None,
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                     DistributionPackage(
                         filename="qypi-0.2.0-py3-none-any.whl",
@@ -111,7 +111,7 @@ def test_from_html_empty() -> None:
                         is_yanked=False,
                         yanked_reason=None,
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                     DistributionPackage(
                         filename="qypi-0.2.0.tar.gz",
@@ -127,7 +127,7 @@ def test_from_html_empty() -> None:
                         is_yanked=False,
                         yanked_reason=None,
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                     DistributionPackage(
                         filename="qypi-0.3.0-py3-none-any.whl",
@@ -143,7 +143,7 @@ def test_from_html_empty() -> None:
                         is_yanked=False,
                         yanked_reason=None,
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                     DistributionPackage(
                         filename="qypi-0.3.0.tar.gz",
@@ -159,7 +159,7 @@ def test_from_html_empty() -> None:
                         is_yanked=False,
                         yanked_reason=None,
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                     DistributionPackage(
                         filename="qypi-0.4.0-py3-none-any.whl",
@@ -175,7 +175,7 @@ def test_from_html_empty() -> None:
                         is_yanked=False,
                         yanked_reason=None,
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                     DistributionPackage(
                         filename="qypi-0.4.0.tar.gz",
@@ -191,7 +191,7 @@ def test_from_html_empty() -> None:
                         is_yanked=False,
                         yanked_reason=None,
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                     DistributionPackage(
                         filename="qypi-0.4.1-py3-none-any.whl",
@@ -207,7 +207,7 @@ def test_from_html_empty() -> None:
                         is_yanked=False,
                         yanked_reason=None,
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                     DistributionPackage(
                         filename="qypi-0.4.1.tar.gz",
@@ -223,7 +223,7 @@ def test_from_html_empty() -> None:
                         is_yanked=False,
                         yanked_reason=None,
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                 ],
                 repository_version=None,
@@ -252,7 +252,7 @@ def test_from_html_empty() -> None:
                         is_yanked=False,
                         yanked_reason=None,
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                     DistributionPackage(
                         filename="qypi-0.1.0.tar.gz",
@@ -268,7 +268,7 @@ def test_from_html_empty() -> None:
                         is_yanked=False,
                         yanked_reason=None,
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                     DistributionPackage(
                         filename="qypi-0.1.0.post1-py3-none-any.whl",
@@ -284,7 +284,7 @@ def test_from_html_empty() -> None:
                         is_yanked=False,
                         yanked_reason=None,
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                     DistributionPackage(
                         filename="qypi-0.1.0.post1.tar.gz",
@@ -300,7 +300,7 @@ def test_from_html_empty() -> None:
                         is_yanked=False,
                         yanked_reason=None,
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                 ],
                 repository_version=None,
@@ -329,7 +329,7 @@ def test_from_html_empty() -> None:
                         is_yanked=True,
                         yanked_reason="Metadata was smelly",
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                     DistributionPackage(
                         filename="qypi-0.1.0.tar.gz",
@@ -345,7 +345,7 @@ def test_from_html_empty() -> None:
                         is_yanked=True,
                         yanked_reason="",
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                     DistributionPackage(
                         filename="qypi-0.1.0.post1-py3-none-any.whl",
@@ -361,7 +361,7 @@ def test_from_html_empty() -> None:
                         is_yanked=True,
                         yanked_reason="",
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                     DistributionPackage(
                         filename="qypi-0.1.0.post1.tar.gz",
@@ -377,7 +377,7 @@ def test_from_html_empty() -> None:
                         is_yanked=False,
                         yanked_reason=None,
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                     DistributionPackage(
                         filename="qypi-0.2.0-py3-none-any.whl",
@@ -393,7 +393,7 @@ def test_from_html_empty() -> None:
                         is_yanked=False,
                         yanked_reason=None,
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                 ],
                 repository_version=None,
@@ -422,7 +422,7 @@ def test_from_html_empty() -> None:
                         is_yanked=False,
                         yanked_reason=None,
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                     DistributionPackage(
                         filename="qypi-0.1.0.tar.gz",
@@ -438,7 +438,7 @@ def test_from_html_empty() -> None:
                         is_yanked=False,
                         yanked_reason=None,
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                 ],
                 repository_version="1.0",
@@ -467,7 +467,7 @@ def test_from_html_empty() -> None:
                         is_yanked=False,
                         yanked_reason=None,
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                     DistributionPackage(
                         filename="qypi-0.1.0.tar.gz",
@@ -483,7 +483,7 @@ def test_from_html_empty() -> None:
                         is_yanked=False,
                         yanked_reason=None,
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                 ],
                 repository_version="1.2",
@@ -520,7 +520,7 @@ def test_from_html_empty() -> None:
                         is_yanked=False,
                         yanked_reason=None,
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                     DistributionPackage(
                         filename="devpi-2.1.0.tar.gz",
@@ -536,7 +536,7 @@ def test_from_html_empty() -> None:
                         is_yanked=False,
                         yanked_reason=None,
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                     DistributionPackage(
                         filename="devpi-2.0.3.tar.gz",
@@ -552,7 +552,7 @@ def test_from_html_empty() -> None:
                         is_yanked=False,
                         yanked_reason=None,
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                     DistributionPackage(
                         filename="devpi-2.0.2.tar.gz",
@@ -568,7 +568,7 @@ def test_from_html_empty() -> None:
                         is_yanked=False,
                         yanked_reason=None,
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                     DistributionPackage(
                         filename="devpi-2.0.1.tar.gz",
@@ -584,7 +584,7 @@ def test_from_html_empty() -> None:
                         is_yanked=False,
                         yanked_reason=None,
                         metadata_digests=None,
-                        has_metadata=False,
+                        has_metadata=None,
                     ),
                 ],
                 repository_version=None,
