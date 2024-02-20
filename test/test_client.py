@@ -844,3 +844,47 @@ def test_download_progress(tmp_path: Path) -> None:
         assert spy.enter_called
         assert spy.exit_called
         assert spy.updates == [65535] * (size // 65535) + [size % 65535]
+
+
+@responses.activate
+def test_metadata_encoding() -> None:
+    responses.add(
+        method=responses.GET,
+        url="https://test.nil/simple/packages/example-0.0.1-py3-none-any.whl.metadata",
+        body=b"\xe2\x98\x83",  # unicode snowman
+    )
+    responses.add(
+        method=responses.GET,
+        url="https://test.nil/simple/packages/example-0.0.2-py3-none-any.whl.metadata",
+        body=b"\xff\xfe\x03\x26",  # unicode snowman in utf-16
+    )
+    with PyPISimple("https://test.nil/simple/") as simple:
+        pkg = DistributionPackage(
+            filename="example-0.0.1-py3-none-any.whl",
+            project="example",
+            version="0.0.1",
+            package_type="wheel",
+            url="https://test.nil/simple/packages/example-0.0.1-py3-none-any.whl",
+            digests={},
+            requires_python=None,
+            has_sig=None,
+            has_metadata=True,
+            metadata_digests={"sha1": "2686137311c038a99622242fdb662b88c221c08d"},
+        )
+        assert simple.get_package_metadata_bytes(pkg) == b"\xe2\x98\x83"
+        assert simple.get_package_metadata(pkg) == "\u2603"
+
+        pkg = DistributionPackage(
+            filename="example-0.0.2-py3-none-any.whl",
+            project="example",
+            version="0.0.2",
+            package_type="wheel",
+            url="https://test.nil/simple/packages/example-0.0.2-py3-none-any.whl",
+            digests={},
+            requires_python=None,
+            has_sig=None,
+            has_metadata=True,
+            metadata_digests={"sha1": "7381ac0d9ddb35e4074acfd9cf72ea47314da70b"},
+        )
+        assert simple.get_package_metadata_bytes(pkg) == b"\xff\xfe\x03\x26"
+        assert simple.get_package_metadata(pkg) == "\udcff\udcfe\u0003\u0026"
