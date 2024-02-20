@@ -6,6 +6,10 @@ v1.5.0 (in development)
     - `DistributionPackage.has_metadata` will now be `None` if this attribute
       was absent in the HTML returned by PyPI.  Previously, it would be `False`
       under this circumstance.
+- Added `PyPISimple.get_package_metadata_bytes()` (contributed by
+  [@thatch](https://github.com/thatch))
+- `PyPISimple.get_package_metadata()` now always decodes responses as UTF-8
+  (contributed by [@thatch](https://github.com/thatch))
 
 v1.4.1 (2024-01-30)
 -------------------

@@ -13,6 +13,12 @@ v1.5.0 (in development)
     absent in the HTML returned by PyPI.  Previously, it would be `False` under
     this circumstance.
 
+- Added `PyPISimple.get_package_metadata_bytes()` (contributed by `@thatch
+  <https://github.com/thatch>`_)
+
+- `PyPISimple.get_package_metadata()` now always decodes responses as UTF-8
+  (contributed by `@thatch <https://github.com/thatch>`_)
+
 
 v1.4.1 (2024-01-30)
 -------------------

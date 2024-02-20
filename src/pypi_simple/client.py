@@ -338,10 +338,10 @@ class PyPISimple:
         .. versionadded:: 1.5.0
 
         Retrieve the `distribution metadata`_ for the given
-        `DistributionPackage`.  This method is lower-level than
-        `PyPISimple.get_package_metadata` and is most appropriate if you want
-        to defer interpretation of the data (e.g. if you're just writing to a
-        file) or want to customize the handling of non-``utf-8`` data.
+        `DistributionPackage` as raw bytes.  This method is lower-level than
+        `PyPISimple.get_package_metadata()` and is most appropriate if you want
+        to defer interpretation of the data (e.g., if you're just writing to a
+        file) or want to customize the handling of non-UTF-8 data.
 
         Not all packages have distribution metadata available for download; the
         `DistributionPackage.has_metadata` attribute can be used to check
@@ -391,8 +391,8 @@ class PyPISimple:
         .. versionadded:: 1.3.0
 
         Retrieve the `distribution metadata`_ for the given
-        `DistributionPackage`.  The metadata can then be parsed with, for
-        example, |the packaging package|_.
+        `DistributionPackage` and decode it as UTF-8.  The metadata can then be
+        parsed with, for example, |the packaging package|_.
 
         Not all packages have distribution metadata available for download; the
         `DistributionPackage.has_metadata` attribute can be used to check
