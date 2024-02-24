@@ -99,6 +99,7 @@ class PyPISimple:
         self,
         timeout: float | tuple[float, float] | None = None,
         accept: Optional[str] = None,
+        headers: Optional[dict[str, str]] = None,
     ) -> IndexPage:
         """
         Fetches the index/root page from the simple repository and returns an
@@ -113,12 +114,18 @@ class PyPISimple:
 
             ``accept`` parameter added
 
+        .. versionchanged:: 1.5.0
+
+            ``headers`` parameter added
+
         :param timeout: optional timeout to pass to the ``requests`` call
         :type timeout: float | tuple[float,float] | None
         :param Optional[str] accept:
             The :mailheader:`Accept` header to send in order to
             specify what serialization format the server should return;
             defaults to the value supplied on client instantiation
+        :param Optional[dict[str, str]] headers:
+            Custom headers to provide for the request.
         :rtype: IndexPage
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code
@@ -127,8 +134,11 @@ class PyPISimple:
         :raises UnsupportedRepoVersionError: if the repository version has a
             greater major component than the supported repository version
         """
+        request_headers = {"Accept": accept or self.accept}
+        if headers:
+            request_headers.update(headers)
         r = self.s.get(
-            self.endpoint, timeout=timeout, headers={"Accept": accept or self.accept}
+            self.endpoint, timeout=timeout, headers=request_headers,
         )
         r.raise_for_status()
         return IndexPage.from_response(r)
@@ -138,6 +148,7 @@ class PyPISimple:
         chunk_size: int = 65535,
         timeout: float | tuple[float, float] | None = None,
         accept: Optional[str] = None,
+        headers: Optional[dict[str, str]] = None,
     ) -> Iterator[str]:
         """
         Returns a generator of names of projects available in the repository.
@@ -164,6 +175,10 @@ class PyPISimple:
 
             ``accept`` parameter added
 
+        .. versionchanged:: 1.5.0
+
+            ``headers`` parameter added
+
         :param int chunk_size: how many bytes to read from the response at a
             time
         :param timeout: optional timeout to pass to the ``requests`` call
@@ -172,6 +187,8 @@ class PyPISimple:
             The :mailheader:`Accept` header to send in order to
             specify what serialization format the server should return;
             defaults to the value supplied on client instantiation
+        :param Optional[dict[str, str]] headers:
+            Custom headers to provide for the request.
         :rtype: Iterator[str]
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code
@@ -180,11 +197,14 @@ class PyPISimple:
         :raises UnsupportedRepoVersionError: if the repository version has a
             greater major component than the supported repository version
         """
+        request_headers = {"Accept": accept or self.accept}
+        if headers:
+            request_headers.update(headers)
         with self.s.get(
             self.endpoint,
             stream=True,
             timeout=timeout,
-            headers={"Accept": accept or self.accept},
+            headers=request_headers,
         ) as r:
             r.raise_for_status()
             ct = ContentType.parse(r.headers.get("content-type", "text/html"))
@@ -205,6 +225,7 @@ class PyPISimple:
         project: str,
         timeout: float | tuple[float, float] | None = None,
         accept: Optional[str] = None,
+        headers: Optional[dict[str, str]] = None,
     ) -> ProjectPage:
         """
         Fetches the page for the given project from the simple repository and
@@ -219,6 +240,10 @@ class PyPISimple:
 
             - ``accept`` parameter added
 
+        .. versionchanged:: 1.5.0
+
+            ``headers`` parameter added
+
         :param str project: The name of the project to fetch information on.
             The name does not need to be normalized.
         :param timeout: optional timeout to pass to the ``requests`` call
@@ -227,6 +252,8 @@ class PyPISimple:
             The :mailheader:`Accept` header to send in order to
             specify what serialization format the server should return;
             defaults to the value supplied on client instantiation
+        :param Optional[dict[str, str]] headers:
+            Custom headers to provide for the request.
         :rtype: ProjectPage
         :raises NoSuchProjectError: if the repository responds with a 404 error
             code
@@ -237,8 +264,11 @@ class PyPISimple:
         :raises UnsupportedRepoVersionError: if the repository version has a
             greater major component than the supported repository version
         """
+        request_headers = {"Accept": accept or self.accept}
+        if headers:
+            request_headers.update(headers)
         url = self.get_project_url(project)
-        r = self.s.get(url, timeout=timeout, headers={"Accept": accept or self.accept})
+        r = self.s.get(url, timeout=timeout, headers=request_headers)
         if r.status_code == 404:
             raise NoSuchProjectError(project, url)
         r.raise_for_status()
@@ -262,6 +292,7 @@ class PyPISimple:
         keep_on_error: bool = False,
         progress: Optional[Callable[[Optional[int]], ProgressTracker]] = None,
         timeout: float | tuple[float, float] | None = None,
+        headers: Optional[dict[str, str]] = None,
     ) -> None:
         """
         Download the given `DistributionPackage` to the given path.
@@ -275,6 +306,10 @@ class PyPISimple:
         and it must return a `ProgressTracker` — a context manager with an
         ``update(increment: int)`` method that will be passed the size of each
         downloaded chunk as each chunk is received.
+
+        .. versionchanged:: 1.5.0
+
+            ``headers`` parameter added
 
         :param DistributionPackage pkg: the distribution package to download
         :param path:
@@ -304,7 +339,7 @@ class PyPISimple:
             digester = DigestChecker(pkg.digests)
         else:
             digester = NullDigestChecker()
-        with self.s.get(pkg.url, stream=True, timeout=timeout) as r:
+        with self.s.get(pkg.url, stream=True, timeout=timeout, headers=headers) as r:
             r.raise_for_status()
             try:
                 content_length = int(r.headers["Content-Length"])
@@ -333,6 +368,7 @@ class PyPISimple:
         pkg: DistributionPackage,
         verify: bool = True,
         timeout: float | tuple[float, float] | None = None,
+        headers: Optional[dict[str, str]] = None,
     ) -> bytes:
         """
         .. versionadded:: 1.5.0
@@ -356,6 +392,9 @@ class PyPISimple:
             whether to verify the metadata's digests against the retrieved data
         :param timeout: optional timeout to pass to the ``requests`` call
         :type timeout: float | tuple[float,float] | None
+        :param Optional[dict[str, str]] headers:
+            Custom headers to provide for the request.
+        :rtype: bytes
 
         :raises NoMetadataError:
             if the repository responds with a 404 error code
@@ -373,7 +412,7 @@ class PyPISimple:
             digester = DigestChecker(pkg.metadata_digests or {})
         else:
             digester = NullDigestChecker()
-        r = self.s.get(pkg.metadata_url, timeout=timeout)
+        r = self.s.get(pkg.metadata_url, timeout=timeout, headers=headers)
         if r.status_code == 404:
             raise NoMetadataError(pkg.filename)
         r.raise_for_status()
@@ -386,6 +425,7 @@ class PyPISimple:
         pkg: DistributionPackage,
         verify: bool = True,
         timeout: float | tuple[float, float] | None = None,
+        headers: Optional[dict[str, str]] = None,
     ) -> str:
         """
         .. versionadded:: 1.3.0
@@ -407,12 +447,19 @@ class PyPISimple:
         .. _the packaging package:
            https://packaging.pypa.io/en/stable/metadata.html
 
+        .. versionchanged:: 1.5.0
+
+            ``headers`` parameter added
+
         :param DistributionPackage pkg:
             the distribution package to retrieve the metadata of
         :param bool verify:
             whether to verify the metadata's digests against the retrieved data
         :param timeout: optional timeout to pass to the ``requests`` call
         :type timeout: float | tuple[float,float] | None
+        :param Optional[dict[str, str]] headers:
+            Custom headers to provide for the request.
+        :rtype: str
 
         :raises NoMetadataError:
             if the repository responds with a 404 error code
@@ -429,6 +476,7 @@ class PyPISimple:
             pkg,
             verify,
             timeout,
+            headers,
         ).decode("utf-8", "surrogateescape")
 
 

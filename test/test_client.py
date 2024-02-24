@@ -888,3 +888,47 @@ def test_metadata_encoding() -> None:
         )
         assert simple.get_package_metadata_bytes(pkg) == b"\xff\xfe\x03\x26"
         assert simple.get_package_metadata(pkg) == "\udcff\udcfe\u0003\u0026"
+
+
+@responses.activate
+def test_custom_headers_get_index_page() -> None:
+    with (DATA_DIR / "simple01.html").open() as fp:
+        responses.add(
+            method=responses.GET,
+            url="https://test.nil/simple/",
+            body=fp.read(),
+            content_type="text/html",
+            match=[responses.matchers.header_matcher({"X-Custom": "foo"})],
+        )
+    with PyPISimple("https://test.nil/simple/") as simple:
+        # Just check that the method returns successfully
+        simple.get_index_page(headers={"X-Custom": "foo"})
+
+
+@responses.activate
+def test_custom_headers_stream_project_names() -> None:
+    with (DATA_DIR / "simple01.html").open() as fp:
+        responses.add(
+            method=responses.GET,
+            url="https://test.nil/simple/",
+            body=fp.read(),
+            content_type="text/html",
+            match=[responses.matchers.header_matcher({"X-Custom": "foo"})],
+        )
+    with PyPISimple("https://test.nil/simple/") as simple:
+        # Just check that the method returns successfully
+        list(simple.stream_project_names(headers={"X-Custom": "foo"}))
+
+
+@responses.activate
+def test_custom_headers_get_project_page() -> None:
+    with (DATA_DIR / "aws-adfs-ebsco.html").open() as fp:
+        responses.add(
+            method=responses.GET,
+            url="https://test.nil/simple/aws-adfs-ebsco/",
+            body=fp.read(),
+            content_type="text/html",
+            match=[responses.matchers.header_matcher({"X-Custom": "foo"})],
+        )
+    with PyPISimple("https://test.nil/simple/") as simple:
+        simple.get_project_page("aws-adfs-ebsco", headers={"X-Custom": "foo"})
