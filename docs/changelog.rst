@@ -6,7 +6,7 @@ Changelog
 v1.5.0 (in development)
 -----------------------
 - **Bugfix**: Fix parsing of "true" ``data-core-metadata`` attributes and
-  handling of the attribute's absense (contributed by `@thatch
+  handling of the attribute's absence (contributed by `@thatch
   <https://github.com/thatch>`_)
 
   - `DistributionPackage.has_metadata` will now be `None` if this attribute was
