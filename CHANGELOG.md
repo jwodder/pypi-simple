@@ -10,6 +10,8 @@ v1.5.0 (in development)
   [@thatch](https://github.com/thatch))
 - `PyPISimple.get_package_metadata()` now always decodes responses as UTF-8
   (contributed by [@thatch](https://github.com/thatch))
+- Request methods now take optional `headers` arguments (contributed by
+  [@thatch](https://github.com/thatch))
 
 v1.4.1 (2024-01-30)
 -------------------
