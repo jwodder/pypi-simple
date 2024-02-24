@@ -3,8 +3,8 @@
 Changelog
 =========
 
-v1.5.0 (in development)
------------------------
+v1.5.0 (2024-02-24)
+-------------------
 - **Bugfix**: Fix parsing of "true" ``data-core-metadata`` attributes and
   handling of the attribute's absence (contributed by `@thatch
   <https://github.com/thatch>`_)
