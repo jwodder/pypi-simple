@@ -138,7 +138,9 @@ class PyPISimple:
         if headers:
             request_headers.update(headers)
         r = self.s.get(
-            self.endpoint, timeout=timeout, headers=request_headers,
+            self.endpoint,
+            timeout=timeout,
+            headers=request_headers,
         )
         r.raise_for_status()
         return IndexPage.from_response(r)
@@ -323,6 +325,8 @@ class PyPISimple:
         :param progress: a callable for constructing a progress tracker
         :param timeout: optional timeout to pass to the ``requests`` call
         :type timeout: float | tuple[float,float] | None
+        :param Optional[dict[str, str]] headers:
+            Custom headers to provide for the request.
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code
         :raises NoDigestsError:
