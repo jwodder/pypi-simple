@@ -46,12 +46,10 @@ def basejoin(base_url: Optional[str], url: str) -> str:
 
 class AbstractDigestChecker(ABC):
     @abstractmethod
-    def update(self, blob: bytes) -> None:
-        ...
+    def update(self, blob: bytes) -> None: ...
 
     @abstractmethod
-    def finalize(self) -> None:
-        ...
+    def finalize(self) -> None: ...
 
 
 class NullDigestChecker(AbstractDigestChecker):

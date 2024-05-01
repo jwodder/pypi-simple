@@ -23,19 +23,16 @@ class ProgressTracker(Protocol):
     that will be called with the size of each downloaded file chunk.
     """
 
-    def __enter__(self) -> Self:
-        ...
+    def __enter__(self) -> Self: ...
 
     def __exit__(
         self,
         exc_type: Optional[type[BaseException]],
         exc_val: Optional[BaseException],
         exc_tb: Optional[TracebackType],
-    ) -> Optional[bool]:
-        ...
+    ) -> Optional[bool]: ...
 
-    def update(self, increment: int) -> None:
-        ...
+    def update(self, increment: int) -> None: ...
 
 
 class NullProgressTracker:
