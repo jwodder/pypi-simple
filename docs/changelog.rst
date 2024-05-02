@@ -3,6 +3,11 @@
 Changelog
 =========
 
+v1.6.0 (in development)
+-----------------------
+- Drop support for Python 3.7
+
+
 v1.5.0 (2024-02-24)
 -------------------
 - **Bugfix**: Fix parsing of "true" ``data-core-metadata`` attributes and

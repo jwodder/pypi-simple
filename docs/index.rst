@@ -29,7 +29,7 @@ metadata URL.
 
 Installation
 ============
-``pypi-simple`` requires Python 3.7 or higher.  Just use `pip
+``pypi-simple`` requires Python 3.8 or higher.  Just use `pip
 <https://pip.pypa.io>`_ for Python 3 (You have pip, right?) to install it::
 
     python3 -m pip install pypi-simple
