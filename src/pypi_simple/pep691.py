@@ -36,6 +36,7 @@ class File(BaseModel, alias_generator=shishkebab, populate_by_name=True):
     yanked: Union[StrictBool, str] = False
     size: Optional[int] = None
     upload_time: Optional[datetime] = None
+    provenance: Optional[str] = None
 
     @property
     def is_yanked(self) -> bool:

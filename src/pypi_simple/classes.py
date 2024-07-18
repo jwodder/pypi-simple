@@ -10,7 +10,7 @@ from .errors import UnparsableFilenameError, UnsupportedContentTypeError
 from .filenames import parse_filename
 from .html import Link, RepositoryPage
 from .pep691 import File, Project, ProjectList
-from .util import basejoin, check_repo_version
+from .util import basejoin, check_repo_version, url_add_suffix
 
 
 @dataclass
@@ -94,14 +94,23 @@ class DistributionPackage:
     #: if not specified [#pep700]_.
     upload_time: Optional[datetime] = None
 
+    #: .. versionadded:: 1.6.0
+    #:
+    #: The SHA 256 digest of the package file's :pep:`740` ``.provenance``
+    #: file.
+    #:
+    #: If `provenance_sha256` is non-`None`, then the package repository
+    #: provides a ``.provenance`` file for the package.  If it is `None`, no
+    #: conclusions can be drawn.
+    provenance_sha256: Optional[str] = None
+
     @property
     def sig_url(self) -> str:
         """
         The URL of the package file's PGP signature file, if it exists; cf.
         `has_sig`
         """
-        u = urlparse(self.url)
-        return urlunparse((u[0], u[1], u[2] + ".asc", "", "", ""))
+        return url_add_suffix(self.url, ".asc")
 
     @property
     def metadata_url(self) -> str:
@@ -109,8 +118,15 @@ class DistributionPackage:
         The URL of the package file's Core Metadata file, if it exists; cf.
         `has_metadata`
         """
-        u = urlparse(self.url)
-        return urlunparse((u[0], u[1], u[2] + ".metadata", "", "", ""))
+        return url_add_suffix(self.url, ".metadata")
+
+    @property
+    def provenance_url(self) -> str:
+        """
+        The URL of the package file's :pep:`740` ``.provenance`` file, if it
+        exists; cf. `provenance_sha256`
+        """
+        return url_add_suffix(self.url, ".provenance")
 
     @classmethod
     def from_link(
@@ -166,6 +182,7 @@ class DistributionPackage:
             digests=digests,
             metadata_digests=metadata_digests,
             has_metadata=has_metadata,
+            provenance_sha256=link.get_str_attrib("data-provenance"),
         )
 
     @classmethod
@@ -219,6 +236,7 @@ class DistributionPackage:
             has_metadata=file.has_metadata,
             size=file.size,
             upload_time=file.upload_time,
+            provenance_sha256=file.provenance,
         )
 
 

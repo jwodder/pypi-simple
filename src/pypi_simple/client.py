@@ -1,5 +1,6 @@
 from __future__ import annotations
 from collections.abc import Callable, Iterator
+import json
 import os
 from pathlib import Path
 import platform
@@ -483,6 +484,63 @@ class PyPISimple:
             headers,
         ).decode("utf-8", "surrogateescape")
 
+    def get_provenance(
+        self,
+        pkg: DistributionPackage,
+        verify: bool = True,
+        timeout: float | tuple[float, float] | None = None,
+        headers: Optional[dict[str, str]] = None,
+    ) -> dict[str, Any]:
+        """
+        .. versionadded:: 1.6.0
+
+        Retrieve the :pep:`740` ``.provenance`` file for the given
+        `DistributionPackage` and decode it as JSON.
+
+        Not all packages have ``.provenance`` files available for download; cf.
+        `DistributionPackage.provenance_sha256`.  This method will always
+        attempt to download the ``.provenance`` file regardless of the value of
+        `DistributionPackage.provenance_sha256`; if the server replies with a
+        404, a `NoProvenanceError` is raised.
+
+        :param DistributionPackage pkg:
+            the distribution package to retrieve the ``.provenance`` file of
+        :param bool verify:
+            whether to verify the ``.provenance`` file's SHA 256 digest against
+            the retrieved data
+        :param timeout: optional timeout to pass to the ``requests`` call
+        :type timeout: float | tuple[float,float] | None
+        :param Optional[dict[str, str]] headers:
+            Custom headers to provide for the request.
+        :rtype: dict[str, Any]
+
+        :raises NoProvenanceError:
+            if the repository responds with a 404 error code
+        :raises requests.HTTPError: if the repository responds with an HTTP
+            error code other than 404
+        :raises NoDigestsError:
+            if ``verify`` is true and ``pkg.provenance_sha256`` is `None`
+        :raises DigestMismatchError:
+            if ``verify`` is true and the digest of the downloaded data does
+            not match the expected value
+        """
+        digester: AbstractDigestChecker
+        if verify:
+            if pkg.provenance_sha256 is not None:
+                digests = {"sha256": pkg.provenance_sha256}
+            else:
+                digests = {}
+            digester = DigestChecker(digests)
+        else:
+            digester = NullDigestChecker()
+        r = self.s.get(pkg.provenance_url, timeout=timeout, headers=headers)
+        if r.status_code == 404:
+            raise NoProvenanceError(pkg.filename)
+        r.raise_for_status()
+        digester.update(r.content)
+        digester.finalize()
+        return json.loads(r.content)  # type: ignore[no-any-return]
+
 
 class NoSuchProjectError(Exception):
     """
@@ -514,3 +572,19 @@ class NoMetadataError(Exception):
 
     def __str__(self) -> str:
         return f"No distribution metadata found for {self.filename}"
+
+
+class NoProvenanceError(Exception):
+    """
+    .. versionadded:: 1.6.0
+
+    Raised by `PyPISimple.get_provenance()` when a request for a
+    ``.provenance`` file fails with a 404 error code
+    """
+
+    def __init__(self, filename: str) -> None:
+        #: The filename of the package whose provenance was requested
+        self.filename = filename
+
+    def __str__(self) -> str:
+        return f"No .provenance file found for {self.filename}"

@@ -7,6 +7,14 @@ v1.6.0 (in development)
 -----------------------
 - Drop support for Python 3.7
 
+- Support :pep:`740`
+
+  - `~DistributionPackage.provenance_sha256` and
+    `~DistributionPackage.provenance_url` fields added to
+    `DistributionPackage`
+  - `~PyPISimple.get_provenance()` method added to `PyPISimple`
+  - `NoProvenanceError` exception type added
+
 
 v1.5.0 (2024-02-24)
 -------------------

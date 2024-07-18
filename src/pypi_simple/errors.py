@@ -52,9 +52,9 @@ class UnsupportedContentTypeError(ValueError):
 
 class NoDigestsError(ValueError):
     """
-    Raised by `PyPISimple.download_package()` and
-    `PyPISimple.get_package_metadata()` with ``verify=True`` when the given
-    package or package metadata does not have any digests with known algorithms
+    Raised by `PyPISimple`'s download methods when passed ``verify=True`` and
+    the resource being downloaded does not have any digests with known
+    algorithms
     """
 
     pass
@@ -62,9 +62,8 @@ class NoDigestsError(ValueError):
 
 class DigestMismatchError(ValueError):
     """
-    Raised by `PyPISimple.download_package()` and
-    `PyPISimple.get_package_metadata()` with ``verify=True`` when the digest of
-    the downloaded data does not match the expected value
+    Raised by `PyPISimple`'s download methods when passed ``verify=True`` and
+    the digest of the downloaded data does not match the expected value
     """
 
     def __init__(
