@@ -11,7 +11,12 @@ from packaging.utils import canonicalize_name as normalize
 import requests
 from . import ACCEPT_ANY, PYPI_SIMPLE_ENDPOINT, __url__, __version__
 from .classes import DistributionPackage, IndexPage, ProjectPage
-from .errors import UnsupportedContentTypeError
+from .errors import (
+    NoMetadataError,
+    NoProvenanceError,
+    NoSuchProjectError,
+    UnsupportedContentTypeError,
+)
 from .html_stream import parse_links_stream_response
 from .progress import ProgressTracker, null_progress_tracker
 from .util import AbstractDigestChecker, DigestChecker, NullDigestChecker
@@ -540,51 +545,3 @@ class PyPISimple:
         digester.update(r.content)
         digester.finalize()
         return json.loads(r.content)  # type: ignore[no-any-return]
-
-
-class NoSuchProjectError(Exception):
-    """
-    Raised by `PyPISimple.get_project_page()` when a request for a project
-    fails with a 404 error code
-    """
-
-    def __init__(self, project: str, url: str) -> None:
-        #: The name of the project requested
-        self.project = project
-        #: The URL to which the failed request was made
-        self.url = url
-
-    def __str__(self) -> str:
-        return f"No details about project {self.project!r} available at {self.url}"
-
-
-class NoMetadataError(Exception):
-    """
-    .. versionadded:: 1.3.0
-
-    Raised by `PyPISimple.get_package_metadata()` when a request for
-    distribution metadata fails with a 404 error code
-    """
-
-    def __init__(self, filename: str) -> None:
-        #: The filename of the package whose metadata was requested
-        self.filename = filename
-
-    def __str__(self) -> str:
-        return f"No distribution metadata found for {self.filename}"
-
-
-class NoProvenanceError(Exception):
-    """
-    .. versionadded:: 1.6.0
-
-    Raised by `PyPISimple.get_provenance()` when a request for a
-    ``.provenance`` file fails with a 404 error code
-    """
-
-    def __init__(self, filename: str) -> None:
-        #: The filename of the package whose provenance was requested
-        self.filename = filename
-
-    def __str__(self) -> str:
-        return f"No .provenance file found for {self.filename}"
