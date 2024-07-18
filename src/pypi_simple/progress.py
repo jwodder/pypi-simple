@@ -1,13 +1,7 @@
 from __future__ import annotations
 from collections.abc import Callable
-import sys
 from types import TracebackType
-from typing import TYPE_CHECKING, Any, Optional
-
-if sys.version_info[:2] >= (3, 8):
-    from typing import Protocol, runtime_checkable
-else:
-    from typing_extensions import Protocol, runtime_checkable
+from typing import TYPE_CHECKING, Any, Optional, Protocol, runtime_checkable
 
 if TYPE_CHECKING:
     from typing_extensions import Self
