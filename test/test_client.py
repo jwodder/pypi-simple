@@ -1,5 +1,6 @@
 from __future__ import annotations
 import filecmp
+import hashlib
 import json
 from pathlib import Path
 from types import TracebackType
@@ -13,6 +14,7 @@ from pypi_simple import (
     DistributionPackage,
     IndexPage,
     NoDigestsError,
+    NoProvenanceError,
     NoSuchProjectError,
     ProgressTracker,
     ProjectPage,
@@ -873,7 +875,6 @@ def test_metadata_encoding() -> None:
         )
         assert simple.get_package_metadata_bytes(pkg) == b"\xe2\x98\x83"
         assert simple.get_package_metadata(pkg) == "\u2603"
-
         pkg = DistributionPackage(
             filename="example-0.0.2-py3-none-any.whl",
             project="example",
@@ -932,3 +933,106 @@ def test_custom_headers_get_project_page() -> None:
         )
     with PyPISimple("https://test.nil/simple/") as simple:
         simple.get_project_page("aws-adfs-ebsco", headers={"X-Custom": "foo"})
+
+
+@responses.activate
+def test_get_provenance() -> None:
+    provenance = {
+        "version": 1,
+        "attestation_bundles": [
+            {
+                "publisher": {
+                    "kind": "important-ci-service",
+                    "claims": {},
+                    "vendor-property": "foo",
+                    "another-property": 123,
+                },
+                "attestations": [
+                    {
+                        "_type": "https://in-toto.io/Statement/v1",
+                        "subject": [
+                            {
+                                "name": "sampleproject-1.2.3.tar.gz",
+                                "digest": {
+                                    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                                },
+                            }
+                        ],
+                        "predicateType": "https://some-arbitrary-predicate.example.com/v1",
+                        "predicate": {"something-else": "foo"},
+                    }
+                ],
+            }
+        ],
+    }
+    provenance_bytes = json.dumps(provenance, sort_keys=True, indent=4).encode("utf-8")
+    responses.add(
+        method=responses.GET,
+        url="https://test.nil/simple/packages/sampleproject-1.2.3-py3-none-any.whl.provenance",
+        body=provenance_bytes,
+    )
+    with PyPISimple("https://test.nil/simple/") as simple:
+        pkg = DistributionPackage(
+            filename="sampleproject-1.2.3-py3-none-any.whl",
+            project="sampleproject",
+            version="1.2.3",
+            package_type="wheel",
+            url="https://test.nil/simple/packages/sampleproject-1.2.3-py3-none-any.whl",
+            digests={},
+            requires_python=None,
+            has_sig=None,
+            provenance_sha256=hashlib.sha256(provenance_bytes).hexdigest(),
+        )
+        assert simple.get_provenance(pkg, verify=True) == provenance
+
+
+@responses.activate
+def test_get_provenance_404() -> None:
+    responses.add(
+        method=responses.GET,
+        url="https://test.nil/simple/packages/sampleproject-1.2.3-py3-none-any.whl.provenance",
+        body="Does not exist",
+        status=404,
+    )
+    with PyPISimple("https://test.nil/simple/") as simple:
+        pkg = DistributionPackage(
+            filename="sampleproject-1.2.3-py3-none-any.whl",
+            project="sampleproject",
+            version="1.2.3",
+            package_type="wheel",
+            url="https://test.nil/simple/packages/sampleproject-1.2.3-py3-none-any.whl",
+            digests={},
+            requires_python=None,
+            has_sig=None,
+        )
+        with pytest.raises(NoProvenanceError) as excinfo:
+            simple.get_provenance(pkg, verify=False)
+        assert excinfo.value.filename == "sampleproject-1.2.3-py3-none-any.whl"
+        assert (
+            str(excinfo.value)
+            == "No .provenance file found for sampleproject-1.2.3-py3-none-any.whl"
+        )
+
+
+@responses.activate
+def test_get_provenance_verify_no_digest() -> None:
+    responses.add(
+        method=responses.GET,
+        url="https://test.nil/simple/packages/sampleproject-1.2.3-py3-none-any.whl.provenance",
+        body="Does not exist",
+        status=404,
+    )
+    with PyPISimple("https://test.nil/simple/") as simple:
+        pkg = DistributionPackage(
+            filename="sampleproject-1.2.3-py3-none-any.whl",
+            project="sampleproject",
+            version="1.2.3",
+            package_type="wheel",
+            url="https://test.nil/simple/packages/sampleproject-1.2.3-py3-none-any.whl",
+            digests={},
+            requires_python=None,
+            has_sig=None,
+            provenance_sha256=None,
+        )
+        with pytest.raises(NoDigestsError):
+            simple.get_provenance(pkg, verify=True)

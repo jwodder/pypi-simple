@@ -58,6 +58,7 @@ Exceptions
 .. autoexception:: NoDigestsError()
     :show-inheritance:
 .. autoexception:: NoMetadataError()
+.. autoexception:: NoProvenanceError()
 .. autoexception:: NoSuchProjectError()
 .. autoexception:: UnsupportedContentTypeError()
     :show-inheritance:

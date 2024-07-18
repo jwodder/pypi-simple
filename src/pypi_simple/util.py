@@ -2,7 +2,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 import hashlib
 from typing import Any, Optional
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse, urlunparse
 import warnings
 from packaging.version import Version
 from . import SUPPORTED_REPOSITORY_VERSION
@@ -88,3 +88,12 @@ class DigestChecker(AbstractDigestChecker):
                     expected_digest=self.expected[alg],
                     actual_digest=actual,
                 )
+
+
+def url_add_suffix(url: str, suffix: str) -> str:
+    """
+    Append `suffix` to the path portion of the URL `url`.  Any query parameters
+    or fragments on the URL are discarded.
+    """
+    u = urlparse(url)
+    return urlunparse((u[0], u[1], u[2] + suffix, "", "", ""))
