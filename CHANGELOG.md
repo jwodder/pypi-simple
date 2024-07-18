@@ -1,5 +1,5 @@
-v1.6.0 (in development)
------------------------
+v1.6.0 (2024-07-18)
+-------------------
 - Drop support for Python 3.7
 - Support PEP 740
     - `provenance_sha256` and `provenance_url` fields added to
