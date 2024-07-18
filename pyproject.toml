@@ -46,7 +46,6 @@ dependencies = [
     "packaging >= 20",
     "pydantic ~= 2.0",
     "requests ~= 2.20",
-    "typing_extensions; python_version < '3.8'",
 ]
 
 [project.optional-dependencies]
