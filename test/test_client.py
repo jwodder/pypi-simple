@@ -14,6 +14,7 @@ from pypi_simple import (
     DistributionPackage,
     IndexPage,
     NoDigestsError,
+    NoMetadataError,
     NoProvenanceError,
     NoSuchProjectError,
     ProgressTracker,
@@ -895,6 +896,38 @@ def test_metadata_encoding() -> None:
 
 
 @responses.activate
+def test_metadata_404() -> None:
+    responses.add(
+        method=responses.GET,
+        url="https://test.nil/simple/packages/sampleproject-1.2.3-py3-none-any.whl.metadata",
+        body="Does not exist",
+        status=404,
+    )
+    with PyPISimple("https://test.nil/simple/") as simple:
+        pkg = DistributionPackage(
+            filename="sampleproject-1.2.3-py3-none-any.whl",
+            project="sampleproject",
+            version="1.2.3",
+            package_type="wheel",
+            url="https://test.nil/simple/packages/sampleproject-1.2.3-py3-none-any.whl",
+            digests={},
+            requires_python=None,
+            has_sig=None,
+        )
+        with pytest.raises(NoMetadataError) as excinfo:
+            simple.get_package_metadata(pkg, verify=False)
+        assert excinfo.value.filename == "sampleproject-1.2.3-py3-none-any.whl"
+        assert (
+            excinfo.value.url
+            == "https://test.nil/simple/packages/sampleproject-1.2.3-py3-none-any.whl.metadata"
+        )
+        assert (
+            str(excinfo.value)
+            == "No distribution metadata found for sampleproject-1.2.3-py3-none-any.whl at https://test.nil/simple/packages/sampleproject-1.2.3-py3-none-any.whl.metadata"
+        )
+
+
+@responses.activate
 def test_custom_headers_get_index_page() -> None:
     with (DATA_DIR / "simple01.html").open() as fp:
         responses.add(
@@ -1011,6 +1044,10 @@ def test_get_provenance_404() -> None:
         with pytest.raises(NoProvenanceError) as excinfo:
             simple.get_provenance(pkg, verify=False)
         assert excinfo.value.filename == "sampleproject-1.2.3-py3-none-any.whl"
+        assert (
+            excinfo.value.url
+            == "https://test.nil/simple/packages/sampleproject-1.2.3-py3-none-any.whl.provenance"
+        )
         assert (
             str(excinfo.value)
             == "No .provenance file found for sampleproject-1.2.3-py3-none-any.whl at https://test.nil/simple/packages/sampleproject-1.2.3-py3-none-any.whl.provenance"
