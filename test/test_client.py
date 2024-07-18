@@ -667,7 +667,10 @@ def test_download_no_digests(tmp_path: Path) -> None:
         dest = tmp_path / str(pkg.project) / pkg.filename
         with pytest.raises(NoDigestsError) as excinfo:
             simple.download_package(pkg, dest)
-        assert str(excinfo.value) == "No digests with known algorithms available"
+        assert (
+            str(excinfo.value)
+            == "No digests with known algorithms available for resource at https://test.nil/simple/packages/click_loglevel-0.4.0.post1-py3-none-any.whl"
+        )
         assert not dest.exists()
 
 
@@ -700,7 +703,7 @@ def test_download_bad_digests(tmp_path: Path) -> None:
         with pytest.raises(DigestMismatchError) as excinfo:
             simple.download_package(pkg, dest)
         assert str(excinfo.value) == (
-            "sha256 digest of downloaded data is"
+            "sha256 digest of https://test.nil/simple/packages/click_loglevel-0.4.0.post1-py3-none-any.whl is"
             " '17e88db187afd62c16e5debf3e6527cd006bc012bc90b51a810cd80c2d511f43'"
             " instead of expected"
             " 'f3449b5d28d6cba5bfbeed371ad59950aba035730d5cc28a32b4e7632e17ed6c'"
@@ -737,7 +740,7 @@ def test_download_bad_digests_keep(tmp_path: Path) -> None:
         with pytest.raises(DigestMismatchError) as excinfo:
             simple.download_package(pkg, dest, keep_on_error=True)
         assert str(excinfo.value) == (
-            "sha256 digest of downloaded data is"
+            "sha256 digest of https://test.nil/simple/packages/click_loglevel-0.4.0.post1-py3-none-any.whl is"
             " '17e88db187afd62c16e5debf3e6527cd006bc012bc90b51a810cd80c2d511f43'"
             " instead of expected"
             " 'f3449b5d28d6cba5bfbeed371ad59950aba035730d5cc28a32b4e7632e17ed6c'"
@@ -1010,7 +1013,7 @@ def test_get_provenance_404() -> None:
         assert excinfo.value.filename == "sampleproject-1.2.3-py3-none-any.whl"
         assert (
             str(excinfo.value)
-            == "No .provenance file found for sampleproject-1.2.3-py3-none-any.whl"
+            == "No .provenance file found for sampleproject-1.2.3-py3-none-any.whl at https://test.nil/simple/packages/sampleproject-1.2.3-py3-none-any.whl.provenance"
         )
 
 

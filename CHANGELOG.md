@@ -6,6 +6,8 @@ v1.6.0 (in development)
       `DistributionPackage`
     - `get_provenance()` method added to `PyPISimple`
     - `NoProvenanceError` exception type added
+- Add `url` fields to the `DigestMismatchError`, `NoDigestsError`, and
+  `NoMetadataError` classes
 
 v1.5.0 (2024-02-24)
 -------------------

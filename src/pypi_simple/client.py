@@ -346,7 +346,7 @@ class PyPISimple:
         target.parent.mkdir(parents=True, exist_ok=True)
         digester: AbstractDigestChecker
         if verify:
-            digester = DigestChecker(pkg.digests)
+            digester = DigestChecker(pkg.digests, pkg.url)
         else:
             digester = NullDigestChecker()
         with self.s.get(pkg.url, stream=True, timeout=timeout, headers=headers) as r:
@@ -419,12 +419,12 @@ class PyPISimple:
         """
         digester: AbstractDigestChecker
         if verify:
-            digester = DigestChecker(pkg.metadata_digests or {})
+            digester = DigestChecker(pkg.metadata_digests or {}, pkg.metadata_url)
         else:
             digester = NullDigestChecker()
         r = self.s.get(pkg.metadata_url, timeout=timeout, headers=headers)
         if r.status_code == 404:
-            raise NoMetadataError(pkg.filename)
+            raise NoMetadataError(pkg.filename, pkg.metadata_url)
         r.raise_for_status()
         digester.update(r.content)
         digester.finalize()
@@ -535,12 +535,12 @@ class PyPISimple:
                 digests = {"sha256": pkg.provenance_sha256}
             else:
                 digests = {}
-            digester = DigestChecker(digests)
+            digester = DigestChecker(digests, pkg.provenance_url)
         else:
             digester = NullDigestChecker()
         r = self.s.get(pkg.provenance_url, timeout=timeout, headers=headers)
         if r.status_code == 404:
-            raise NoProvenanceError(pkg.filename)
+            raise NoProvenanceError(pkg.filename, pkg.provenance_url)
         r.raise_for_status()
         digester.update(r.content)
         digester.finalize()

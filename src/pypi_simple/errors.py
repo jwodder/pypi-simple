@@ -57,7 +57,14 @@ class NoDigestsError(ValueError):
     algorithms
     """
 
-    pass
+    def __init__(self, url: str) -> None:
+        #: The URL of the resource being downloaded
+        #:
+        #: .. versionadded:: 1.6.0
+        self.url = url
+
+    def __str__(self) -> str:
+        return f"No digests with known algorithms available for resource at {self.url}"
 
 
 class DigestMismatchError(ValueError):
@@ -67,7 +74,7 @@ class DigestMismatchError(ValueError):
     """
 
     def __init__(
-        self, algorithm: str, expected_digest: str, actual_digest: str
+        self, *, algorithm: str, expected_digest: str, actual_digest: str, url: str
     ) -> None:
         #: The name of the digest algorithm used
         self.algorithm = algorithm
@@ -75,11 +82,15 @@ class DigestMismatchError(ValueError):
         self.expected_digest = expected_digest
         #: The digest of the data that was actually received
         self.actual_digest = actual_digest
+        #: The URL of the resource being downloaded
+        #:
+        #: .. versionadded:: 1.6.0
+        self.url = url
 
     def __str__(self) -> str:
         return (
-            f"{self.algorithm} digest of downloaded data is"
-            f" {self.actual_digest!r} instead of expected {self.expected_digest!r}"
+            f"{self.algorithm} digest of {self.url} is {self.actual_digest!r}"
+            f" instead of expected {self.expected_digest!r}"
         )
 
 
@@ -122,12 +133,16 @@ class NoMetadataError(Exception):
     distribution metadata fails with a 404 error code
     """
 
-    def __init__(self, filename: str) -> None:
+    def __init__(self, filename: str, url: str) -> None:
         #: The filename of the package whose metadata was requested
         self.filename = filename
+        #: The URL to which the failed request was made
+        #:
+        #: .. versionadded:: 1.6.0
+        self.url = url
 
     def __str__(self) -> str:
-        return f"No distribution metadata found for {self.filename}"
+        return f"No distribution metadata found for {self.filename} at {self.url}"
 
 
 class NoProvenanceError(Exception):
@@ -138,9 +153,11 @@ class NoProvenanceError(Exception):
     ``.provenance`` file fails with a 404 error code
     """
 
-    def __init__(self, filename: str) -> None:
+    def __init__(self, filename: str, url: str) -> None:
         #: The filename of the package whose provenance was requested
         self.filename = filename
+        #: The URL to which the failed request was made
+        self.url = url
 
     def __str__(self) -> str:
-        return f"No .provenance file found for {self.filename}"
+        return f"No .provenance file found for {self.filename} at {self.url}"
