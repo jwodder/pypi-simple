@@ -61,9 +61,10 @@ class NullDigestChecker(AbstractDigestChecker):
 
 
 class DigestChecker(AbstractDigestChecker):
-    def __init__(self, digests: dict[str, str]) -> None:
+    def __init__(self, digests: dict[str, str], url: str) -> None:
         self.digesters: dict[str, Any] = {}
         self.expected: dict[str, str] = {}
+        self.url = url
         for alg, value in digests.items():
             try:
                 d = hashlib.new(alg)
@@ -73,7 +74,7 @@ class DigestChecker(AbstractDigestChecker):
                 self.digesters[alg] = d
                 self.expected[alg] = value
         if not self.digesters:
-            raise NoDigestsError("No digests with known algorithms available")
+            raise NoDigestsError(self.url)
 
     def update(self, blob: bytes) -> None:
         for d in self.digesters.values():
@@ -87,6 +88,7 @@ class DigestChecker(AbstractDigestChecker):
                     algorithm=alg,
                     expected_digest=self.expected[alg],
                     actual_digest=actual,
+                    url=self.url,
                 )
 
 

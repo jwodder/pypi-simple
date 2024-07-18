@@ -68,10 +68,13 @@ ACCEPT_HTML_PREFERRED = ", ".join(
 )
 
 from .classes import DistributionPackage, IndexPage, ProjectPage
-from .client import NoMetadataError, NoProvenanceError, NoSuchProjectError, PyPISimple
+from .client import PyPISimple
 from .errors import (
     DigestMismatchError,
     NoDigestsError,
+    NoMetadataError,
+    NoProvenanceError,
+    NoSuchProjectError,
     UnexpectedRepoVersionWarning,
     UnparsableFilenameError,
     UnsupportedContentTypeError,
