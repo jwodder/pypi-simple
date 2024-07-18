@@ -15,25 +15,28 @@ their metadata "backfilled" in; see
 .. code:: python
 
     # Requirements:
-    #     Python 3.8+
     #     packaging 23.1+
-    #     pypi_simple 1.3+
+    #     pypi_simple 1.5+
 
     from packaging.metadata import parse_email
-    from pypi_simple import PyPISimple
+    from pypi_simple import NoMetadataError, PyPISimple
 
     with PyPISimple() as client:
         page = client.get_project_page("pypi-simple")
         for pkg in page.packages:
-            if pkg.has_metadata:
-                src = client.get_package_metadata(pkg)
-                md, _ = parse_email(src)
-                if deps := md.get("requires_dist"):
-                    print(f"Dependencies for {pkg.filename}:")
-                    for d in deps:
-                        print(f"    {d}")
+            if pkg.has_metadata is not False:
+                try:
+                    src = client.get_package_metadata(pkg)
+                except NoMetadataError:
+                    print(f"{pkg.filename}: No metadata available")
                 else:
-                    print(f"Dependencies for {pkg.filename}: NONE")
+                    md, _ = parse_email(src)
+                    if deps := md.get("requires_dist"):
+                        print(f"Dependencies for {pkg.filename}:")
+                        for d in deps:
+                            print(f"    {d}")
+                    else:
+                        print(f"Dependencies for {pkg.filename}: NONE")
             else:
                 print(f"{pkg.filename}: No metadata available")
             print()

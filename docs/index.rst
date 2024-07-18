@@ -42,8 +42,8 @@ Installation
 .. _tqdm: https://tqdm.github.io
 
 
-Example
-=======
+Examples
+========
 
 Get information about a package:
 
@@ -77,6 +77,7 @@ Download a package with a tqdm progress bar:
             pkg, path=pkg.filename, progress=tqdm_progress_factory(),
         )
 
+:doc:`See more examples in the docs. <examples>`
 
 Indices and tables
 ==================

@@ -54,8 +54,8 @@ Installation
 .. _tqdm: https://tqdm.github.io
 
 
-Example
-=======
+Examples
+========
 
 Get information about a package:
 
@@ -88,3 +88,7 @@ Download a package with a tqdm progress bar:
         client.download_package(
             pkg, path=pkg.filename, progress=tqdm_progress_factory(),
         )
+
+`See more examples in the docs.`__
+
+__ https://pypi-simple.readthedocs.io/en/stable/examples.html

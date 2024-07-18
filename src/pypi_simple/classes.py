@@ -42,13 +42,13 @@ class DistributionPackage:
     #: The type of the package, or `None` if the filename cannot be parsed.
     #: The recognized package types are:
     #:
-    #: - ``'dumb'``
-    #: - ``'egg'``
-    #: - ``'msi'``
-    #: - ``'rpm'``
-    #: - ``'sdist'``
-    #: - ``'wheel'``
-    #: - ``'wininst'``
+    #: - ``"dumb"``
+    #: - ``"egg"``
+    #: - ``"msi"``
+    #: - ``"rpm"``
+    #: - ``"sdist"``
+    #: - ``"wheel"``
+    #: - ``"wininst"``
     package_type: Optional[str]
 
     #: A collection of hash digests for the file as a `dict` mapping hash

@@ -326,8 +326,8 @@ class PyPISimple:
         :param bool verify:
             whether to verify the package's digests against the downloaded file
         :param bool keep_on_error:
-            whether to keep (true) or delete (false) the downloaded file if an
-            error occurs
+            whether to keep (true) or delete (false; default) the downloaded
+            file if an error occurs
         :param progress: a callable for constructing a progress tracker
         :param timeout: optional timeout to pass to the ``requests`` call
         :type timeout: float | tuple[float,float] | None
