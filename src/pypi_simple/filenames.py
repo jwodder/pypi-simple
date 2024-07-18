@@ -88,24 +88,24 @@ def parse_filename(
     spelled the same as they appear in the filename; no normalization is
     performed.
 
-    The package type may be any of the following strings:
+    The package type will be one of the following strings:
 
-    - ``'dumb'``
-    - ``'egg'``
-    - ``'msi'``
-    - ``'rpm'``
-    - ``'sdist'``
-    - ``'wheel'``
-    - ``'wininst'``
+    - ``"dumb"``
+    - ``"egg"``
+    - ``"msi"``
+    - ``"rpm"``
+    - ``"sdist"``
+    - ``"wheel"``
+    - ``"wininst"``
 
     Note that some filenames (e.g., :file:`1-2-3.tar.gz`) may be ambiguous as
     to which part is the project name and which is the version.  In order to
-    resolve the ambiguity, the expected value for the project name (*modulo*
-    normalization) can be supplied as the ``project_name`` argument to the
-    function.  If the filename can be parsed with the given string in the role
-    of the project name, the results of that parse will be returned; otherwise,
-    the function will fall back to breaking the project & version apart at an
-    unspecified point.
+    resolve the ambiguity, the expected value for the project name can be
+    supplied as the ``project_name`` argument to the function; it need not be
+    normalized.  If the filename can be parsed with the given string in the
+    role of the project name, the results of that parse will be returned;
+    otherwise, the function will fall back to breaking the project & version
+    apart at an unspecified point.
 
     .. versionchanged:: 1.0.0
 
