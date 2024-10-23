@@ -3,8 +3,8 @@
 Changelog
 =========
 
-v1.6.1 (in development)
------------------------
+v1.6.1 (2024-10-23)
+-------------------
 - `SUPPORTED_REPOSITORY_VERSION` increased to ``"1.3"`` for compatibility with
   :pep:`740`
 
