@@ -1,3 +1,8 @@
+v1.6.1 (in development)
+-----------------------
+- `SUPPORTED_REPOSITORY_VERSION` increased to `"1.3"` for compatibility with
+  PEP 740
+
 v1.6.0 (2024-07-18)
 -------------------
 - Drop support for Python 3.7
