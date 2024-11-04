@@ -119,7 +119,7 @@ class PyPISimple:
         .. warning::
 
             PyPI's top-level simple HTML page is cached for 24 hours, meaning
-            that new projects won't show up on this page immediate.  Access
+            that new projects won't show up on this page immediately.  Access
             the project page directly if you need immediate results.
 
         .. versionchanged:: 1.0.0
