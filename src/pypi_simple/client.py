@@ -116,6 +116,12 @@ class PyPISimple:
             PyPI's project index file is very large and takes several seconds
             to parse.  Use this method sparingly.
 
+        .. warning::
+
+            PyPI's top-level simple HTML page is cached for 24 hours, meaning
+            that new projects won't show up on this page immediate.  Access
+            the project page directly if you need immediate results.
+
         .. versionchanged:: 1.0.0
 
             ``accept`` parameter added
