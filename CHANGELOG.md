@@ -1,3 +1,7 @@
+v1.7.0 (in development)
+-----------------------
+- Support Python 3.13
+
 v1.6.1 (2024-10-23)
 -------------------
 - `SUPPORTED_REPOSITORY_VERSION` increased to `"1.3"` for compatibility with
