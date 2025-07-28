@@ -23,7 +23,6 @@ class Meta(BaseModel, alias_generator=shishkebab, populate_by_name=True):
 
 class ProjectMeta(Meta):
     tracks: List[str] = Field(default_factory=list)
-    alternate_locations: List[str] = Field(default_factory=list)
 
 
 class File(BaseModel, alias_generator=shishkebab, populate_by_name=True):
@@ -69,10 +68,11 @@ class File(BaseModel, alias_generator=shishkebab, populate_by_name=True):
             return None
 
 
-class Project(BaseModel):
+class Project(BaseModel, alias_generator=shishkebab, populate_by_name=True):
     name: str
     files: List[File]
     meta: ProjectMeta
+    alternate_locations: List[str] = Field(default_factory=list)
     versions: Optional[List[str]] = None
 
 

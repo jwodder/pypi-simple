@@ -351,7 +351,7 @@ class ProjectPage:
             last_serial=project.meta.last_serial,
             versions=project.versions,
             tracks=project.meta.tracks,
-            alternate_locations=project.meta.alternate_locations,
+            alternate_locations=project.alternate_locations,
         )
 
     @classmethod
