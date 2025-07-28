@@ -24,7 +24,7 @@ __url__ = "https://github.com/jwodder/pypi-simple"
 PYPI_SIMPLE_ENDPOINT: str = "https://pypi.org/simple/"
 
 #: The maximum supported simple repository version (See :pep:`629`)
-SUPPORTED_REPOSITORY_VERSION: str = "1.3"
+SUPPORTED_REPOSITORY_VERSION: str = "1.4"
 
 #: :mailheader:`Accept` header value for accepting either the HTML or JSON
 #: serialization without a preference
@@ -69,6 +69,7 @@ ACCEPT_HTML_PREFERRED = ", ".join(
 
 from .classes import DistributionPackage, IndexPage, ProjectPage
 from .client import PyPISimple
+from .enums import ProjectStatus
 from .errors import (
     DigestMismatchError,
     NoDigestsError,
@@ -97,6 +98,7 @@ __all__ = [
     "PYPI_SIMPLE_ENDPOINT",
     "ProgressTracker",
     "ProjectPage",
+    "ProjectStatus",
     "PyPISimple",
     "RepositoryPage",
     "SUPPORTED_REPOSITORY_VERSION",

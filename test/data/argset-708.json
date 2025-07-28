@@ -29,6 +29,10 @@
     "tracks": ["https://tracks.package/pypi/argset/", "https://test.tracks.package/pypi/argset"]
   },
   "alternate-locations": ["https://alt.package/pypi/argset/", "https://test.alt.package/pypi/argset"],
+  "project-status": {
+    "status": "deprecated",
+    "reason": "Dev is tired of project"
+  },
   "name": "argset",
   "versions": ["0.1.0"]
 }

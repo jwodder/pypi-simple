@@ -4,6 +4,7 @@ import re
 from typing import Optional
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup, Tag
+from .enums import ProjectStatus
 from .util import basejoin, check_repo_version
 
 
@@ -51,6 +52,28 @@ class RepositoryPage:
         __ https://peps.python.org/pep-0708/#alternate-locations-metadata
         """
         return self.pypi_meta.get("alternate-locations", [])
+
+    @property
+    def status(self) -> ProjectStatus | None:
+        """
+        .. versionadded:: 1.7.0
+
+        Project status marker, or `None` if not specified.  See :pep:`792`.
+        """
+        if st := self.pypi_meta.get("project-status"):
+            return ProjectStatus(st[0])
+        else:
+            return None
+
+    @property
+    def status_reason(self) -> str | None:
+        """
+        .. versionadded:: 1.7.0
+
+        Freeform text contextualizing `status`, or `None` if not specified.
+        See :pep:`792` for more information.
+        """
+        return self.pypi_meta.get("project-status-reason", [None])[0]
 
     @classmethod
     def from_html(

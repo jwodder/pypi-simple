@@ -12,6 +12,7 @@ Core Classes
 .. autoclass:: IndexPage()
 .. autoclass:: ProjectPage()
 .. autoclass:: DistributionPackage()
+.. autoclass:: ProjectStatus()
 
 Progress Trackers
 -----------------

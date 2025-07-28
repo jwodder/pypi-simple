@@ -2,6 +2,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Union
 from pydantic import BaseModel, Field, StrictBool, field_validator
+from .enums import ProjectStatus
 
 
 def shishkebab(s: str) -> str:
@@ -23,6 +24,11 @@ class Meta(BaseModel, alias_generator=shishkebab, populate_by_name=True):
 
 class ProjectMeta(Meta):
     tracks: List[str] = Field(default_factory=list)
+
+
+class StatusData(BaseModel):
+    status: Optional[ProjectStatus] = None
+    reason: Optional[str] = None
 
 
 class File(BaseModel, alias_generator=shishkebab, populate_by_name=True):
@@ -73,6 +79,7 @@ class Project(BaseModel, alias_generator=shishkebab, populate_by_name=True):
     files: List[File]
     meta: ProjectMeta
     alternate_locations: List[str] = Field(default_factory=list)
+    project_status: StatusData = Field(default_factory=StatusData)
     versions: Optional[List[str]] = None
 
 
