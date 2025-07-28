@@ -26,9 +26,9 @@
   "meta": {
     "_last-serial": 10562871,
     "api-version": "1.2",
-    "tracks": ["https://tracks.package/pypi/argset/", "https://test.tracks.package/pypi/argset"],
-    "alternate-locations": ["https://alt.package/pypi/argset/", "https://test.alt.package/pypi/argset"]
+    "tracks": ["https://tracks.package/pypi/argset/", "https://test.tracks.package/pypi/argset"]
   },
+  "alternate-locations": ["https://alt.package/pypi/argset/", "https://test.alt.package/pypi/argset"],
   "name": "argset",
   "versions": ["0.1.0"]
 }

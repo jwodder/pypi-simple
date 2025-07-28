@@ -1,6 +1,8 @@
 v1.7.0 (in development)
 -----------------------
 - Support Python 3.13
+- **Bugfix**: Fix parsing of PEP 708 `alternate-locations` fields in JSON
+  project pages (Previous versions looked for the field in the wrong location)
 
 v1.6.1 (2024-10-23)
 -------------------
