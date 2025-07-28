@@ -7,6 +7,7 @@ from pypi_simple import (
     SUPPORTED_REPOSITORY_VERSION,
     DistributionPackage,
     ProjectPage,
+    ProjectStatus,
     UnsupportedRepoVersionError,
 )
 
@@ -496,6 +497,8 @@ def test_from_html_empty() -> None:
                     "https://alt.package/pypi/qypi/",
                     "https://test.alt.package/pypi/qypi/",
                 ],
+                status=ProjectStatus.DEPRECATED,
+                status_reason="Dev is tired of project",
             ),
         ),
         (
@@ -792,6 +795,8 @@ def test_from_json_data_empty() -> None:
                     "https://alt.package/pypi/argset/",
                     "https://test.alt.package/pypi/argset",
                 ],
+                status=ProjectStatus.DEPRECATED,
+                status_reason="Dev is tired of project",
             ),
         ),
         (

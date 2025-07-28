@@ -6,6 +6,7 @@ from typing import Any, Optional
 from urllib.parse import urlparse, urlunparse
 from mailbits import ContentType
 import requests
+from .enums import ProjectStatus
 from .errors import UnparsableFilenameError, UnsupportedContentTypeError
 from .filenames import parse_filename
 from .html import Link, RepositoryPage
@@ -277,6 +278,16 @@ class ProjectPage:
     #: __ https://peps.python.org/pep-0708/#alternate-locations-metadata
     alternate_locations: list[str] = field(default_factory=list)
 
+    #: .. versionadded:: 1.7.0
+    #:
+    #: Project status marker, or `None` if not specified.  See :pep:`792`.
+    status: ProjectStatus | None = None
+
+    #: .. versionadded:: 1.7.0
+    #:
+    #: Freeform text contextualizing `status`, or `None` if not specified
+    status_reason: str | None = None
+
     @classmethod
     def from_html(
         cls,
@@ -317,6 +328,8 @@ class ProjectPage:
             versions=None,
             tracks=page.tracks,
             alternate_locations=page.alternate_locations,
+            status=page.status,
+            status_reason=page.status_reason,
         )
 
     @classmethod
@@ -352,6 +365,8 @@ class ProjectPage:
             versions=project.versions,
             tracks=project.meta.tracks,
             alternate_locations=project.alternate_locations,
+            status=project.project_status.status,
+            status_reason=project.project_status.reason,
         )
 
     @classmethod
