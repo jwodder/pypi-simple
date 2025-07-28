@@ -3,8 +3,8 @@
 Changelog
 =========
 
-v1.7.0 (in development)
------------------------
+v1.7.0 (2025-07-28)
+-------------------
 - Support Python 3.13
 
 - **Bugfix**: Fix parsing of :pep:`708` ``alternate-locations`` fields in JSON
