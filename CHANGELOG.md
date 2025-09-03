@@ -1,5 +1,5 @@
-v1.8.0 (in development)
------------------------
+v1.8.0 (2025-09-03)
+-------------------
 - Provenance support belatedly updated to match a change to PEP 740:
     - `DistributionPackage.provenance_sha256` is now deprecated and is always
       `None`
