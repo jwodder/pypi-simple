@@ -1,3 +1,6 @@
+from typing import Optional
+
+
 class UnsupportedRepoVersionError(Exception):
     """
     Raised upon encountering a simple repository whose repository version
@@ -149,15 +152,24 @@ class NoProvenanceError(Exception):
     """
     .. versionadded:: 1.6.0
 
-    Raised by `PyPISimple.get_provenance()` when a request for a
-    ``.provenance`` file fails with a 404 error code
+    .. versionchanged:: 1.8.0
+
+        ``url`` can now be `None`
+
+    Raised by `PyPISimple.get_provenance()` when passed a `DistributionPackage`
+    with a `None` ``provenance_url`` or when a request for a provenance file
+    fails with a 404 error code
     """
 
-    def __init__(self, filename: str, url: str) -> None:
+    def __init__(self, filename: str, url: Optional[str]) -> None:
         #: The filename of the package whose provenance was requested
         self.filename = filename
-        #: The URL to which the failed request was made
+        #: The URL to which the failed request was made, or `None` if
+        #: ``provenance_url`` was `None`
         self.url = url
 
     def __str__(self) -> str:
-        return f"No .provenance file found for {self.filename} at {self.url}"
+        if self.url is None:
+            return f"No provenance file declared for {self.filename}"
+        else:
+            return f"No provenance file found for {self.filename} at {self.url}"
