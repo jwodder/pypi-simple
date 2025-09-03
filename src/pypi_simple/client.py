@@ -498,56 +498,42 @@ class PyPISimple:
     def get_provenance(
         self,
         pkg: DistributionPackage,
-        verify: bool = True,
+        verify: bool = True,  # noqa: U100
         timeout: float | tuple[float, float] | None = None,
         headers: Optional[dict[str, str]] = None,
     ) -> dict[str, Any]:
         """
         .. versionadded:: 1.6.0
 
-        Retrieve the :pep:`740` ``.provenance`` file for the given
+        .. versionchanged:: 1.8.0
+
+            The ``verify`` argument is now deprecated and does nothing.
+
+        Retrieve the :pep:`740` provenance file for the given
         `DistributionPackage` and decode it as JSON.
 
-        Not all packages have ``.provenance`` files available for download; cf.
-        `DistributionPackage.provenance_sha256`.  This method will always
-        attempt to download the ``.provenance`` file regardless of the value of
-        `DistributionPackage.provenance_sha256`; if the server replies with a
-        404, a `NoProvenanceError` is raised.
+        Not all packages have provenance files available for download.  If
+        `DistributionPackage.provenance_url` is `None` or if the server replies
+        with a 404, a `NoProvenanceError` is raised.
 
         :param DistributionPackage pkg:
-            the distribution package to retrieve the ``.provenance`` file of
-        :param bool verify:
-            whether to verify the ``.provenance`` file's SHA 256 digest against
-            the retrieved data
+            the distribution package to retrieve the provenance file of
         :param timeout: optional timeout to pass to the ``requests`` call
         :type timeout: float | tuple[float,float] | None
         :param Optional[dict[str, str]] headers:
             Custom headers to provide for the request.
         :rtype: dict[str, Any]
-
         :raises NoProvenanceError:
-            if the repository responds with a 404 error code
+            if ``provenance_url`` is `None` or the repository responds with a
+            404 error code
         :raises requests.HTTPError: if the repository responds with an HTTP
             error code other than 404
-        :raises NoDigestsError:
-            if ``verify`` is true and ``pkg.provenance_sha256`` is `None`
-        :raises DigestMismatchError:
-            if ``verify`` is true and the digest of the downloaded data does
-            not match the expected value
         """
-        digester: AbstractDigestChecker
-        if verify:
-            if pkg.provenance_sha256 is not None:
-                digests = {"sha256": pkg.provenance_sha256}
-            else:
-                digests = {}
-            digester = DigestChecker(digests, pkg.provenance_url)
-        else:
-            digester = NullDigestChecker()
-        r = self.s.get(pkg.provenance_url, timeout=timeout, headers=headers)
+        url = pkg.provenance_url
+        if url is None:
+            raise NoProvenanceError(pkg.filename, None)
+        r = self.s.get(url, timeout=timeout, headers=headers)
         if r.status_code == 404:
-            raise NoProvenanceError(pkg.filename, pkg.provenance_url)
+            raise NoProvenanceError(pkg.filename, url)
         r.raise_for_status()
-        digester.update(r.content)
-        digester.finalize()
         return json.loads(r.content)  # type: ignore[no-any-return]

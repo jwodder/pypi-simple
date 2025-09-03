@@ -1,6 +1,5 @@
 from __future__ import annotations
 import filecmp
-import hashlib
 import json
 from pathlib import Path
 from types import TracebackType
@@ -324,7 +323,7 @@ def test_utf8_declarations(content_type: str, body_decl: bytes) -> None:
         method=responses.GET,
         url="https://test.nil/simple/project/",
         body=body_decl
-        + b'<a href="../files/project-0.1.0-p\xC3\xBF42-none-any.whl">project-0.1.0-p\xC3\xBF42-none-any.whl</a>',
+        + b'<a href="../files/project-0.1.0-p\xc3\xbf42-none-any.whl">project-0.1.0-p\xc3\xbf42-none-any.whl</a>',
         content_type=content_type,
     )
     with PyPISimple("https://test.nil/simple/") as simple:
@@ -332,11 +331,11 @@ def test_utf8_declarations(content_type: str, body_decl: bytes) -> None:
             project="project",
             packages=[
                 DistributionPackage(
-                    filename="project-0.1.0-p\xFF42-none-any.whl",
+                    filename="project-0.1.0-p\xff42-none-any.whl",
                     project="project",
                     version="0.1.0",
                     package_type="wheel",
-                    url="https://test.nil/simple/files/project-0.1.0-p\xFF42-none-any.whl",
+                    url="https://test.nil/simple/files/project-0.1.0-p\xff42-none-any.whl",
                     digests={},
                     requires_python=None,
                     has_sig=None,
@@ -371,7 +370,7 @@ def test_latin2_declarations(content_type: str, body_decl: bytes) -> None:
         method=responses.GET,
         url="https://test.nil/simple/project/",
         body=body_decl
-        + b'<a href="../files/project-0.1.0-p\xC3\xBF42-none-any.whl">project-0.1.0-p\xC3\xBF42-none-any.whl</a>',
+        + b'<a href="../files/project-0.1.0-p\xc3\xbf42-none-any.whl">project-0.1.0-p\xc3\xbf42-none-any.whl</a>',
         content_type=content_type,
     )
     with PyPISimple("https://test.nil/simple/") as simple:
@@ -379,11 +378,11 @@ def test_latin2_declarations(content_type: str, body_decl: bytes) -> None:
             project="project",
             packages=[
                 DistributionPackage(
-                    filename="project-0.1.0-p\u0102\u017C42-none-any.whl",
+                    filename="project-0.1.0-p\u0102\u017c42-none-any.whl",
                     project="project",
                     version="0.1.0",
                     package_type="wheel",
-                    url="https://test.nil/simple/files/project-0.1.0-p\u0102\u017C42-none-any.whl",
+                    url="https://test.nil/simple/files/project-0.1.0-p\u0102\u017c42-none-any.whl",
                     digests={},
                     requires_python=None,
                     has_sig=None,
@@ -1017,9 +1016,9 @@ def test_get_provenance() -> None:
             digests={},
             requires_python=None,
             has_sig=None,
-            provenance_sha256=hashlib.sha256(provenance_bytes).hexdigest(),
+            provenance_url="https://test.nil/simple/packages/sampleproject-1.2.3-py3-none-any.whl.provenance",
         )
-        assert simple.get_provenance(pkg, verify=True) == provenance
+        assert simple.get_provenance(pkg) == provenance
 
 
 @responses.activate
@@ -1040,6 +1039,7 @@ def test_get_provenance_404() -> None:
             digests={},
             requires_python=None,
             has_sig=None,
+            provenance_url="https://test.nil/simple/packages/sampleproject-1.2.3-py3-none-any.whl.provenance",
         )
         with pytest.raises(NoProvenanceError) as excinfo:
             simple.get_provenance(pkg, verify=False)
@@ -1050,29 +1050,5 @@ def test_get_provenance_404() -> None:
         )
         assert (
             str(excinfo.value)
-            == "No .provenance file found for sampleproject-1.2.3-py3-none-any.whl at https://test.nil/simple/packages/sampleproject-1.2.3-py3-none-any.whl.provenance"
+            == "No provenance file found for sampleproject-1.2.3-py3-none-any.whl at https://test.nil/simple/packages/sampleproject-1.2.3-py3-none-any.whl.provenance"
         )
-
-
-@responses.activate
-def test_get_provenance_verify_no_digest() -> None:
-    responses.add(
-        method=responses.GET,
-        url="https://test.nil/simple/packages/sampleproject-1.2.3-py3-none-any.whl.provenance",
-        body="Does not exist",
-        status=404,
-    )
-    with PyPISimple("https://test.nil/simple/") as simple:
-        pkg = DistributionPackage(
-            filename="sampleproject-1.2.3-py3-none-any.whl",
-            project="sampleproject",
-            version="1.2.3",
-            package_type="wheel",
-            url="https://test.nil/simple/packages/sampleproject-1.2.3-py3-none-any.whl",
-            digests={},
-            requires_python=None,
-            has_sig=None,
-            provenance_sha256=None,
-        )
-        with pytest.raises(NoDigestsError):
-            simple.get_provenance(pkg, verify=True)

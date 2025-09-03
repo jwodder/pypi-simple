@@ -1,3 +1,13 @@
+v1.8.0 (in development)
+-----------------------
+- Provenance support belatedly updated to match a change to PEP 740:
+    - `DistributionPackage.provenance_sha256` is now deprecated and is always
+      `None`
+    - `DistributionPackage.provenance_url` is now determined correctly and is
+      `None` when no provenance file is declared
+    - `PyPISimple.get_provenance()` no longer verifies the provenance's digest,
+      and the `verify` argument is now deprecated
+
 v1.7.0 (2025-07-28)
 -------------------
 - Support Python 3.13

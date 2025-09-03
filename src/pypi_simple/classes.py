@@ -97,13 +97,19 @@ class DistributionPackage:
 
     #: .. versionadded:: 1.6.0
     #:
-    #: The SHA 256 digest of the package file's :pep:`740` ``.provenance``
-    #: file.
+    #: .. deprecated:: 1.8.0
     #:
-    #: If `provenance_sha256` is non-`None`, then the package repository
-    #: provides a ``.provenance`` file for the package.  If it is `None`, no
-    #: conclusions can be drawn.
-    provenance_sha256: Optional[str] = None
+    #: This attribute is deprecated; its value is always `None`.
+    provenance_sha256: None = None
+
+    #: .. versionadded:: 1.6.0
+    #:
+    #: .. versionchanged:: 1.8.0
+    #:
+    #:     ``provenance_url`` can now be `None`
+    #:
+    #: The URL of the package file's :pep:`740` provenance file, if any
+    provenance_url: Optional[str] = None
 
     @property
     def sig_url(self) -> str:
@@ -120,14 +126,6 @@ class DistributionPackage:
         `has_metadata`
         """
         return url_add_suffix(self.url, ".metadata")
-
-    @property
-    def provenance_url(self) -> str:
-        """
-        The URL of the package file's :pep:`740` ``.provenance`` file, if it
-        exists; cf. `provenance_sha256`
-        """
-        return url_add_suffix(self.url, ".provenance")
 
     @classmethod
     def from_link(
@@ -183,7 +181,7 @@ class DistributionPackage:
             digests=digests,
             metadata_digests=metadata_digests,
             has_metadata=has_metadata,
-            provenance_sha256=link.get_str_attrib("data-provenance"),
+            provenance_url=link.get_str_attrib("data-provenance"),
         )
 
     @classmethod
@@ -237,7 +235,7 @@ class DistributionPackage:
             has_metadata=file.has_metadata,
             size=file.size,
             upload_time=file.upload_time,
-            provenance_sha256=file.provenance,
+            provenance_url=None if file.provenance is None else str(file.provenance),
         )
 
 

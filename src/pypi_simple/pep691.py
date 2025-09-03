@@ -1,7 +1,7 @@
 from __future__ import annotations
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Union
-from pydantic import BaseModel, Field, StrictBool, field_validator
+from pydantic import BaseModel, Field, HttpUrl, StrictBool, field_validator
 from .enums import ProjectStatus
 
 
@@ -41,7 +41,7 @@ class File(BaseModel, alias_generator=shishkebab, populate_by_name=True):
     yanked: Union[StrictBool, str] = False
     size: Optional[int] = None
     upload_time: Optional[datetime] = None
-    provenance: Optional[str] = None
+    provenance: Optional[HttpUrl] = None
 
     @property
     def is_yanked(self) -> bool:
