@@ -383,12 +383,12 @@ from pypi_simple import (
                 repository_version=None,
                 links=[
                     Link(
-                        "project-0.1.0-p\xFF42-none-any.whl",
-                        "https://test.nil/simple/files/project-0.1.0-p\xFF42-none"
+                        "project-0.1.0-p\xff42-none-any.whl",
+                        "https://test.nil/simple/files/project-0.1.0-p\xff42-none"
                         "-any.whl",
                         {
                             "href": "https://test.nil/simple/files/project-0.1.0-"
-                            "p\xFF42-none-any.whl",
+                            "p\xff42-none-any.whl",
                         },
                     )
                 ],
@@ -403,12 +403,12 @@ from pypi_simple import (
                 repository_version=None,
                 links=[
                     Link(
-                        "project-0.1.0-p\xFF42-none-any.whl",
-                        "https://test.nil/simple/files/project-0.1.0-p\xFF42-none"
+                        "project-0.1.0-p\xff42-none-any.whl",
+                        "https://test.nil/simple/files/project-0.1.0-p\xff42-none"
                         "-any.whl",
                         {
                             "href": "https://test.nil/simple/files/project-0.1.0-"
-                            "p\xFF42-none-any.whl",
+                            "p\xff42-none-any.whl",
                         },
                     ),
                 ],

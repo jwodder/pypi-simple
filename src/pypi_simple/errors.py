@@ -13,6 +13,7 @@ class UnsupportedRepoVersionError(Exception):
         self.declared_version: str = declared_version
         #: The maximum repository version that we support
         self.supported_version: str = supported_version
+        super().__init__(declared_version, supported_version)
 
     def __str__(self) -> str:
         return (
@@ -45,6 +46,7 @@ class UnsupportedContentTypeError(ValueError):
         self.url = url
         #: The unsupported :mailheader:`Content-Type`
         self.content_type = content_type
+        super().__init__(url, content_type)
 
     def __str__(self) -> str:
         return (
@@ -65,6 +67,7 @@ class NoDigestsError(ValueError):
         #:
         #: .. versionadded:: 1.6.0
         self.url = url
+        super().__init__(url)
 
     def __str__(self) -> str:
         return f"No digests with known algorithms available for resource at {self.url}"
@@ -77,7 +80,7 @@ class DigestMismatchError(ValueError):
     """
 
     def __init__(
-        self, *, algorithm: str, expected_digest: str, actual_digest: str, url: str
+        self, algorithm: str, expected_digest: str, actual_digest: str, url: str
     ) -> None:
         #: The name of the digest algorithm used
         self.algorithm = algorithm
@@ -89,6 +92,7 @@ class DigestMismatchError(ValueError):
         #:
         #: .. versionadded:: 1.6.0
         self.url = url
+        super().__init__(algorithm, expected_digest, actual_digest, url)
 
     def __str__(self) -> str:
         return (
@@ -107,6 +111,7 @@ class UnparsableFilenameError(ValueError):
     def __init__(self, filename: str) -> None:
         #: The unparsable filename
         self.filename = filename
+        super().__init__(filename)
 
     def __str__(self) -> str:
         return f"Cannot parse package filename: {self.filename!r}"
@@ -123,6 +128,7 @@ class NoSuchProjectError(Exception):
         self.project = project
         #: The URL to which the failed request was made
         self.url = url
+        super().__init__(project, url)
 
     def __str__(self) -> str:
         return f"No details about project {self.project!r} available at {self.url}"
@@ -143,6 +149,7 @@ class NoMetadataError(Exception):
         #:
         #: .. versionadded:: 1.6.0
         self.url = url
+        super().__init__(filename, url)
 
     def __str__(self) -> str:
         return f"No distribution metadata found for {self.filename} at {self.url}"
@@ -167,6 +174,7 @@ class NoProvenanceError(Exception):
         #: The URL to which the failed request was made, or `None` if
         #: ``provenance_url`` was `None`
         self.url = url
+        super().__init__(filename, url)
 
     def __str__(self) -> str:
         if self.url is None:

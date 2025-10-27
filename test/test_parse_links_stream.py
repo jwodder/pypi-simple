@@ -328,12 +328,12 @@ from pypi_simple import (
             None,
             [
                 Link(
-                    "project-0.1.0-p\xFF42-none-any.whl",
-                    "https://test.nil/simple/files/project-0.1.0-p\xFF42-none"
+                    "project-0.1.0-p\xff42-none-any.whl",
+                    "https://test.nil/simple/files/project-0.1.0-p\xff42-none"
                     "-any.whl",
                     {
                         "href": "https://test.nil/simple/files/project-0.1.0-"
-                        "p\xFF42-none-any.whl",
+                        "p\xff42-none-any.whl",
                     },
                 )
             ],
@@ -344,12 +344,12 @@ from pypi_simple import (
             None,
             [
                 Link(
-                    "project-0.1.0-p\xFF42-none-any.whl",
-                    "https://test.nil/simple/files/project-0.1.0-p\xFF42-none"
+                    "project-0.1.0-p\xff42-none-any.whl",
+                    "https://test.nil/simple/files/project-0.1.0-p\xff42-none"
                     "-any.whl",
                     {
                         "href": "https://test.nil/simple/files/project-0.1.0-"
-                        "p\xFF42-none-any.whl",
+                        "p\xff42-none-any.whl",
                     },
                 ),
             ],
@@ -444,7 +444,7 @@ def test_parse_links_stream(
         ([], None, []),
         (
             [
-                b"\xFF\xFE<\x00h\x00t\x00m\x00l\x00>\x00\n\x00",
+                b"\xff\xfe<\x00h\x00t\x00m\x00l\x00>\x00\n\x00",
                 "<head><title>UTF-16LE</title></head>\n".encode("utf-16le"),
                 "<body>\n".encode("utf-16le"),
                 '<a href="one.html">link1</a>\n'.encode("utf-16le"),
@@ -460,7 +460,7 @@ def test_parse_links_stream(
         ),
         (
             [
-                b"\xFF\xFE<\x00h\x00t\x00m\x00l\x00>\x00\n\x00",
+                b"\xff\xfe<\x00h\x00t\x00m\x00l\x00>\x00\n\x00",
                 "<!-- This is a very long comment to ensure that `scan_window = 1024` bytes are consumed before reaching the end of all of the data.  What can I write about... So, how about that sports team?  Aren't they very sporty?  ... Forget it, I'll just multiply this string a few times. -->".encode(
                     "utf-16le"
                 )
@@ -480,7 +480,7 @@ def test_parse_links_stream(
         ),
         (
             [
-                b"\xFF\xFE<\x00h\x00t\x00m\x00l\x00>\x00\n\x00",
+                b"\xff\xfe<\x00h\x00t\x00m\x00l\x00>\x00\n\x00",
                 "<head>\n".encode("utf-16le"),
                 "<title>UTF-16LE</title>\n".encode("utf-16le"),
                 '<meta charset="iso-8859-1"/>\n'.encode("utf-16le"),
@@ -506,7 +506,7 @@ def test_parse_links_stream(
                 b"</head>\n",
                 b"<body>\n",
                 b'<a href="one.html">link1</a>\n',
-                b'<a href="two.html">link-\xB9</a>\n',
+                b'<a href="two.html">link-\xb9</a>\n',
                 b"</body>\n",
                 b"</html>\n",
             ],
@@ -525,14 +525,14 @@ def test_parse_links_stream(
                 b"</head>\n",
                 b"<body>\n",
                 b'<a href="one.html">link1</a>\n',
-                b'<a href="two.html">link-\xC3\xB0</a>\n',
+                b'<a href="two.html">link-\xc3\xb0</a>\n',
                 b"</body>\n",
                 b"</html>\n",
             ],
             None,
             [
                 Link("link1", "one.html", {"href": "one.html"}),
-                Link("link-\xC3\xB0", "two.html", {"href": "two.html"}),
+                Link("link-\xc3\xb0", "two.html", {"href": "two.html"}),
             ],
         ),
         (
@@ -544,14 +544,14 @@ def test_parse_links_stream(
                 b"</head>\n",
                 b"<body>\n",
                 b'<a href="one.html">link1</a>\n',
-                b'<a href="two.html">link-\xC3\xB0</a>\n',
+                b'<a href="two.html">link-\xc3\xb0</a>\n',
                 b"</body>\n",
                 b"</html>\n",
             ],
             "utf-8",
             [
                 Link("link1", "one.html", {"href": "one.html"}),
-                Link("link-\xF0", "two.html", {"href": "two.html"}),
+                Link("link-\xf0", "two.html", {"href": "two.html"}),
             ],
         ),
         (
@@ -563,7 +563,7 @@ def test_parse_links_stream(
                 b"</head>\n",
                 b"<body>\n",
                 b'<a href="one.html">link1</a>\n',
-                b'<a href="two.html">link-\x8E</a>\n',
+                b'<a href="two.html">link-\x8e</a>\n',
                 b"</body>\n",
                 b"</html>\n",
             ],
@@ -582,7 +582,7 @@ def test_parse_links_stream(
                 b"</head>\n",
                 b"<body>\n",
                 b'<a href="one.html">link1</a>\n',
-                b'<a href="two.html">link-\x8E</a>\n',
+                b'<a href="two.html">link-\x8e</a>\n',
                 b"</body>\n",
                 b"</html>\n",
             ],
@@ -601,7 +601,7 @@ def test_parse_links_stream(
                 b"</head>\n",
                 b"<body>\n",
                 b'<a href="one.html">link1</a>\n',
-                b'<a href="two.html">link-\x8E</a>\n',
+                b'<a href="two.html">link-\x8e</a>\n',
                 b"</body>\n",
                 b"</html>\n",
             ],
@@ -619,7 +619,7 @@ def test_parse_links_stream(
                 b"</head>\n",
                 b"<body>\n",
                 b'<a href="one.html">link1</a>\n',
-                b'<a href="two.html">link-\x8E</a>\n',
+                b'<a href="two.html">link-\x8e</a>\n',
                 b"</body>\n",
                 b"</html>\n",
             ],
