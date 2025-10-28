@@ -2,7 +2,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import datetime
 import re
-from typing import Any, Optional
+from typing import Any
 from urllib.parse import urlparse, urlunparse
 from mailbits import ContentType
 import requests
@@ -34,11 +34,11 @@ class DistributionPackage:
 
     #: The name of the project (as extracted from the filename), or `None` if
     #: the filename cannot be parsed
-    project: Optional[str]
+    project: str | None
 
     #: The project version (as extracted from the filename), or `None` if the
     #: filename cannot be parsed
-    version: Optional[str]
+    version: str | None
 
     #: The type of the package, or `None` if the filename cannot be parsed.
     #: The recognized package types are:
@@ -50,7 +50,7 @@ class DistributionPackage:
     #: - ``"sdist"``
     #: - ``"wheel"``
     #: - ``"wininst"``
-    package_type: Optional[str]
+    package_type: str | None
 
     #: A collection of hash digests for the file as a `dict` mapping hash
     #: algorithm names to hex-encoded digest strings
@@ -58,11 +58,11 @@ class DistributionPackage:
 
     #: An optional version specifier string declaring the Python version(s) in
     #: which the package can be installed
-    requires_python: Optional[str]
+    requires_python: str | None
 
     #: Whether the package file is accompanied by a PGP signature file.  This
     #: is `None` if the package repository does not report such information.
-    has_sig: Optional[bool]
+    has_sig: bool | None
 
     #: Whether the package file has been "yanked" from the package repository
     #: (meaning that it should only be installed when that specific version is
@@ -71,29 +71,29 @@ class DistributionPackage:
 
     #: If the package file has been "yanked" and a reason is given, this
     #: attribute will contain that (possibly empty) reason
-    yanked_reason: Optional[str] = None
+    yanked_reason: str | None = None
 
     #: Whether the package file is accompanied by a Core Metadata file.  This
     #: is `None` if the package repository does not report such information.
-    has_metadata: Optional[bool] = None
+    has_metadata: bool | None = None
 
     #: If the package repository provides a Core Metadata file for the package,
     #: this is a (possibly empty) `dict` of digests of the file, given as a
     #: mapping from hash algorithm names to hex-encoded digest strings;
     #: otherwise, it is `None`
-    metadata_digests: Optional[dict[str, str]] = None
+    metadata_digests: dict[str, str] | None = None
 
     #: .. versionadded:: 1.1.0
     #:
     #: The size of the package file in bytes, or `None` if not specified
     #: [#pep700]_.
-    size: Optional[int] = None
+    size: int | None = None
 
     #: .. versionadded:: 1.1.0
     #:
     #: The time at which the package file was uploaded to the server, or `None`
     #: if not specified [#pep700]_.
-    upload_time: Optional[datetime] = None
+    upload_time: datetime | None = None
 
     #: .. versionadded:: 1.6.0
     #:
@@ -109,7 +109,7 @@ class DistributionPackage:
     #:     ``provenance_url`` can now be `None`
     #:
     #: The URL of the package file's :pep:`740` provenance file, if any
-    provenance_url: Optional[str] = None
+    provenance_url: str | None = None
 
     @property
     def sig_url(self) -> str:
@@ -129,7 +129,7 @@ class DistributionPackage:
 
     @classmethod
     def from_link(
-        cls, link: Link, project_hint: Optional[str] = None
+        cls, link: Link, project_hint: str | None = None
     ) -> DistributionPackage:
         """
         Construct a `DistributionPackage` from a `Link` on a project page.
@@ -150,14 +150,14 @@ class DistributionPackage:
         dgst_name, _, dgst_value = urlbits.fragment.partition("=")
         digests = {dgst_name: dgst_value} if dgst_value else {}
         url = urlunparse(urlbits._replace(fragment=""))
-        has_sig: Optional[bool]
+        has_sig: bool | None
         gpg_sig = link.get_str_attrib("data-gpg-sig")
         if gpg_sig is not None:
             has_sig = gpg_sig.lower() == "true"
         else:
             has_sig = None
         mddigest = link.get_str_attrib("data-core-metadata")
-        metadata_digests: Optional[dict[str, str]]
+        metadata_digests: dict[str, str] | None
         has_metadata = None
         if mddigest is not None:
             metadata_digests = {}
@@ -188,8 +188,8 @@ class DistributionPackage:
     def from_json_data(
         cls,
         data: Any,
-        project_hint: Optional[str] = None,
-        base_url: Optional[str] = None,
+        project_hint: str | None = None,
+        base_url: str | None = None,
     ) -> DistributionPackage:
         """
         Construct a `DistributionPackage` from an object taken from the
@@ -210,8 +210,8 @@ class DistributionPackage:
     def from_file(
         cls,
         file: File,
-        project_hint: Optional[str] = None,
-        base_url: Optional[str] = None,
+        project_hint: str | None = None,
+        base_url: str | None = None,
     ) -> DistributionPackage:
         """:meta private:"""
         try:
@@ -251,16 +251,16 @@ class ProjectPage:
     packages: list[DistributionPackage]
 
     #: The repository version reported by the page, or `None` if not specified
-    repository_version: Optional[str]
+    repository_version: str | None
 
     #: The value of the :mailheader:`X-PyPI-Last-Serial` response header
     #: returned when fetching the page, or `None` if not specified
-    last_serial: Optional[str]
+    last_serial: str | None
 
     #: .. versionadded:: 1.1.0
     #:
     #: A list of the project's versions, or `None` if not specified [#pep700]_.
-    versions: Optional[list[str]] = None
+    versions: list[str] | None = None
 
     #: .. versionadded:: 1.4.0
     #:
@@ -291,8 +291,8 @@ class ProjectPage:
         cls,
         project: str,
         html: str | bytes,
-        base_url: Optional[str] = None,
-        from_encoding: Optional[str] = None,
+        base_url: str | None = None,
+        from_encoding: str | None = None,
     ) -> ProjectPage:
         """
         .. versionadded:: 1.0.0
@@ -331,7 +331,7 @@ class ProjectPage:
         )
 
     @classmethod
-    def from_json_data(cls, data: Any, base_url: Optional[str] = None) -> ProjectPage:
+    def from_json_data(cls, data: Any, base_url: str | None = None) -> ProjectPage:
         """
         .. versionadded:: 1.0.0
 
@@ -413,15 +413,15 @@ class IndexPage:
     projects: list[str]
 
     #: The repository version reported by the page, or `None` if not specified
-    repository_version: Optional[str]
+    repository_version: str | None
 
     #: The value of the :mailheader:`X-PyPI-Last-Serial` response header
     #: returned when fetching the page, or `None` if not specified
-    last_serial: Optional[str]
+    last_serial: str | None
 
     @classmethod
     def from_html(
-        cls, html: str | bytes, from_encoding: Optional[str] = None
+        cls, html: str | bytes, from_encoding: str | None = None
     ) -> IndexPage:
         """
         .. versionadded:: 1.0.0

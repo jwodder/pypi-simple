@@ -1,6 +1,5 @@
 from __future__ import annotations
 import re
-from typing import Optional
 from .errors import UnparsableFilenameError
 
 PROJECT_NAME = r"[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?"
@@ -52,22 +51,18 @@ BAD_PACKAGE_BASES = [
     # See <https://github.com/python/cpython/blob/v3.7.0/Lib/distutils/command/bdist_dumb.py#L93>:
     (
         "dumb",
-        re.compile(r"-(?P<version>{})\.{}{}$".format(VERSION, PLAT_NAME, ARCHIVE_EXT)),
+        re.compile(rf"-(?P<version>{VERSION})\.{PLAT_NAME}{ARCHIVE_EXT}$"),
     ),
     # See <https://github.com/python/cpython/blob/v3.7.0/Lib/distutils/command/bdist_msi.py#L733>:
     (
         "msi",
-        re.compile(
-            r"-(?P<version>{})\.{}(?:-{})?\.msi$".format(VERSION, PLAT_NAME, PYVER)
-        ),
+        re.compile(rf"-(?P<version>{VERSION})\.{PLAT_NAME}(?:-{PYVER})?\.msi$"),
     ),
-    ("sdist", re.compile(r"-(?P<version>{}){}$".format(VERSION, ARCHIVE_EXT))),
+    ("sdist", re.compile(rf"-(?P<version>{VERSION}){ARCHIVE_EXT}$")),
     # See <https://github.com/python/cpython/blob/v3.7.0/Lib/distutils/command/bdist_wininst.py#L292>:
     (
         "wininst",
-        re.compile(
-            r"-(?P<version>{})\.{}(?:-{})?\.exe$".format(VERSION, PLAT_NAME, PYVER)
-        ),
+        re.compile(rf"-(?P<version>{VERSION})\.{PLAT_NAME}(?:-{PYVER})?\.exe$"),
     ),
 ]
 
@@ -80,7 +75,7 @@ BAD_PACKAGE_RGXN = [
 
 
 def parse_filename(
-    filename: str, project_hint: Optional[str] = None
+    filename: str, project_hint: str | None = None
 ) -> tuple[str, str, str]:
     """
     Given the filename of a distribution package, returns a triple of the

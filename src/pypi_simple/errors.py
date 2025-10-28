@@ -1,6 +1,3 @@
-from typing import Optional
-
-
 class UnsupportedRepoVersionError(Exception):
     """
     Raised upon encountering a simple repository whose repository version
@@ -168,7 +165,7 @@ class NoProvenanceError(Exception):
     fails with a 404 error code
     """
 
-    def __init__(self, filename: str, url: Optional[str]) -> None:
+    def __init__(self, filename: str, url: str | None) -> None:
         #: The filename of the package whose provenance was requested
         self.filename = filename
         #: The URL to which the failed request was made, or `None` if

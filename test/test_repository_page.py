@@ -1,5 +1,4 @@
 from __future__ import annotations
-from typing import Optional
 import pytest
 from pypi_simple import (
     SUPPORTED_REPOSITORY_VERSION,
@@ -514,7 +513,7 @@ from pypi_simple import (
         ),
     ],
 )
-def test_from_html(html: str, base_url: Optional[str], page: RepositoryPage) -> None:
+def test_from_html(html: str, base_url: str | None, page: RepositoryPage) -> None:
     assert RepositoryPage.from_html(html, base_url) == page
 
 

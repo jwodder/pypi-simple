@@ -3,7 +3,7 @@ from codecs import getincrementaldecoder
 from collections.abc import Iterable, Iterator
 from html.parser import HTMLParser
 from itertools import chain
-from typing import AnyStr, Optional, cast
+from typing import AnyStr, cast
 from urllib.parse import urljoin
 from bs4.dammit import EncodingDetector
 import requests
@@ -40,9 +40,9 @@ EMPTY_TAGS = {
 
 
 class LinkParser(HTMLParser):
-    def __init__(self, base_url: Optional[str] = None) -> None:
+    def __init__(self, base_url: str | None = None) -> None:
         super().__init__(convert_charrefs=True)
-        self.base_url: Optional[str] = base_url
+        self.base_url: str | None = base_url
         self.base_seen = False
         self.tag_stack: list[str] = []
         self.finished_links: list[Link] = []
@@ -53,7 +53,7 @@ class LinkParser(HTMLParser):
         self.finished_links = []
         return links
 
-    def handle_starttag(self, tag: str, attrs: list[tuple[str, Optional[str]]]) -> None:
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         if tag not in EMPTY_TAGS:
             self.tag_stack.append(tag)
         attrdict = {k: v or "" for k, v in attrs}
@@ -132,8 +132,8 @@ def parse_links_stream_response(
 
 def parse_links_stream(
     htmlseq: Iterable[AnyStr],
-    base_url: Optional[str] = None,
-    http_charset: Optional[str] = None,
+    base_url: str | None = None,
+    http_charset: str | None = None,
 ) -> Iterator[Link]:
     """
     Parse an HTML page given as an iterable of `bytes` or `str` and yield each
@@ -167,16 +167,14 @@ def parse_links_stream(
     parser = LinkParser(base_url=base_url)
     for piece in textseq:
         parser.feed(piece)
-        for link in parser.fetch_links():
-            yield link
+        yield from parser.fetch_links()
     parser.close()
-    for link in parser.fetch_links():
-        yield link
+    yield from parser.fetch_links()
 
 
 def iterhtmldecode(
     iterable: Iterable[AnyStr],
-    http_charset: Optional[str] = None,
+    http_charset: str | None = None,
     default_encoding: str = "cp1252",
     errors: str = "replace",
     scan_window: int = 1024,
@@ -237,7 +235,7 @@ def iterhtmldecode(
             initblob += next(iterator)
         except StopIteration:
             break
-    enc: Optional[str]
+    enc: str | None
     initblob, enc = EncodingDetector.strip_byte_order_mark(initblob)
     if enc is None:
         if http_charset is not None:
