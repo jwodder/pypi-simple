@@ -1,3 +1,7 @@
+v1.9.0 (in development)
+-----------------------
+- Support Python 3.14
+
 v1.8.0 (2025-09-03)
 -------------------
 - Provenance support belatedly updated to match a change to PEP 740:
