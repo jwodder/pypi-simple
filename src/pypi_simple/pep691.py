@@ -1,6 +1,6 @@
 from __future__ import annotations
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 from pydantic import BaseModel, Field, HttpUrl, StrictBool, field_validator
 from .enums import ProjectStatus
 
@@ -11,7 +11,7 @@ def shishkebab(s: str) -> str:
 
 class Meta(BaseModel, alias_generator=shishkebab, populate_by_name=True):
     api_version: str
-    last_serial: Optional[str] = Field(None, alias="_last-serial")
+    last_serial: str | None = Field(None, alias="_last-serial")
 
     @field_validator("last_serial", mode="before")
     @classmethod
@@ -23,25 +23,25 @@ class Meta(BaseModel, alias_generator=shishkebab, populate_by_name=True):
 
 
 class ProjectMeta(Meta):
-    tracks: List[str] = Field(default_factory=list)
+    tracks: list[str] = Field(default_factory=list)
 
 
 class StatusData(BaseModel):
-    status: Optional[ProjectStatus] = None
-    reason: Optional[str] = None
+    status: ProjectStatus | None = None
+    reason: str | None = None
 
 
 class File(BaseModel, alias_generator=shishkebab, populate_by_name=True):
     filename: str
     url: str
-    hashes: Dict[str, str]
-    requires_python: Optional[str] = None
-    core_metadata: Union[StrictBool, Dict[str, str], None] = None
-    gpg_sig: Optional[StrictBool] = None
-    yanked: Union[StrictBool, str] = False
-    size: Optional[int] = None
-    upload_time: Optional[datetime] = None
-    provenance: Optional[HttpUrl] = None
+    hashes: dict[str, str]
+    requires_python: str | None = None
+    core_metadata: StrictBool | dict[str, str] | None = None
+    gpg_sig: StrictBool | None = None
+    yanked: StrictBool | str = False
+    size: int | None = None
+    upload_time: datetime | None = None
+    provenance: HttpUrl | None = None
 
     @property
     def is_yanked(self) -> bool:
@@ -51,21 +51,21 @@ class File(BaseModel, alias_generator=shishkebab, populate_by_name=True):
             return self.yanked
 
     @property
-    def yanked_reason(self) -> Optional[str]:
+    def yanked_reason(self) -> str | None:
         if isinstance(self.yanked, str):
             return self.yanked
         else:
             return None
 
     @property
-    def has_metadata(self) -> Optional[bool]:
+    def has_metadata(self) -> bool | None:
         if isinstance(self.core_metadata, dict):
             return True
         else:
             return self.core_metadata
 
     @property
-    def metadata_digests(self) -> Optional[dict[str, str]]:
+    def metadata_digests(self) -> dict[str, str] | None:
         if isinstance(self.core_metadata, dict):
             return self.core_metadata
         elif self.core_metadata is True:
@@ -76,11 +76,11 @@ class File(BaseModel, alias_generator=shishkebab, populate_by_name=True):
 
 class Project(BaseModel, alias_generator=shishkebab, populate_by_name=True):
     name: str
-    files: List[File]
+    files: list[File]
     meta: ProjectMeta
-    alternate_locations: List[str] = Field(default_factory=list)
+    alternate_locations: list[str] = Field(default_factory=list)
     project_status: StatusData = Field(default_factory=StatusData)
-    versions: Optional[List[str]] = None
+    versions: list[str] | None = None
 
 
 class ProjectItem(BaseModel):
@@ -88,5 +88,5 @@ class ProjectItem(BaseModel):
 
 
 class ProjectList(BaseModel):
-    projects: List[ProjectItem]
+    projects: list[ProjectItem]
     meta: Meta

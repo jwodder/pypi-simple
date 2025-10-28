@@ -1,7 +1,7 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
 import hashlib
-from typing import Any, Optional
+from typing import Any
 from urllib.parse import urljoin, urlparse, urlunparse
 import warnings
 from packaging.version import Version
@@ -37,7 +37,7 @@ def check_repo_version(
         )
 
 
-def basejoin(base_url: Optional[str], url: str) -> str:
+def basejoin(base_url: str | None, url: str) -> str:
     if base_url is None:
         return url
     else:

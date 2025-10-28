@@ -1,7 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass
 import re
-from typing import Optional
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup, Tag
 from .enums import ProjectStatus
@@ -18,7 +17,7 @@ class RepositoryPage:
 
     #: The repository version, if any, reported by the page in accordance with
     #: :pep:`629`
-    repository_version: Optional[str]
+    repository_version: str | None
 
     #: A list of hyperlinks found on the page
     links: list[Link]
@@ -79,8 +78,8 @@ class RepositoryPage:
     def from_html(
         cls,
         html: str | bytes,
-        base_url: Optional[str] = None,
-        from_encoding: Optional[str] = None,
+        base_url: str | None = None,
+        from_encoding: str | None = None,
     ) -> RepositoryPage:
         """
         Parse an HTML page from a simple repository into a `RepositoryPage`.
@@ -158,7 +157,7 @@ class Link:
     #: instead.
     attrs: dict[str, str | list[str]]
 
-    def get_str_attrib(self, attrib: str) -> Optional[str]:
+    def get_str_attrib(self, attrib: str) -> str | None:
         """:meta private:"""
         value = self.attrs.get(attrib)
         if value is not None:

@@ -1,5 +1,4 @@
 from __future__ import annotations
-from typing import Optional
 import pytest
 from pypi_simple import DistributionPackage, Link
 
@@ -227,7 +226,7 @@ def test_from_json_data_no_metadata() -> None:
 def test_from_json_data_metadata(
     core_metadata: bool | dict[str, str],
     has_metadata: bool,
-    metadata_digests: Optional[dict[str, str]],
+    metadata_digests: dict[str, str] | None,
 ) -> None:
     pkg = DistributionPackage.from_json_data(
         {

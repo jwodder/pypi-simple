@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 import platform
 from types import TracebackType
-from typing import Any, AnyStr, Optional
+from typing import Any, AnyStr
 from mailbits import ContentType
 from packaging.utils import canonicalize_name as normalize
 import requests
@@ -76,7 +76,7 @@ class PyPISimple:
         self,
         endpoint: str = PYPI_SIMPLE_ENDPOINT,
         auth: Any = None,
-        session: Optional[requests.Session] = None,
+        session: requests.Session | None = None,
         accept: str = ACCEPT_ANY,
     ) -> None:
         self.endpoint: str = endpoint.rstrip("/") + "/"
@@ -95,17 +95,17 @@ class PyPISimple:
 
     def __exit__(
         self,
-        _exc_type: Optional[type[BaseException]],
-        _exc_val: Optional[BaseException],
-        _exc_tb: Optional[TracebackType],
+        _exc_type: type[BaseException] | None,
+        _exc_val: BaseException | None,
+        _exc_tb: TracebackType | None,
     ) -> None:
         self.s.close()
 
     def get_index_page(
         self,
         timeout: float | tuple[float, float] | None = None,
-        accept: Optional[str] = None,
-        headers: Optional[dict[str, str]] = None,
+        accept: str | None = None,
+        headers: dict[str, str] | None = None,
     ) -> IndexPage:
         """
         Fetches the index/root page from the simple repository and returns an
@@ -161,8 +161,8 @@ class PyPISimple:
         self,
         chunk_size: int = 65535,
         timeout: float | tuple[float, float] | None = None,
-        accept: Optional[str] = None,
-        headers: Optional[dict[str, str]] = None,
+        accept: str | None = None,
+        headers: dict[str, str] | None = None,
     ) -> Iterator[str]:
         """
         Returns a generator of names of projects available in the repository.
@@ -238,8 +238,8 @@ class PyPISimple:
         self,
         project: str,
         timeout: float | tuple[float, float] | None = None,
-        accept: Optional[str] = None,
-        headers: Optional[dict[str, str]] = None,
+        accept: str | None = None,
+        headers: dict[str, str] | None = None,
     ) -> ProjectPage:
         """
         Fetches the page for the given project from the simple repository and
@@ -304,9 +304,9 @@ class PyPISimple:
         path: AnyStr | os.PathLike[AnyStr],
         verify: bool = True,
         keep_on_error: bool = False,
-        progress: Optional[Callable[[Optional[int]], ProgressTracker]] = None,
+        progress: Callable[[int | None], ProgressTracker] | None = None,
         timeout: float | tuple[float, float] | None = None,
-        headers: Optional[dict[str, str]] = None,
+        headers: dict[str, str] | None = None,
     ) -> None:
         """
         Download the given `DistributionPackage` to the given path.
@@ -384,7 +384,7 @@ class PyPISimple:
         pkg: DistributionPackage,
         verify: bool = True,
         timeout: float | tuple[float, float] | None = None,
-        headers: Optional[dict[str, str]] = None,
+        headers: dict[str, str] | None = None,
     ) -> bytes:
         """
         .. versionadded:: 1.5.0
@@ -441,7 +441,7 @@ class PyPISimple:
         pkg: DistributionPackage,
         verify: bool = True,
         timeout: float | tuple[float, float] | None = None,
-        headers: Optional[dict[str, str]] = None,
+        headers: dict[str, str] | None = None,
     ) -> str:
         """
         .. versionadded:: 1.3.0
@@ -500,7 +500,7 @@ class PyPISimple:
         pkg: DistributionPackage,
         verify: bool = True,  # noqa: U100
         timeout: float | tuple[float, float] | None = None,
-        headers: Optional[dict[str, str]] = None,
+        headers: dict[str, str] | None = None,
     ) -> dict[str, Any]:
         """
         .. versionadded:: 1.6.0

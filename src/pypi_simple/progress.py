@@ -1,7 +1,7 @@
 from __future__ import annotations
 from collections.abc import Callable
 from types import TracebackType
-from typing import TYPE_CHECKING, Any, Optional, Protocol, runtime_checkable
+from typing import TYPE_CHECKING, Any, Protocol, runtime_checkable
 
 if TYPE_CHECKING:
     from typing_extensions import Self
@@ -21,10 +21,10 @@ class ProgressTracker(Protocol):
 
     def __exit__(
         self,
-        exc_type: Optional[type[BaseException]],
-        exc_val: Optional[BaseException],
-        exc_tb: Optional[TracebackType],
-    ) -> Optional[bool]: ...
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> bool | None: ...
 
     def update(self, increment: int) -> None: ...
 
@@ -35,9 +35,9 @@ class NullProgressTracker:
 
     def __exit__(
         self,
-        exc_type: Optional[type[BaseException]],
-        exc_val: Optional[BaseException],
-        exc_tb: Optional[TracebackType],
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
     ) -> None:
         pass
 
@@ -45,14 +45,14 @@ class NullProgressTracker:
         pass
 
 
-def null_progress_tracker() -> Callable[[Optional[int]], ProgressTracker]:
-    def factory(_content_length: Optional[int]) -> ProgressTracker:
+def null_progress_tracker() -> Callable[[int | None], ProgressTracker]:
+    def factory(_content_length: int | None) -> ProgressTracker:
         return NullProgressTracker()
 
     return factory
 
 
-def tqdm_progress_factory(**kwargs: Any) -> Callable[[Optional[int]], ProgressTracker]:
+def tqdm_progress_factory(**kwargs: Any) -> Callable[[int | None], ProgressTracker]:
     """
     A function for displaying a progress bar with tqdm_ during a download.
     Naturally, using this requires tqdm to be installed alongside
@@ -80,7 +80,7 @@ def tqdm_progress_factory(**kwargs: Any) -> Callable[[Optional[int]], ProgressTr
 
     from tqdm import tqdm
 
-    def factory(content_length: Optional[int]) -> ProgressTracker:
+    def factory(content_length: int | None) -> ProgressTracker:
         return tqdm(total=content_length, **kwargs)
 
     return factory
