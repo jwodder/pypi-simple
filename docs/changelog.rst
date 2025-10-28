@@ -3,6 +3,12 @@
 Changelog
 =========
 
+v1.9.0 (in development)
+-----------------------
+- Support Python 3.14
+- Drop support for Python 3.8 and 3.9
+
+
 v1.8.0 (2025-09-03)
 -------------------
 - Provenance support belatedly updated to match a change to :pep:`740`:
